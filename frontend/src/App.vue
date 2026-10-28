@@ -368,7 +368,7 @@ onUnmounted(() => {
 <!-- ============================================================ -->
   <!-- 1. HEADER (Белый корпоративный хедер с анимированным лого)     -->
   <!-- ============================================================ -->
-  <header class="sticky top-0 z-40 bg-white shadow-xs">
+  <header class="sticky top-0 z-40 bg-white shadow-[0_4px_16px_rgba(0,0,0,0.06)]">
     
     <!-- Top Layer: Clean white with useful company information, search & contacts -->
     <div class="bg-white border-b border-neutral-border">
@@ -490,7 +490,10 @@ onUnmounted(() => {
           
           <!-- Graphic Media: on desktop fills background; on mobile taller container (290-340px) with 25% left cropped for powerful focus -->
           <div class="relative w-full h-[290px] xs:h-[310px] sm:h-[340px] md:h-full md:absolute md:inset-0 pointer-events-none overflow-hidden flex md:justify-end">
-            <img src="assets/banner-1-2-1.png" alt="APEKS AP40 Laser+" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
+            <picture class="w-full h-full block">
+              <source type="image/webp" srcset="assets/banner-1-2-1.webp">
+              <img src="assets/banner-1-2-1.png" alt="APEKS AP40 Laser+" width="1920" height="800" fetchpriority="high" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
+            </picture>
             
             <!-- Mobile vertical gradient scrim: increased height to 28-32 for seamless transition downwards into #080d1c -->
             <div class="absolute inset-x-0 bottom-0 h-28 sm:h-32 bg-gradient-to-b from-transparent via-[#080d1c]/80 to-[#080d1c] pointer-events-none md:hidden"></div>
@@ -522,8 +525,10 @@ onUnmounted(() => {
           <!-- Graphic Media: on desktop uses 19-50-55 right-aligned; on mobile uses dedicated centered 18-07-40 without left crop -->
           <div class="relative w-full h-[290px] xs:h-[310px] sm:h-[340px] md:h-full md:absolute md:inset-0 pointer-events-none overflow-hidden flex md:justify-end">
             <picture class="w-full h-full block">
+              <source media="(min-width: 768px)" type="image/webp" srcset="assets/image_2026-10-22_19-50-55.webp">
               <source media="(min-width: 768px)" srcset="assets/image_2026-10-22_19-50-55.png">
-              <img src="assets/image_2026-10-22_18-07-40.png" alt="APEKS AP10" class="w-full h-full object-cover object-center md:object-[right_center] hero-mask-mobile">
+              <source type="image/webp" srcset="assets/image_2026-10-22_18-07-40.webp">
+              <img src="assets/image_2026-10-22_18-07-40.png" alt="APEKS AP10" width="2560" height="1173" loading="lazy" class="w-full h-full object-cover object-center md:object-[right_center] hero-mask-mobile">
             </picture>
             
             <!-- Mobile vertical gradient scrim: seamless transition into #060608 -->
@@ -556,7 +561,10 @@ onUnmounted(() => {
           
           <!-- Graphic Media: lifted higher up on desktop; on mobile taller container with 25% left cropped -->
           <div class="relative w-full h-[290px] xs:h-[310px] sm:h-[340px] md:h-full md:absolute md:inset-0 pointer-events-none overflow-hidden flex md:justify-end">
-            <img src="assets/dddeb846-d345-4862-b238-c5db85fb56a9.png" alt="APEKS AP80 PRO" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
+            <picture class="w-full h-full block">
+              <source type="image/webp" srcset="assets/dddeb846-d345-4862-b238-c5db85fb56a9.webp">
+              <img src="assets/dddeb846-d345-4862-b238-c5db85fb56a9.png" alt="APEKS AP80 PRO" width="1920" height="800" loading="lazy" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
+            </picture>
             
             <!-- Mobile vertical gradient scrim: transitions image downwards into #0d1d4d -->
             <div class="absolute inset-x-0 bottom-0 h-28 sm:h-32 bg-gradient-to-b from-transparent via-[#0d1d4d]/80 to-[#0d1d4d] pointer-events-none md:hidden"></div>

@@ -1,0 +1,8 @@
+# Personal instructions and AI context
+MASTER_PROMPT.md
+
+# Dependencies & Build artifacts
+node_modules/
+.DS_Store
+Thumbs.db
+*.local
