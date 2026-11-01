@@ -6,6 +6,9 @@ import AppFooter from './components/layout/AppFooter.vue';
 
 const router = useRouter();
 
+// Global store state
+let cart = [];
+
 function formatRub(num) {
   if (!num) return '0 ₽';
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₽";
@@ -14,6 +17,10 @@ function formatRub(num) {
 function toggleDropdown(id) {
   const el = document.getElementById(id);
   if (el) el.classList.toggle('hidden');
+}
+
+function toggleCartDrawer() {
+  scrollToContacts('Оформление заказа из корзины');
 }
 
 function toggleMobileMenu() {
@@ -55,6 +62,99 @@ function scrollToContacts(subject) {
   }
 }
 
+function addToCart(name, price, img, desc, qty = 1) {
+  const quantity = Number(qty) || 1;
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty += quantity;
+  } else {
+    cart.push({ name, price, img, desc, qty: quantity });
+  }
+  updateCartUI();
+}
+
+function changeQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.name !== name);
+    }
+  }
+  updateCartUI();
+}
+
+function removeItem(name) {
+  cart = cart.filter(i => i.name !== name);
+  updateCartUI();
+}
+
+function openCheckoutModal() {
+  toggleCartDrawer();
+  scrollToContacts('Оформление заказа из корзины');
+}
+
+function updateCartUI() {
+  const count = cart.reduce((sum, i) => sum + i.qty, 0);
+  const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+  const badge = document.getElementById('cartCountBadge');
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = count;
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+  }
+
+  const drawerCount = document.getElementById('drawerCount');
+  if (drawerCount) drawerCount.textContent = count;
+
+  const drawerTotal = document.getElementById('drawerTotal');
+  if (drawerTotal) drawerTotal.textContent = formatRub(total);
+
+  const list = document.getElementById('cartItemsList');
+  const btn = document.getElementById('btnCheckout');
+
+  if (list && btn) {
+    if (cart.length === 0) {
+      btn.disabled = true;
+      list.innerHTML = `
+        <div id="emptyNotice" class="text-center py-16 text-neutral-muted">
+          <svg class="w-12 h-12 mx-auto text-neutral-border mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          <p class="font-medium text-sm text-neutral-dark">В корзине пока нет товаров</p>
+        </div>
+      `;
+    } else {
+      btn.disabled = false;
+      let html = '';
+      cart.forEach(item => {
+        html += `
+          <div class="p-3 bg-neutral-bg rounded border border-neutral-border flex items-center justify-between gap-3">
+            <img src="${item.img}" alt="${item.name}" class="w-12 h-12 object-contain bg-white rounded p-1 border border-neutral-border">
+            <div class="flex-1">
+              <div class="text-xs font-bold text-neutral-dark leading-tight">${item.name}</div>
+              <div class="text-[11px] font-semibold text-brand mt-0.5">${formatRub(item.price)}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center border border-neutral-border bg-white rounded">
+                <button onclick="changeQty('${item.name}', -1)" class="px-2 py-0.5 text-xs text-neutral-muted hover:text-neutral-dark cursor-pointer">-</button>
+                <span class="px-2 text-xs font-semibold text-neutral-dark">${item.qty}</span>
+                <button onclick="changeQty('${item.name}', 1)" class="px-2 py-0.5 text-xs text-neutral-muted hover:text-neutral-dark cursor-pointer">+</button>
+              </div>
+              <button onclick="removeItem('${item.name}')" class="text-neutral-muted hover:text-red-600 p-1 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+  }
+}
+
 function filterStoreProducts(query) {
   const q = query.trim().toLowerCase();
   const items = document.querySelectorAll('.product-item');
@@ -71,10 +171,16 @@ function filterStoreProducts(query) {
 onMounted(() => {
   window.formatRub = formatRub;
   window.toggleDropdown = toggleDropdown;
+  window.toggleCartDrawer = toggleCartDrawer;
   window.toggleMobileMenu = toggleMobileMenu;
   window.toggleMobileCatalog = toggleMobileCatalog;
   window.closeModal = closeModal;
   window.scrollToContacts = scrollToContacts;
+  window.addToCart = addToCart;
+  window.changeQty = changeQty;
+  window.removeItem = removeItem;
+  window.openCheckoutModal = openCheckoutModal;
+  window.updateCartUI = updateCartUI;
   window.filterStoreProducts = filterStoreProducts;
 });
 </script>
@@ -91,6 +197,7 @@ onMounted(() => {
 
     <!-- Identical Global Footer across all pages -->
     <AppFooter />
+
 
     <!-- Slide-Over Mobile Menu Drawer -->
     <div id="mobileMenuDrawer" class="fixed inset-0 z-50 bg-black/50 flex justify-end hidden">
