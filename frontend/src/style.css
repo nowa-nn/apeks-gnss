@@ -43,3 +43,16 @@ html {
 .news-dot {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Brand-tinted background theme (White + 4% #016C8A => #F5F9FA) */
+body.theme-brand-bg,
+body.theme-brand-bg .bg-white {
+  background-color: #F5F9FA !important;
+}
+body.theme-brand-bg .product-img-box {
+  background: radial-gradient(circle at center, #F5F9FA 65%, #EAF0F2 100%) !important;
+}
+body.theme-brand-bg .hero-dot.bg-white {
+  background-color: #ffffff !important;
+}
+
