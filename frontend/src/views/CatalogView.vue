@@ -120,7 +120,7 @@ function getCategoryCount(catId) {
 }
 
 const filteredProducts = computed(() => {
-  return products.filter(p => {
+  const list = products.filter(p => {
     // Category
     if (selectedCategory.value !== 'all') {
       const catObj = categories.find(c => c.id === selectedCategory.value);
@@ -157,12 +157,12 @@ const filteredProducts = computed(() => {
     if (filterInStock.value && !p.inStock) return false;
 
     return true;
-  }).sort((a, b) => {
-    if (sortBy.value === 'price_asc') return a.price - b.price;
-    if (sortBy.value === 'price_desc') return b.price - a.price;
-    if (sortBy.value === 'name_asc') return a.title.localeCompare(b.title, 'ru');
-    return a.id - b.id;
   });
+
+  if (sortBy.value === 'price_asc') return [...list].sort((a, b) => a.price - b.price);
+  if (sortBy.value === 'price_desc') return [...list].sort((a, b) => b.price - a.price);
+  if (sortBy.value === 'name_asc') return [...list].sort((a, b) => a.title.localeCompare(b.title, 'ru'));
+  return list;
 });
 
 function formatRub(num) {
