@@ -76,31 +76,29 @@ function formatRub(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
 }
 
-// Add to cart with current quantity and selected kit options
-function handleAddToCart() {
-  if (window.addToCart) {
-    let configuredTitle = product.value.title;
-    const optionsList = [];
-    if (includeSoftware.value && product.value.kitOptions?.software) {
-      optionsList.push(product.value.kitOptions.software.name);
-    }
-    if (includeController.value && product.value.kitOptions?.controller) {
-      optionsList.push(product.value.kitOptions.controller.name);
-    }
-    if (isFullKit.value) {
-      optionsList.push('веха 2.2 м в подарок');
-    }
-    if (optionsList.length > 0) {
-      configuredTitle += ` [${optionsList.join(', ')}]`;
-    }
+// Order product with current quantity and selected kit options
+function handleOrder() {
+  let configuredTitle = product.value.title;
+  const optionsList = [];
+  if (includeSoftware.value && product.value.kitOptions?.software) {
+    optionsList.push(product.value.kitOptions.software.name);
+  }
+  if (includeController.value && product.value.kitOptions?.controller) {
+    optionsList.push(product.value.kitOptions.controller.name);
+  }
+  if (isFullKit.value) {
+    optionsList.push('веха 2.2 м в подарок');
+  }
+  if (optionsList.length > 0) {
+    configuredTitle += ` (${optionsList.join(', ')})`;
+  }
+  if (quantity.value > 1) {
+    configuredTitle += ` — ${quantity.value} шт.`;
+  }
+  configuredTitle += ` — ${formatRub(totalPrice.value * quantity.value)}`;
 
-    window.addToCart(
-      configuredTitle,
-      totalPrice.value,
-      product.value.mainImage,
-      product.value.subtitle,
-      quantity.value
-    );
+  if (window.scrollToContacts) {
+    window.scrollToContacts(`Заказ: ${configuredTitle}`);
   }
 }
 
@@ -315,7 +313,7 @@ watch(
               </div>
             </div>
 
-            <!-- Stepper & Кнопка «В корзину» (Строго под описанием) -->
+            <!-- Stepper & Кнопка «Заказать» (Строго под описанием) -->
             <div class="space-y-3 pt-1">
               <div class="flex items-center gap-3">
                 
@@ -342,28 +340,28 @@ watch(
                   </button>
                 </div>
 
-                <!-- Primary CTA: Add to Cart -->
+                <!-- Primary CTA: Заказать -->
                 <button 
                   type="button"
-                  @click="handleAddToCart"
+                  @click="handleOrder"
                   class="flex-1 h-11 px-6 rounded-lg bg-brand hover:bg-[#01556D] text-white font-semibold text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
-                  <span>Добавить в корзину</span>
+                  <span>Заказать</span>
                 </button>
 
               </div>
 
-              <!-- Или позвоните в отдел продаж (строго под кнопкой добавить в корзину) -->
+              <!-- Или позвоните в отдел продаж (строго под кнопкой «Заказать») -->
               <div class="text-xs text-neutral-muted pt-0.5">
                 <span>Или позвоните в отдел продаж: </span>
                 <a href="tel:+79269730003" class="text-neutral-dark font-semibold hover:text-brand transition whitespace-nowrap">+7 (926) 973-00-03</a>
               </div>
             </div>
 
-            <!-- Service Points: Размещены под кнопкой «В корзину», без карточек внутри карточки -->
+            <!-- Service Points: Размещены под кнопкой «Заказать», без карточек внутри карточки -->
             <div class="border-t border-neutral-border pt-5 divide-y divide-neutral-border space-y-3.5">
               
               <!-- 1. Быстрая доставка по всей России -->

@@ -46,6 +46,10 @@ html {
 
 /* Brand-tinted background theme (White + 4% #016C8A => #F5F9FA) */
 body.theme-brand-bg,
+body.theme-brand-bg header,
+body.theme-brand-bg header > div,
+body.theme-brand-bg header nav,
+body.theme-brand-bg #catalogDropdown,
 body.theme-brand-bg .bg-white {
   background-color: #F5F9FA !important;
 }
