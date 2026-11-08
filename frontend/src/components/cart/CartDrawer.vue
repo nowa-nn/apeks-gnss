@@ -119,7 +119,7 @@ function goToCheckout() {
         </div>
 
         <!-- Scrollable Items List -->
-        <div class="flex-1 overflow-y-auto brand-scrollbar p-4 sm:p-6 space-y-3 divide-y divide-neutral-border/60">
+        <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 divide-y divide-neutral-border/60">
           
           <!-- Empty State -->
           <div 

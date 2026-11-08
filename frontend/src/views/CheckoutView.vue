@@ -19,13 +19,13 @@ const form = ref({
   deliveryType: 'cdek', // 'cdek' | 'pickup'
   city: '',
   address: '',
-  paymentMethod: 'sbp', // 'sbp' | 'cash'
+  paymentMethod: 'sbp',
   agreeTerms: false
 });
 
-// Auto reset payment method if delivery changed to cdek
+// Automatically revert cash on pickup if delivery type switches to cdek
 watch(() => form.value.deliveryType, (newVal) => {
-  if (newVal === 'cdek' && form.value.paymentMethod === 'cash') {
+  if (newVal === 'cdek' && form.value.paymentMethod === 'cash_pickup') {
     form.value.paymentMethod = 'sbp';
   }
 });
@@ -395,7 +395,7 @@ function printOrder() {
                 {{ submittedOrderData.form.city }}, {{ submittedOrderData.form.address }}
               </div>
               <div class="text-brand font-semibold pt-1">
-                {{ submittedOrderData.form.paymentMethod === 'cash' ? 'Наличными при самовывозе' : 'Система быстрых платежей (СБП)' }}
+                {{ submittedOrderData.form.paymentMethod === 'cash_pickup' ? 'Наличными при самовывозе' : 'Система быстрых платежей (СБП)' }}
               </div>
             </div>
           </div>
@@ -675,7 +675,9 @@ function printOrder() {
                 Способ оплаты
               </h2>
 
+              <!-- 2 Payment Options Cards -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                
                 <!-- Option 1: СБП -->
                 <label 
                   @click="form.paymentMethod = 'sbp'"
@@ -689,47 +691,46 @@ function printOrder() {
                   <div class="space-y-1">
                     <div class="flex items-center justify-between">
                       <span class="text-sm font-bold text-neutral-dark">
-                        СБП
+                        Система быстрых платежей (СБП)
                       </span>
                       <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', form.paymentMethod === 'sbp' ? 'border-brand' : 'border-neutral-border']">
                         <div v-if="form.paymentMethod === 'sbp'" class="w-2 h-2 rounded-full bg-brand"></div>
                       </div>
                     </div>
                     <p class="text-xs text-neutral-muted leading-tight">
-                      Онлайн-оплата по QR-коду через приложение любого банка
+                      Мгновенная онлайн-оплата по QR-коду через приложение любого банка
                     </p>
                   </div>
                 </label>
 
                 <!-- Option 2: Наличными при самовывозе -->
                 <label 
-                  @click="form.deliveryType === 'pickup' && (form.paymentMethod = 'cash')"
+                  @click="form.deliveryType === 'pickup' && (form.paymentMethod = 'cash_pickup')"
                   :class="[
                     'p-4 rounded-xl border text-left transition flex flex-col justify-between select-none',
-                    form.deliveryType !== 'pickup' 
-                      ? 'border-neutral-border/80 bg-neutral-50/70 opacity-55 cursor-not-allowed' 
-                      : (form.paymentMethod === 'cash' 
-                          ? 'border-brand bg-brand-light/25 ring-1 ring-brand cursor-pointer' 
+                    form.deliveryType !== 'pickup'
+                      ? 'border-neutral-border/70 bg-[#F8FAFC] opacity-50 cursor-not-allowed'
+                      : (form.paymentMethod === 'cash_pickup'
+                          ? 'border-brand bg-brand-light/25 ring-1 ring-brand cursor-pointer'
                           : 'border-neutral-border hover:border-neutral-muted bg-white cursor-pointer')
                   ]"
+                  :title="form.deliveryType !== 'pickup' ? 'Доступно только при выборе способа доставки «Самовывоз»' : ''"
                 >
                   <div class="space-y-1">
-                    <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center justify-between">
                       <span class="text-sm font-bold text-neutral-dark">
                         Наличными при самовывозе
                       </span>
-                      <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', form.paymentMethod === 'cash' ? 'border-brand' : 'border-neutral-border']">
-                        <div v-if="form.paymentMethod === 'cash'" class="w-2 h-2 rounded-full bg-brand"></div>
+                      <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', (form.paymentMethod === 'cash_pickup' && form.deliveryType === 'pickup') ? 'border-brand' : 'border-neutral-border']">
+                        <div v-if="form.paymentMethod === 'cash_pickup' && form.deliveryType === 'pickup'" class="w-2 h-2 rounded-full bg-brand"></div>
                       </div>
                     </div>
-                    <p class="text-xs text-neutral-muted leading-tight">
-                      Оплата наличными или картой при получении заказа в офисе
+                    <p class="text-xs leading-tight" :class="form.deliveryType === 'pickup' ? 'text-neutral-muted' : 'text-neutral-400'">
+                      {{ form.deliveryType === 'pickup' ? 'Оплата наличными или картой в офисе при получении заказа' : 'Доступно только при выборе самовывоза' }}
                     </p>
                   </div>
-                  <div v-if="form.deliveryType !== 'pickup'" class="mt-2 text-[11px] text-amber-700/80 font-medium">
-                    Доступно только при самовывозе
-                  </div>
                 </label>
+
               </div>
 
               <!-- Personal Data Agreement Checkbox (Aligned center with text, neat compact size) -->
@@ -762,7 +763,7 @@ function printOrder() {
               </div>
 
               <!-- Mini Items List -->
-              <div class="max-h-64 overflow-y-auto brand-scrollbar space-y-3 pr-1">
+              <div class="max-h-64 overflow-y-auto space-y-3 pr-1">
                 <div 
                   v-for="item in cartItems" 
                   :key="item.id || item.title"

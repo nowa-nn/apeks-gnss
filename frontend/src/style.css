@@ -4,70 +4,52 @@
 
 html {
   scroll-behavior: smooth;
+  scrollbar-gutter: stable;
 }
 
 /* ============================================================ */
-/* Global Custom Brand Scrollbar (#016C8A)                     */
+/* Universal Brand Custom Scrollbars (No arrows, brand teal)    */
 /* ============================================================ */
-html,
-body,
 * {
   scrollbar-width: thin;
-  scrollbar-color: #016C8A rgba(1, 108, 138, 0.06);
+  scrollbar-color: #016C8A rgba(1, 108, 138, 0.05);
 }
 
-::-webkit-scrollbar {
+/* WebKit / Chromium / Edge / Safari */
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-::-webkit-scrollbar-button {
+/* NO ARROWS / BUTTONS ANYWHERE */
+::-webkit-scrollbar-button,
+*::-webkit-scrollbar-button {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(1, 108, 138, 0.06);
+::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: rgba(1, 108, 138, 0.05);
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
   background-color: #016C8A;
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
   background-color: #01556D;
 }
 
-::-webkit-scrollbar-corner {
+::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
   background: transparent;
-}
-
-/* Explicit class for custom scrollable containers */
-.brand-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: #016C8A rgba(1, 108, 138, 0.06);
-}
-
-.brand-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.brand-scrollbar::-webkit-scrollbar-track {
-  background: rgba(1, 108, 138, 0.06);
-  border-radius: 9999px;
-}
-
-.brand-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #016C8A;
-  border-radius: 9999px;
-}
-
-.brand-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: #01556D;
 }
 .product-img-box {
   background: radial-gradient(circle at center, #FFFFFF 65%, #F4F5F7 100%);
@@ -124,10 +106,11 @@ body.theme-brand-bg .hero-dot.bg-white {
   background-color: #ffffff !important;
 }
 
-/* Catalog sidebar left scrollbar (Brand teal #016C8A) */
+/* Catalog sidebar left scrollbar (Brand teal #016C8A) with stable gutter to prevent layout shift */
 .sidebar-scroll-left {
   direction: rtl;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
 }
 
 @supports (-moz-appearance: none) {
