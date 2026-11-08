@@ -123,17 +123,10 @@ body.theme-brand-bg .hero-dot.bg-white {
   background-color: #ffffff !important;
 }
 
-/* Catalog filter section: completely clean & invisible scrollbar (NO track, NO thumb, NO arrows, NO layout shift) */
-.sidebar-scroll-clean {
+/* Catalog filter section: brand scrollbar without arrows, stable gutter to prevent layout shifts */
+.sidebar-filter-scroll {
   overflow-y: auto;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-.sidebar-scroll-clean::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  background: transparent !important;
+  scrollbar-gutter: stable;
 }
 
 /* Header Brand Logo Animation (from apeks-reference / variant-2) */

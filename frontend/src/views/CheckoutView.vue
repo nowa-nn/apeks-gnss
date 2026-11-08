@@ -709,7 +709,7 @@ function printOrder() {
                   :class="[
                     'p-4 rounded-xl border text-left transition flex flex-col justify-between select-none',
                     form.deliveryType !== 'pickup'
-                      ? 'border-neutral-border/70 bg-[#F8FAFC] opacity-50 cursor-not-allowed'
+                      ? 'border-neutral-border bg-[#F8FAFC] cursor-not-allowed'
                       : (form.paymentMethod === 'cash_pickup'
                           ? 'border-brand bg-brand-light/25 ring-1 ring-brand cursor-pointer'
                           : 'border-neutral-border hover:border-neutral-muted bg-white cursor-pointer')
@@ -721,12 +721,20 @@ function printOrder() {
                       <span class="text-sm font-bold text-neutral-dark">
                         Наличными при самовывозе
                       </span>
-                      <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', (form.paymentMethod === 'cash_pickup' && form.deliveryType === 'pickup') ? 'border-brand' : 'border-neutral-border']">
+                      <div :class="[
+                        'w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition',
+                        (form.paymentMethod === 'cash_pickup' && form.deliveryType === 'pickup') 
+                          ? 'border-brand' 
+                          : (form.deliveryType === 'pickup' ? 'border-neutral-border' : 'border-neutral-300 bg-neutral-100')
+                      ]">
                         <div v-if="form.paymentMethod === 'cash_pickup' && form.deliveryType === 'pickup'" class="w-2 h-2 rounded-full bg-brand"></div>
                       </div>
                     </div>
-                    <p class="text-xs leading-tight" :class="form.deliveryType === 'pickup' ? 'text-neutral-muted' : 'text-neutral-400'">
-                      {{ form.deliveryType === 'pickup' ? 'Оплата наличными или картой в офисе при получении заказа' : 'Доступно только при выборе самовывоза' }}
+                    <p 
+                      class="text-xs leading-tight transition-colors"
+                      :class="form.deliveryType === 'pickup' ? 'text-neutral-muted' : 'text-amber-600 font-medium'"
+                    >
+                      {{ form.deliveryType === 'pickup' ? 'Оплата наличными или картой в офисе при получении заказа' : 'Доступно только при самовывозе' }}
                     </p>
                   </div>
                 </label>
