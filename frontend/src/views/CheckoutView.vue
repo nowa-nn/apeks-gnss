@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCart, formatRub } from '../composables/useCart.js';
 
@@ -19,8 +19,15 @@ const form = ref({
   deliveryType: 'cdek', // 'cdek' | 'pickup'
   city: '',
   address: '',
-  paymentMethod: 'sbp',
+  paymentMethod: 'sbp', // 'sbp' | 'cash'
   agreeTerms: false
+});
+
+// Auto reset payment method if delivery changed to cdek
+watch(() => form.value.deliveryType, (newVal) => {
+  if (newVal === 'cdek' && form.value.paymentMethod === 'cash') {
+    form.value.paymentMethod = 'sbp';
+  }
 });
 
 // Errors & submission state
@@ -388,7 +395,7 @@ function printOrder() {
                 {{ submittedOrderData.form.city }}, {{ submittedOrderData.form.address }}
               </div>
               <div class="text-brand font-semibold pt-1">
-                Система быстрых платежей (СБП)
+                {{ submittedOrderData.form.paymentMethod === 'cash' ? 'Наличными при самовывозе' : 'Система быстрых платежей (СБП)' }}
               </div>
             </div>
           </div>
@@ -668,20 +675,59 @@ function printOrder() {
                 Способ оплаты
               </h2>
 
-              <div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <!-- Option 1: СБП -->
                 <label 
-                  class="p-4 rounded-xl border border-brand bg-brand-light/25 ring-1 ring-brand text-left cursor-pointer transition flex items-center gap-3.5 select-none"
+                  @click="form.paymentMethod = 'sbp'"
+                  :class="[
+                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between select-none',
+                    form.paymentMethod === 'sbp' 
+                      ? 'border-brand bg-brand-light/25 ring-1 ring-brand' 
+                      : 'border-neutral-border hover:border-neutral-muted bg-white'
+                  ]"
                 >
-                  <div class="w-4 h-4 rounded-full border border-brand flex items-center justify-center shrink-0">
-                    <div class="w-2 h-2 rounded-full bg-brand"></div>
-                  </div>
-                  <div class="space-y-0.5 flex-1">
-                    <span class="text-sm font-bold text-neutral-dark">
-                      Система быстрых платежей (СБП)
-                    </span>
-                    <p class="text-xs text-neutral-muted">
-                      Мгновенная онлайн-оплата по QR-коду через приложение вашего банка
+                  <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-bold text-neutral-dark">
+                        СБП
+                      </span>
+                      <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', form.paymentMethod === 'sbp' ? 'border-brand' : 'border-neutral-border']">
+                        <div v-if="form.paymentMethod === 'sbp'" class="w-2 h-2 rounded-full bg-brand"></div>
+                      </div>
+                    </div>
+                    <p class="text-xs text-neutral-muted leading-tight">
+                      Онлайн-оплата по QR-коду через приложение любого банка
                     </p>
+                  </div>
+                </label>
+
+                <!-- Option 2: Наличными при самовывозе -->
+                <label 
+                  @click="form.deliveryType === 'pickup' && (form.paymentMethod = 'cash')"
+                  :class="[
+                    'p-4 rounded-xl border text-left transition flex flex-col justify-between select-none',
+                    form.deliveryType !== 'pickup' 
+                      ? 'border-neutral-border/80 bg-neutral-50/70 opacity-55 cursor-not-allowed' 
+                      : (form.paymentMethod === 'cash' 
+                          ? 'border-brand bg-brand-light/25 ring-1 ring-brand cursor-pointer' 
+                          : 'border-neutral-border hover:border-neutral-muted bg-white cursor-pointer')
+                  ]"
+                >
+                  <div class="space-y-1">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-sm font-bold text-neutral-dark">
+                        Наличными при самовывозе
+                      </span>
+                      <div :class="['w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition', form.paymentMethod === 'cash' ? 'border-brand' : 'border-neutral-border']">
+                        <div v-if="form.paymentMethod === 'cash'" class="w-2 h-2 rounded-full bg-brand"></div>
+                      </div>
+                    </div>
+                    <p class="text-xs text-neutral-muted leading-tight">
+                      Оплата наличными или картой при получении заказа в офисе
+                    </p>
+                  </div>
+                  <div v-if="form.deliveryType !== 'pickup'" class="mt-2 text-[11px] text-amber-700/80 font-medium">
+                    Доступно только при самовывозе
                   </div>
                 </label>
               </div>
@@ -716,7 +762,7 @@ function printOrder() {
               </div>
 
               <!-- Mini Items List -->
-              <div class="max-h-64 overflow-y-auto space-y-3 pr-1">
+              <div class="max-h-64 overflow-y-auto brand-scrollbar space-y-3 pr-1">
                 <div 
                   v-for="item in cartItems" 
                   :key="item.id || item.title"
