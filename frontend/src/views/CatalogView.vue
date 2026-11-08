@@ -449,7 +449,7 @@ function goToProduct(slug) {
             ]"
           >
             <div class="sidebar-filter-scroll max-h-[75vh] lg:max-h-[calc(100vh-8.5rem)] overflow-y-auto p-5 border border-neutral-border rounded-xl bg-white shadow-xs">
-              <div class="space-y-6">
+              <div class="sidebar-content-ltr space-y-6">
                 
                 <!-- Filter Header -->
                 <div class="flex items-center justify-between pb-3 border-b border-neutral-border">

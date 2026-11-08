@@ -395,7 +395,7 @@ function printOrder() {
                 {{ submittedOrderData.form.city }}, {{ submittedOrderData.form.address }}
               </div>
               <div class="text-brand font-semibold pt-1">
-                {{ submittedOrderData.form.paymentMethod === 'cash_pickup' ? 'Наличными при самовывозе' : 'Система быстрых платежей (СБП)' }}
+                {{ submittedOrderData.form.paymentMethod === 'cash_pickup' ? 'Наличными' : 'Система быстрых платежей (СБП)' }}
               </div>
             </div>
           </div>
@@ -719,7 +719,7 @@ function printOrder() {
                   <div class="space-y-1">
                     <div class="flex items-center justify-between">
                       <span class="text-sm font-bold text-neutral-dark">
-                        Наличными при самовывозе
+                        Наличными
                       </span>
                       <div :class="[
                         'w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition',
@@ -734,7 +734,7 @@ function printOrder() {
                       class="text-xs leading-tight transition-colors"
                       :class="form.deliveryType === 'pickup' ? 'text-neutral-muted' : 'text-amber-600 font-medium'"
                     >
-                      {{ form.deliveryType === 'pickup' ? 'Оплата наличными или картой в офисе при получении заказа' : 'Доступно только при самовывозе' }}
+                      {{ form.deliveryType === 'pickup' ? 'Оплата наличными в офисе при получении заказа' : 'Доступно только при самовывозе' }}
                     </p>
                   </div>
                 </label>
@@ -771,7 +771,7 @@ function printOrder() {
               </div>
 
               <!-- Mini Items List with comfortable margin from scrollbar -->
-              <div class="max-h-72 sm:max-h-80 overflow-y-auto space-y-3 pr-4 sm:pr-5">
+              <div class="max-h-72 sm:max-h-80 overflow-y-auto custom-scrollbar space-y-3 pr-4 sm:pr-5">
                 <div 
                   v-for="item in cartItems" 
                   :key="item.id || item.title"

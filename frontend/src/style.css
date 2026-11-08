@@ -7,62 +7,53 @@ html {
 }
 
 /* ============================================================ */
-/* Universal Brand Custom Scrollbars (NO arrows, NO background) */
+/* Custom Brand Scrollbar for Specific Containers (Cart, Checkout, Filters) */
+/* (Site-wide page scrolling uses standard default browser scrollbar) */
 /* ============================================================ */
-/* WebKit / Chromium / Edge / Safari */
-::-webkit-scrollbar,
-*::-webkit-scrollbar {
+.custom-scrollbar::-webkit-scrollbar,
+.sidebar-filter-scroll::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
-/* NO ARROW BUTTONS ANYWHERE (Top/Bottom, Single, Increments) */
-::-webkit-scrollbar-button,
-*::-webkit-scrollbar-button,
-::-webkit-scrollbar-button:single-button,
-*::-webkit-scrollbar-button:single-button,
-::-webkit-scrollbar-button:vertical:decrement,
-*::-webkit-scrollbar-button:vertical:decrement,
-::-webkit-scrollbar-button:vertical:increment,
-*::-webkit-scrollbar-button:vertical:increment,
-::-webkit-scrollbar-button:horizontal:decrement,
-*::-webkit-scrollbar-button:horizontal:decrement,
-::-webkit-scrollbar-button:horizontal:increment,
-*::-webkit-scrollbar-button:horizontal:increment {
+/* NO ARROW BUTTONS in custom containers */
+.custom-scrollbar::-webkit-scrollbar-button,
+.sidebar-filter-scroll::-webkit-scrollbar-button {
   display: none !important;
   width: 0 !important;
   height: 0 !important;
 }
 
-/* NO BACKGROUND TRACK ANYWHERE (Transparent) */
-::-webkit-scrollbar-track,
-*::-webkit-scrollbar-track,
-::-webkit-scrollbar-track-piece,
-*::-webkit-scrollbar-track-piece {
+/* NO BACKGROUND TRACK in custom containers (Transparent) */
+.custom-scrollbar::-webkit-scrollbar-track,
+.custom-scrollbar::-webkit-scrollbar-track-piece,
+.sidebar-filter-scroll::-webkit-scrollbar-track,
+.sidebar-filter-scroll::-webkit-scrollbar-track-piece {
   background: transparent !important;
   border: none !important;
 }
 
-::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-thumb,
+.sidebar-filter-scroll::-webkit-scrollbar-thumb {
   background-color: #016C8A;
   border-radius: 9999px;
   border: none !important;
 }
 
-::-webkit-scrollbar-thumb:hover,
-*::-webkit-scrollbar-thumb:hover {
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.sidebar-filter-scroll::-webkit-scrollbar-thumb:hover {
   background-color: #01556D;
 }
 
-::-webkit-scrollbar-corner,
-*::-webkit-scrollbar-corner {
+.custom-scrollbar::-webkit-scrollbar-corner,
+.sidebar-filter-scroll::-webkit-scrollbar-corner {
   background: transparent !important;
 }
 
-/* Firefox support (Transparent track) */
+/* Firefox support for custom containers */
 @supports (-moz-appearance: none) {
-  html, body, * {
+  .custom-scrollbar,
+  .sidebar-filter-scroll {
     scrollbar-width: thin;
     scrollbar-color: #016C8A transparent;
   }
@@ -123,10 +114,16 @@ body.theme-brand-bg .hero-dot.bg-white {
   background-color: #ffffff !important;
 }
 
-/* Catalog filter section: brand scrollbar without arrows, stable gutter to prevent layout shifts */
+/* Catalog filter section: scrollbar on the LEFT side, stable gutter to prevent layout shifts */
 .sidebar-filter-scroll {
+  direction: rtl;
   overflow-y: auto;
   scrollbar-gutter: stable;
+}
+
+.sidebar-content-ltr {
+  direction: ltr;
+  text-align: left;
 }
 
 /* Header Brand Logo Animation (from apeks-reference / variant-2) */
