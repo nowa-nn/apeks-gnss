@@ -570,7 +570,7 @@ function printOrder() {
                       </div>
                     </div>
                     <p class="text-xs text-neutral-muted leading-tight">
-                      Курьерская доставка до двери или в ПВЗ
+                      Доставка в пункт выдачи
                     </p>
                   </div>
                   <div class="mt-3 flex items-center justify-between text-xs">
@@ -597,7 +597,7 @@ function printOrder() {
                       </div>
                     </div>
                     <p class="text-xs text-neutral-muted leading-tight">
-                      Из офиса представительства
+                      Из офиса представительства в Москве
                     </p>
                   </div>
                   <div class="mt-3 flex items-center justify-between text-xs">
