@@ -60,3 +60,93 @@ body.theme-brand-bg .hero-dot.bg-white {
   background-color: #ffffff !important;
 }
 
+/* Catalog sidebar left scrollbar (Brand teal #016C8A) */
+.sidebar-scroll-left {
+  direction: rtl;
+  overflow-y: auto;
+}
+
+@supports (-moz-appearance: none) {
+  .sidebar-scroll-left {
+    scrollbar-width: thin;
+    scrollbar-color: #016C8A rgba(1, 108, 138, 0.05);
+  }
+}
+
+.sidebar-scroll-left::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar-scroll-left::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.sidebar-scroll-left::-webkit-scrollbar-track {
+  background: rgba(1, 108, 138, 0.06);
+  border-radius: 9999px;
+  margin: 10px 0;
+}
+
+.sidebar-scroll-left::-webkit-scrollbar-thumb {
+  background-color: #016C8A;
+  border-radius: 9999px;
+}
+
+.sidebar-scroll-left::-webkit-scrollbar-thumb:hover {
+  background-color: #01556D;
+}
+
+.sidebar-content-ltr {
+  direction: ltr;
+}
+
+/* Header Brand Logo Animation (from apeks-reference / variant-2) */
+@keyframes brand-part-in {
+  from {
+    opacity: 0;
+    transform: translateX(-60%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes brand-first-in {
+  from {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.svg-anim-svg {
+  display: block;
+  overflow: visible;
+}
+
+.nav-logo-anim .svg-p {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brand-part-in 0.75s cubic-bezier(0.2, 0.75, 0.2, 1) calc(320ms + var(--i, 0) * 110ms) both;
+}
+
+.nav-logo-anim .svg-p:first-of-type {
+  animation: brand-first-in 0.6s cubic-bezier(0.2, 0.75, 0.2, 1) 120ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-logo-anim .svg-p {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+

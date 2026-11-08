@@ -11,8 +11,11 @@ const categories = [
   { id: 'all', name: 'Все товары' },
   { id: 'gnss', name: 'ГНСС-приёмники', rawName: 'ГНСС-приёмники' },
   { id: 'controllers', name: 'Контроллеры и планшеты', rawName: 'Контроллеры и планшеты' },
-  { id: 'software', name: 'Полевое ПО', rawName: 'Полевое ПО' },
-  { id: 'radio', name: 'Радиосвязь', rawName: 'Радиосвязь' }
+  { id: 'total-stations', name: 'Электронные тахеометры', rawName: 'Электронные тахеометры' },
+  { id: 'levels', name: 'Нивелиры и уровни', rawName: 'Нивелиры и уровни' },
+  { id: 'radio', name: 'Радиосвязь', rawName: 'Радиосвязь' },
+  { id: 'accessories', name: 'Аксессуары', rawName: 'Аксессуары' },
+  { id: 'software', name: 'Полевое ПО', rawName: 'Полевое ПО' }
 ];
 
 const selectedCategory = ref('all');
@@ -20,10 +23,27 @@ const searchQuery = ref('');
 const priceMin = ref(null);
 const priceMax = ref(null);
 const selectedManufacturers = ref([]);
-const filterLaser = ref(false);
-const filterCamera = ref(false);
 const filterImu = ref(false);
-const filterRadio = ref(false);
+const filterLaser = ref(false);
+const filterCameraAr = ref(false);
+const filterCameraVr = ref(false);
+const filterRadio2W = ref(false);
+const filterRadio5W = ref(false);
+const filterController = ref(false);
+const filterTablet = ref(false);
+const filterRtkModule = ref(false);
+
+// Software filters
+const filterSwGnss = ref(false);
+const filterSwTacheometer = ref(false);
+const filterSwPostProcessing = ref(false);
+const filterSwOther = ref(false);
+
+// Radio filters
+const filterRadioModem = ref(false);
+const filterRadioAntenna = ref(false);
+const filterRadioOther = ref(false);
+
 const filterInStock = ref(false);
 const sortBy = ref('default');
 
@@ -32,15 +52,31 @@ const showMobileFilters = ref(false);
 // Initialize from route query
 function initFromQuery() {
   if (route.query.category) {
-    const qCat = String(route.query.category).toLowerCase().replace(/ё/g, 'е');
-    const found = categories.find(c => 
-      c.id.toLowerCase() === qCat || 
-      (c.rawName && c.rawName.toLowerCase().replace(/ё/g, 'е') === qCat)
-    );
-    if (found) {
-      selectedCategory.value = found.id;
+    const qCat = String(route.query.category).toLowerCase().replace(/ё/g, 'е').replace(/\+/g, ' ');
+    if (qCat === 'software' || qCat.includes('программ') || qCat.includes('по')) {
+      selectedCategory.value = 'software';
+    } else if (qCat === 'radio' || qCat.includes('радио') || qCat.includes('модем') || qCat.includes('периф')) {
+      selectedCategory.value = 'radio';
+    } else if (qCat === 'controllers' || qCat.includes('контролл') || qCat.includes('планшет')) {
+      selectedCategory.value = 'controllers';
+    } else if (qCat === 'total-stations' || qCat.includes('тахеометр')) {
+      selectedCategory.value = 'total-stations';
+    } else if (qCat === 'levels' || qCat.includes('нивелир') || qCat.includes('уровен') || qCat.includes('уровн')) {
+      selectedCategory.value = 'levels';
+    } else if (qCat === 'accessories' || qCat.includes('аксессуар')) {
+      selectedCategory.value = 'accessories';
+    } else if (qCat === 'gnss' || qCat.includes('гнсс') || qCat.includes('приемник')) {
+      selectedCategory.value = 'gnss';
     } else {
-      selectedCategory.value = 'all';
+      const found = categories.find(c => 
+        c.id.toLowerCase() === qCat || 
+        (c.rawName && c.rawName.toLowerCase().replace(/ё/g, 'е') === qCat)
+      );
+      if (found) {
+        selectedCategory.value = found.id;
+      } else {
+        selectedCategory.value = 'all';
+      }
     }
   } else {
     selectedCategory.value = 'all';
@@ -62,8 +98,60 @@ watch(() => route.query, () => {
   initFromQuery();
 });
 
+watch(selectedCategory, (newCat) => {
+  if (newCat !== 'gnss') {
+    filterImu.value = false;
+    filterLaser.value = false;
+    filterCameraAr.value = false;
+    filterCameraVr.value = false;
+    filterRadio2W.value = false;
+    filterRadio5W.value = false;
+  }
+  if (newCat !== 'controllers') {
+    filterController.value = false;
+    filterTablet.value = false;
+    filterRtkModule.value = false;
+  }
+  if (newCat !== 'software') {
+    filterSwGnss.value = false;
+    filterSwTacheometer.value = false;
+    filterSwPostProcessing.value = false;
+    filterSwOther.value = false;
+  }
+  if (newCat !== 'radio') {
+    filterRadioModem.value = false;
+    filterRadioAntenna.value = false;
+    filterRadioOther.value = false;
+  }
+});
+
 function selectCategory(id) {
   selectedCategory.value = id;
+  // Clear category-specific flags when switching categories to avoid unintended empty results
+  if (id !== 'controllers') {
+    filterController.value = false;
+    filterTablet.value = false;
+    filterRtkModule.value = false;
+  }
+  if (id !== 'gnss' && id !== 'all') {
+    filterImu.value = false;
+    filterLaser.value = false;
+    filterCameraAr.value = false;
+    filterCameraVr.value = false;
+    filterRadio2W.value = false;
+    filterRadio5W.value = false;
+  }
+  if (id !== 'software') {
+    filterSwGnss.value = false;
+    filterSwTacheometer.value = false;
+    filterSwPostProcessing.value = false;
+    filterSwOther.value = false;
+  }
+  if (id !== 'radio') {
+    filterRadioModem.value = false;
+    filterRadioAntenna.value = false;
+    filterRadioOther.value = false;
+  }
   router.replace({
     path: '/catalog',
     query: {
@@ -88,10 +176,22 @@ function resetFilters() {
   priceMin.value = null;
   priceMax.value = null;
   selectedManufacturers.value = [];
-  filterLaser.value = false;
-  filterCamera.value = false;
   filterImu.value = false;
-  filterRadio.value = false;
+  filterLaser.value = false;
+  filterCameraAr.value = false;
+  filterCameraVr.value = false;
+  filterRadio2W.value = false;
+  filterRadio5W.value = false;
+  filterController.value = false;
+  filterTablet.value = false;
+  filterRtkModule.value = false;
+  filterSwGnss.value = false;
+  filterSwTacheometer.value = false;
+  filterSwPostProcessing.value = false;
+  filterSwOther.value = false;
+  filterRadioModem.value = false;
+  filterRadioAntenna.value = false;
+  filterRadioOther.value = false;
   filterInStock.value = false;
   sortBy.value = 'default';
   router.replace({ path: '/catalog' });
@@ -104,10 +204,22 @@ const hasActiveFilters = computed(() => {
     priceMin.value !== null && priceMin.value !== '' ||
     priceMax.value !== null && priceMax.value !== '' ||
     selectedManufacturers.value.length > 0 ||
-    filterLaser.value ||
-    filterCamera.value ||
     filterImu.value ||
-    filterRadio.value ||
+    filterLaser.value ||
+    filterCameraAr.value ||
+    filterCameraVr.value ||
+    filterRadio2W.value ||
+    filterRadio5W.value ||
+    filterController.value ||
+    filterTablet.value ||
+    filterRtkModule.value ||
+    filterSwGnss.value ||
+    filterSwTacheometer.value ||
+    filterSwPostProcessing.value ||
+    filterSwOther.value ||
+    filterRadioModem.value ||
+    filterRadioAntenna.value ||
+    filterRadioOther.value ||
     filterInStock.value
   );
 });
@@ -149,11 +261,48 @@ const filteredProducts = computed(() => {
       if (p.price > Number(priceMax.value)) return false;
     }
 
-    // Feature flags
-    if (filterLaser.value && !p.hasLaser) return false;
-    if (filterCamera.value && !p.hasCamera) return false;
-    if (filterImu.value && !p.hasImu) return false;
-    if (filterRadio.value && !p.hasRadio) return false;
+    // Feature flags (GNSS)
+    if (selectedCategory.value === 'gnss') {
+      if (filterImu.value && !p.hasImu) return false;
+      if (filterLaser.value && !p.hasLaser) return false;
+      if (filterCameraAr.value && !p.hasCameraAr) return false;
+      if (filterCameraVr.value && !p.hasCameraVr) return false;
+      if (filterRadio2W.value && !p.hasRadio2W) return false;
+      if (filterRadio5W.value && !p.hasRadio5W) return false;
+    }
+
+    // Feature flags (Controllers & Tablets)
+    if (selectedCategory.value === 'controllers') {
+      if (filterController.value || filterTablet.value) {
+        const matchDeviceType = (filterController.value && p.isController) || (filterTablet.value && p.isTablet);
+        if (!matchDeviceType) return false;
+      }
+      if (filterRtkModule.value && !p.hasRtkModule) return false;
+    }
+
+    // Feature flags (Software)
+    if (selectedCategory.value === 'software') {
+      if (filterSwGnss.value || filterSwTacheometer.value || filterSwPostProcessing.value || filterSwOther.value) {
+        const matchSw = 
+          (filterSwGnss.value && p.isSwGnss) ||
+          (filterSwTacheometer.value && p.isSwTacheometer) ||
+          (filterSwPostProcessing.value && p.isSwPostProcessing) ||
+          (filterSwOther.value && p.isSwOther);
+        if (!matchSw) return false;
+      }
+    }
+
+    // Feature flags (Radio)
+    if (selectedCategory.value === 'radio') {
+      if (filterRadioModem.value || filterRadioAntenna.value || filterRadioOther.value) {
+        const matchRadio = 
+          (filterRadioModem.value && p.isRadioModem) ||
+          (filterRadioAntenna.value && p.isRadioAntenna) ||
+          (filterRadioOther.value && p.isRadioOther);
+        if (!matchRadio) return false;
+      }
+    }
+
     if (filterInStock.value && !p.inStock) return false;
 
     return true;
@@ -293,128 +442,276 @@ function goToProduct(slug) {
           <!-- LEFT SIDEBAR: FILTERS (Sticky on scroll) -->
           <aside 
             :class="[
-              'lg:col-span-3 space-y-6 lg:sticky lg:top-28 self-start max-h-[calc(100vh-8rem)] overflow-y-auto no-scrollbar',
+              'lg:col-span-3 lg:sticky lg:top-28 self-start',
               showMobileFilters ? 'block' : 'hidden lg:block'
             ]"
           >
-            <div class="p-5 border border-neutral-border rounded-xl bg-white space-y-6">
-              
-              <!-- Filter Header -->
-              <div class="flex items-center justify-between pb-3 border-b border-neutral-border">
-                <span class="text-sm font-bold text-neutral-dark">Фильтры</span>
-                <button 
-                  v-if="hasActiveFilters" 
-                  @click="resetFilters" 
-                  class="text-xs text-brand hover:underline font-medium cursor-pointer"
-                >
-                  Сбросить всё
-                </button>
-              </div>
-
-              <!-- Price Filter -->
-              <div class="space-y-2">
-                <label class="text-xs font-bold text-neutral-dark block">
-                  Цена, ₽
-                </label>
-                <div class="grid grid-cols-2 gap-2">
-                  <input 
-                    v-model.number="priceMin" 
-                    type="number" 
-                    placeholder="от 25 000" 
-                    class="w-full h-8 px-2.5 text-xs bg-[#F4F6F9] border border-neutral-border rounded text-neutral-dark focus:bg-white focus:border-brand focus:outline-none transition"
-                  />
-                  <input 
-                    v-model.number="priceMax" 
-                    type="number" 
-                    placeholder="до 250 000" 
-                    class="w-full h-8 px-2.5 text-xs bg-[#F4F6F9] border border-neutral-border rounded text-neutral-dark focus:bg-white focus:border-brand focus:outline-none transition"
-                  />
+            <div class="sidebar-scroll-left max-h-[75vh] lg:max-h-[calc(100vh-8.5rem)] overflow-y-auto p-5 pl-3 border border-neutral-border rounded-xl bg-white shadow-xs">
+              <div class="sidebar-content-ltr space-y-6 pl-2">
+                
+                <!-- Filter Header -->
+                <div class="flex items-center justify-between pb-3 border-b border-neutral-border">
+                  <span class="text-sm font-bold text-neutral-dark">Фильтры</span>
+                  <button 
+                    v-if="hasActiveFilters" 
+                    @click="resetFilters" 
+                    class="text-xs text-brand hover:underline font-medium cursor-pointer"
+                  >
+                    Сбросить всё
+                  </button>
                 </div>
-              </div>
 
-              <!-- Manufacturer Filter -->
-              <div class="space-y-2.5 pt-2 border-t border-neutral-border/60">
-                <span class="text-xs font-bold text-neutral-dark block">
-                  Производитель
-                </span>
-                <div class="space-y-1.5">
+                <!-- Category Filter -->
+                <div class="space-y-2.5">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Категория оборудования
+                  </span>
+                  <div class="space-y-1.5">
+                    <label 
+                      v-for="cat in categories.filter(c => c.id !== 'all')" 
+                      :key="cat.id" 
+                      class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none hover:text-brand transition"
+                    >
+                      <input 
+                        type="checkbox" 
+                        :checked="selectedCategory === cat.id" 
+                        @change="selectCategory(selectedCategory === cat.id ? 'all' : cat.id)" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>{{ cat.name }}</span>
+                      <span class="text-neutral-muted ml-auto text-[11px]">({{ getCategoryCount(cat.id) }})</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Price Filter -->
+                <div class="space-y-2 pt-2 border-t border-neutral-border/60">
+                  <label class="text-xs font-bold text-neutral-dark block">
+                    Цена, ₽
+                  </label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <input 
+                      v-model.number="priceMin" 
+                      type="number" 
+                      placeholder="от 25 000" 
+                      class="w-full h-8 px-2.5 text-xs bg-[#F4F6F9] border border-neutral-border rounded text-neutral-dark focus:bg-white focus:border-brand focus:outline-none transition"
+                    />
+                    <input 
+                      v-model.number="priceMax" 
+                      type="number" 
+                      placeholder="до 250 000" 
+                      class="w-full h-8 px-2.5 text-xs bg-[#F4F6F9] border border-neutral-border rounded text-neutral-dark focus:bg-white focus:border-brand focus:outline-none transition"
+                    />
+                  </div>
+                </div>
+
+                <!-- Manufacturer Filter -->
+                <div class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Производитель
+                  </span>
+                  <div class="space-y-1.5">
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        value="APEKS" 
+                        :checked="selectedManufacturers.includes('APEKS')" 
+                        @change="toggleManufacturer('APEKS')" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>APEKS</span>
+                      <span class="text-neutral-muted ml-auto text-[11px]">({{ getManufacturerCount('APEKS') }})</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Technology & Hardware Options (GNSS) -->
+                <div v-if="selectedCategory === 'gnss'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Технологии (для GNSS)
+                  </span>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterImu" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Компенсация наклона (IMU)</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterLaser" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Лазерный дальномер</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterCameraAr" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Камера AR</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterCameraVr" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Камера VR / фотограмметрия</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRadio2W" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>УКВ радиомодем 2 ватт</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRadio5W" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>УКВ радиомодем 5 ватт</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Controller & Tablet Options -->
+                <div v-if="selectedCategory === 'controllers'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Тип и оснащение
+                  </span>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterController" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Полевой контроллер</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterTablet" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Полевой планшет</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRtkModule" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>RTK модуль</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Software Options -->
+                <div v-if="selectedCategory === 'software'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Назначение ПО
+                  </span>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterSwGnss" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Полевое ПО для ГНСС</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterSwTacheometer" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Полевое ПО для тахеометров</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterSwPostProcessing" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>ПО для постобработки</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterSwOther" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Прочее ПО</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Radio Options -->
+                <div v-if="selectedCategory === 'radio'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                  <span class="text-xs font-bold text-neutral-dark block">
+                    Тип оборудования
+                  </span>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRadioModem" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Радиомодемы</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRadioAntenna" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>УКВ радиоантенны</span>
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        v-model="filterRadioOther" 
+                        class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
+                      />
+                      <span>Прочие периферийные устройства</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Availability Filter -->
+                <div class="space-y-2 pt-2 border-t border-neutral-border/60">
                   <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
                     <input 
                       type="checkbox" 
-                      value="APEKS" 
-                      :checked="selectedManufacturers.includes('APEKS')" 
-                      @change="toggleManufacturer('APEKS')" 
+                      v-model="filterInStock" 
                       class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
                     />
-                    <span>APEKS</span>
-                    <span class="text-neutral-muted ml-auto text-[11px]">({{ getManufacturerCount('APEKS') }})</span>
+                    <span>Только в наличии</span>
                   </label>
                 </div>
-              </div>
 
-              <!-- Technology & Hardware Options -->
-              <div class="space-y-2.5 pt-2 border-t border-neutral-border/60">
-                <span class="text-xs font-bold text-neutral-dark block">
-                  Технологии (для GNSS)
-                </span>
-                <div class="space-y-2">
-                  <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
-                    <input 
-                      type="checkbox" 
-                      v-model="filterImu" 
-                      class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
-                    />
-                    <span>Компенсация наклона (IMU)</span>
-                  </label>
-                  <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
-                    <input 
-                      type="checkbox" 
-                      v-model="filterLaser" 
-                      class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
-                    />
-                    <span>Лазерный дальномер</span>
-                  </label>
-                  <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
-                    <input 
-                      type="checkbox" 
-                      v-model="filterCamera" 
-                      class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
-                    />
-                    <span>Камера (AR / фотограмметрия)</span>
-                  </label>
-                  <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
-                    <input 
-                      type="checkbox" 
-                      v-model="filterRadio" 
-                      class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
-                    />
-                    <span>УКВ радиомодем</span>
-                  </label>
+                <!-- Reset Button at bottom of sidebar -->
+                <div v-if="hasActiveFilters" class="pt-2">
+                  <button 
+                    @click="resetFilters" 
+                    class="w-full py-2 rounded-lg border border-neutral-border hover:border-neutral-muted text-xs text-neutral-dark font-medium transition cursor-pointer"
+                  >
+                    Очистить фильтры
+                  </button>
                 </div>
-              </div>
 
-              <!-- Availability Filter -->
-              <div class="space-y-2 pt-2 border-t border-neutral-border/60">
-                <label class="flex items-center gap-2 text-xs text-neutral-dark cursor-pointer select-none">
-                  <input 
-                    type="checkbox" 
-                    v-model="filterInStock" 
-                    class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
-                  />
-                  <span>Только в наличии</span>
-                </label>
               </div>
-
-              <!-- Reset Button at bottom of sidebar -->
-              <div v-if="hasActiveFilters" class="pt-2">
-                <button 
-                  @click="resetFilters" 
-                  class="w-full py-2 rounded-lg border border-neutral-border hover:border-neutral-muted text-xs text-neutral-dark font-medium transition cursor-pointer"
-                >
-                  Очистить фильтры
-                </button>
-              </div>
-
             </div>
           </aside>
 
@@ -470,22 +767,6 @@ function goToProduct(slug) {
               </span>
 
               <span 
-                v-if="filterLaser" 
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
-              >
-                <span>Лазер</span>
-                <button @click="filterLaser = false" class="hover:text-brand cursor-pointer">×</button>
-              </span>
-
-              <span 
-                v-if="filterCamera" 
-                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
-              >
-                <span>Камера</span>
-                <button @click="filterCamera = false" class="hover:text-brand cursor-pointer">×</button>
-              </span>
-
-              <span 
                 v-if="filterImu" 
                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
               >
@@ -494,11 +775,123 @@ function goToProduct(slug) {
               </span>
 
               <span 
-                v-if="filterRadio" 
+                v-if="filterLaser" 
                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
               >
-                <span>УКВ</span>
-                <button @click="filterRadio = false" class="hover:text-brand cursor-pointer">×</button>
+                <span>Лазер</span>
+                <button @click="filterLaser = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterCameraAr" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Камера AR</span>
+                <button @click="filterCameraAr = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterCameraVr" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Камера VR</span>
+                <button @click="filterCameraVr = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRadio2W" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>УКВ 2 Вт</span>
+                <button @click="filterRadio2W = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRadio5W" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>УКВ 5 Вт</span>
+                <button @click="filterRadio5W = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterController" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Контроллер</span>
+                <button @click="filterController = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterTablet" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Планшет</span>
+                <button @click="filterTablet = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRtkModule" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>RTK модуль</span>
+                <button @click="filterRtkModule = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterSwGnss" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Полевое ПО для ГНСС</span>
+                <button @click="filterSwGnss = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterSwTacheometer" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Полевое ПО для тахеометров</span>
+                <button @click="filterSwTacheometer = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterSwPostProcessing" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>ПО для постобработки</span>
+                <button @click="filterSwPostProcessing = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterSwOther" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Прочее ПО</span>
+                <button @click="filterSwOther = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRadioModem" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Радиомодемы</span>
+                <button @click="filterRadioModem = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRadioAntenna" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>УКВ радиоантенны</span>
+                <button @click="filterRadioAntenna = false" class="hover:text-brand cursor-pointer">×</button>
+              </span>
+
+              <span 
+                v-if="filterRadioOther" 
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
+              >
+                <span>Прочие периферийные устройства</span>
+                <button @click="filterRadioOther = false" class="hover:text-brand cursor-pointer">×</button>
               </span>
 
               <span 

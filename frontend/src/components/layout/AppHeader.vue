@@ -1,14 +1,64 @@
 <script setup>
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useCart } from '../../composables/useCart.js';
 
 const router = useRouter();
+const route = useRoute();
+const { totalCount, toggleCart } = useCart();
+
+const isCatalogOpen = ref(false);
+const catalogContainerRef = ref(null);
+
+function toggleCatalog(event) {
+  if (event) {
+    event.stopPropagation();
+  }
+  isCatalogOpen.value = !isCatalogOpen.value;
+}
+
+function closeCatalog() {
+  isCatalogOpen.value = false;
+}
+
+function handleClickOutside(event) {
+  if (isCatalogOpen.value && catalogContainerRef.value && !catalogContainerRef.value.contains(event.target)) {
+    isCatalogOpen.value = false;
+  }
+}
+
+function handleKeydown(event) {
+  if (event.key === 'Escape') {
+    isCatalogOpen.value = false;
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('keydown', handleKeydown);
+  window.toggleCatalogDropdown = toggleCatalog;
+  window.closeCatalogDropdown = closeCatalog;
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('keydown', handleKeydown);
+});
+
+watch(() => route.fullPath, () => {
+  isCatalogOpen.value = false;
+});
 
 function toggleDropdown(id) {
+  if (id === 'catalogDropdown') {
+    toggleCatalog();
+    return;
+  }
   if (window.toggleDropdown) window.toggleDropdown(id);
 }
 
 function toggleCartDrawer() {
-  if (window.toggleCartDrawer) window.toggleCartDrawer();
+  toggleCart();
 }
 
 function toggleMobileMenu() {
@@ -92,15 +142,20 @@ function handleSearch(e) {
 
           <!-- Cart Icon -->
           <button 
-            @click="toggleCartDrawer" 
+            @click="toggleCart" 
             class="relative text-neutral-dark hover:text-brand transition p-2 focus:outline-none rounded-lg hover:bg-neutral-bg cursor-pointer" 
             title="Корзина"
+            aria-label="Корзина"
           >
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
-            <span id="cartCountBadge" class="hidden absolute top-0.5 right-0.5 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
-              0
+            <span 
+              v-if="totalCount > 0"
+              id="cartCountBadge" 
+              class="absolute top-0.5 right-0.5 bg-brand text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-xs"
+            >
+              {{ totalCount }}
             </span>
           </button>
 
@@ -124,11 +179,14 @@ function handleSearch(e) {
     <nav class="hidden md:block bg-white border-b border-neutral-border">
       <div class="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-10">
         
-        <!-- Left: 'Каталог' button -->
-        <div class="relative">
+        <!-- Left: 'Каталог' button with click-outside support -->
+        <div class="relative" ref="catalogContainerRef">
           <button 
-            @click="toggleDropdown('catalogDropdown')" 
+            type="button"
+            @click="toggleCatalog" 
             class="flex items-center gap-2.5 font-bold text-sm text-neutral-dark hover:text-brand transition py-1 focus:outline-none cursor-pointer"
+            :aria-expanded="isCatalogOpen"
+            aria-haspopup="true"
           >
             <svg class="w-5 h-5 text-[#016C8A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -137,15 +195,22 @@ function handleSearch(e) {
           </button>
 
           <!-- Dropdown Menu -->
-          <div id="catalogDropdown" class="hidden absolute left-0 top-full mt-1 w-64 bg-white text-neutral-dark rounded-md shadow-xl border border-neutral-border py-2 z-50">
-            <router-link to="/catalog?category=gnss" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">ГНСС-приёмники RTK</router-link>
-            <router-link to="/catalog?category=controllers" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">Полевые контроллеры и планшеты</router-link>
-            <router-link to="/catalog?category=total-stations" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">Электронные тахеометры</router-link>
-            <router-link to="/catalog?category=levels" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">Оптические нивелиры</router-link>
-            <router-link to="/catalog?category=radio" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">Радиосвязь и модемы</router-link>
-            <router-link to="/catalog?category=sensors" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand">GNSS-датчики и антенны</router-link>
+          <div 
+            id="catalogDropdown" 
+            :class="[
+              'absolute left-0 top-full mt-1 w-64 bg-white text-neutral-dark rounded-md shadow-xl border border-neutral-border py-2 z-50',
+              isCatalogOpen ? 'block' : 'hidden'
+            ]"
+          >
+            <router-link to="/catalog?category=gnss" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">ГНСС-приёмники</router-link>
+            <router-link to="/catalog?category=controllers" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Полевые контроллеры и планшеты</router-link>
+            <router-link to="/catalog?category=total-stations" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Электронные тахеометры</router-link>
+            <router-link to="/catalog?category=levels" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Нивелиры и уровни</router-link>
+            <router-link to="/catalog?category=radio" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Радиомодемы и периферия</router-link>
+            <router-link to="/catalog?category=accessories" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Аксессуары</router-link>
+            <router-link to="/catalog?category=software" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Программное обеспечение</router-link>
             <div class="border-t border-neutral-border my-1"></div>
-            <router-link to="/catalog" @click="toggleDropdown('catalogDropdown')" class="block px-4 py-2 text-xs font-bold text-brand hover:bg-brand-light">Весь каталог оборудования &rarr;</router-link>
+            <router-link to="/catalog" @click="closeCatalog" class="block px-4 py-2 text-xs font-bold text-brand hover:bg-brand-light transition-colors">Весь каталог оборудования &rarr;</router-link>
           </div>
         </div>
 

@@ -11,6 +11,23 @@ const product = computed(() => {
   return getProductBySlug(route.params.slug) || products[0];
 });
 
+const categorySlugMap = {
+  'ГНСС-приёмники': 'gnss',
+  'Контроллеры и планшеты': 'controllers',
+  'Полевые контроллеры и планшеты': 'controllers',
+  'Электронные тахеометры': 'total-stations',
+  'Нивелиры и уровни': 'levels',
+  'Оптические нивелиры': 'levels',
+  'Радиосвязь': 'radio',
+  'Аксессуары': 'accessories',
+  'Полевое ПО': 'software'
+};
+
+const categorySlug = computed(() => {
+  if (!product.value || !product.value.category) return '';
+  return categorySlugMap[product.value.category] || '';
+});
+
 // Related products from the series
 const relatedProducts = computed(() => {
   return products.filter(p => p.slug !== product.value.slug);
@@ -140,6 +157,15 @@ watch(
         <router-link to="/catalog" class="hover:text-brand transition">
           Каталог
         </router-link>
+        <template v-if="product.category">
+          <span class="text-neutral-300">/</span>
+          <router-link 
+            :to="{ path: '/catalog', query: categorySlug ? { category: categorySlug } : undefined }" 
+            class="hover:text-brand transition"
+          >
+            {{ product.category }}
+          </router-link>
+        </template>
         <span class="text-neutral-300">/</span>
         <span class="text-neutral-dark font-medium">{{ product.title }}</span>
       </nav>

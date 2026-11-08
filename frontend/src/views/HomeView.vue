@@ -274,58 +274,70 @@ onUnmounted(() => {
           </router-link>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          <router-link to="/catalog" class="col-span-2 md:hidden group p-4 rounded-xl border border-neutral-border hover:border-brand bg-white flex flex-row items-center shadow-xs transition min-h-[110px]">
-            <div class="w-[130px] h-[86px] shrink-0 flex items-center justify-center">
-              <img src="assets/image_2026-10-22_18-56-56.png" alt="Смотреть все категории" class="max-h-full max-w-full object-contain group-hover:scale-105 transition">
+        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 sm:gap-4">
+          <!-- 1. Смотреть все (только для мобильных устройств, в верхнем ряду слева, одинакового размера с остальными) -->
+          <router-link to="/catalog" class="md:hidden group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+            <div class="h-28 flex items-center justify-center p-2">
+              <img src="assets/image_2026-10-22_18-56-56.png" alt="Смотреть все" class="max-h-[70px] w-auto object-contain group-hover:scale-105 transition">
             </div>
-            <div class="flex-1 min-w-0 flex items-center justify-center text-center px-2">
-              <h3 class="text-base font-bold text-neutral-dark group-hover:text-brand transition text-center">Смотреть все</h3>
-            </div>
+            <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Смотреть все</h3>
           </router-link>
           
-          <router-link to="/catalog?category=ГНСС-приёмники" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 2. ГНСС-приемники -->
+          <router-link to="/catalog?category=ГНСС-приёмники" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
               <img src="assets/ap40_laser.png" alt="ГНСС-приемники" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">ГНСС-приемники</h3>
           </router-link>
 
-          <router-link to="/catalog?category=ГНСС-приёмники" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 3. Нивелиры и уровни -->
+          <router-link to="/catalog?category=levels" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/max5_base.png" alt="База-ровер" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/3-Photoroom (1).png" alt="Нивелиры и уровни" class="max-h-20 w-auto object-contain group-hover:scale-105 transition">
             </div>
-            <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">База-ровер</h3>
+            <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Нивелиры и уровни</h3>
           </router-link>
 
-          <router-link to="/catalog?category=Контроллеры и планшеты" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 4. Контроллеры -->
+          <router-link to="/catalog?category=Контроллеры и планшеты" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
               <img src="assets/cs3i_controller.png" alt="Контроллеры" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Контроллеры</h3>
           </router-link>
 
-          <router-link to="/catalog?category=Тахеометры" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 5. Тахеометры -->
+          <router-link to="/catalog?category=Тахеометры" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
               <img src="assets/total_station.jpg" alt="Тахеометры" class="max-h-24 w-auto object-contain group-hover:scale-105 transition rounded">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Тахеометры</h3>
           </router-link>
 
-          <router-link to="/catalog?category=Радиосвязь" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 6. Радиосвязь -->
+          <router-link to="/catalog?category=Радиосвязь" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
               <img src="assets/adl35_radio.png" alt="Радиосвязь" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Радиосвязь</h3>
           </router-link>
 
-          <router-link to="/catalog?category=GNSS-датчики и антенны" class="group p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <!-- 7. Аксессуары -->
+          <router-link to="/catalog?category=GNSS-датчики и антенны" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
               <img src="assets/accessories_prism.jpg" alt="Геодезические аксессуары" class="max-h-24 w-auto object-contain group-hover:scale-105 transition rounded">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Аксессуары</h3>
           </router-link>
 
+          <!-- 8. Полевое ПО (для десктопа в ряд справа, для мобильных в нижний ряд справа) -->
+          <router-link to="/catalog?category=Полевое ПО" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+            <div class="h-28 flex items-center justify-center p-2">
+              <img src="assets/client_title_software_apeksurv_cut.png" alt="Полевое ПО" class="max-h-[72px] md:max-h-[76px] w-auto object-contain group-hover:scale-105 transition">
+            </div>
+            <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Полевое ПО</h3>
+          </router-link>
         </div>
 
       </div>
@@ -357,19 +369,19 @@ onUnmounted(() => {
 
           <div class="p-6 rounded-lg border border-neutral-border bg-white flex flex-col justify-between shadow-xs">
             <div>
-              <h3 class="font-bold text-sm text-neutral-dark">Поверка приборов</h3>
+              <h3 class="font-bold text-sm text-neutral-dark">Сервисное обслуживание</h3>
               <p class="text-xs text-neutral-muted mt-2 leading-relaxed">
-                Периодическая и первичная поверка с внесением во ФГИС «АРШИН» за 2 рабочих дня.
+                Ремонт и обслуживание геодезического оборудования любой сложности.
               </p>
             </div>
-            <button @click="scrollToContacts('Заявка на поверку оборудования')" class="mt-4 text-xs font-semibold text-brand hover:underline text-left cursor-pointer">
-              Сдать на поверку
+            <button @click="scrollToContacts('Заявка на сервисное обслуживание')" class="mt-4 text-xs font-semibold text-brand hover:underline text-left cursor-pointer">
+              Сдать на диагностику
             </button>
           </div>
 
           <div class="p-6 rounded-lg border border-neutral-border bg-white flex flex-col justify-between shadow-xs">
             <div>
-              <h3 class="font-bold text-sm text-neutral-dark">Trade-In оборудования</h3>
+              <h3 class="font-bold text-sm text-neutral-dark">Выгодный Trade-In</h3>
               <p class="text-xs text-neutral-muted mt-2 leading-relaxed">
                 Обмен устаревших приборов любых брендов со скидкой на новое оборудование APEKS.
               </p>
@@ -381,12 +393,12 @@ onUnmounted(() => {
 
           <div class="p-6 rounded-lg border border-neutral-border bg-white flex flex-col justify-between shadow-xs">
             <div>
-              <h3 class="font-bold text-sm text-neutral-dark">Лизинг и рассрочка</h3>
+              <h3 class="font-bold text-sm text-neutral-dark">Кредит и рассрочка</h3>
               <p class="text-xs text-neutral-muted mt-2 leading-relaxed">
-                Программы для юридических лиц и ИП с первоначальным взносом от 0% и вычетом НДС.
+                Программы для ИП, физических и юридических лиц
               </p>
             </div>
-            <button @click="scrollToContacts('Заявка на расчет лизинга')" class="mt-4 text-xs font-semibold text-brand hover:underline text-left cursor-pointer">
+            <button @click="scrollToContacts('Заявка на кредит и рассрочку')" class="mt-4 text-xs font-semibold text-brand hover:underline text-left cursor-pointer">
               Рассчитать график
             </button>
           </div>
@@ -402,12 +414,8 @@ onUnmounted(() => {
     <section id="all-products" class="py-12 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-8">
         
-        <div class="mb-8 pb-3 border-b border-neutral-border flex items-center justify-between">
+        <div class="mb-8 pb-3 border-b border-neutral-border">
           <h2 class="text-2xl font-bold text-neutral-dark">Лучшие предложения</h2>
-          <router-link to="/catalog" class="text-xs sm:text-sm font-semibold text-brand hover:text-brand-dark flex items-center gap-1.5 transition">
-            <span>Все товары каталога</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-          </router-link>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -681,6 +689,78 @@ onUnmounted(() => {
     </section>
 
     <!-- ============================================================ -->
+    <!-- 6. ЦЕНТР ЗАГРУЗОК (Инструкции и программное обеспечение)     -->
+    <!-- ============================================================ -->
+    <section id="downloads" class="py-12 bg-white scroll-mt-20 sm:scroll-mt-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-8">
+        
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 pb-3 border-b border-neutral-border">
+          <div>
+            <h2 class="text-2xl font-bold text-neutral-dark">Инструкции и программное обеспечение</h2>
+            <p class="text-xs text-neutral-muted mt-1">Документация, руководства пользователя и актуальные версии прошивок</p>
+          </div>
+          
+          <router-link 
+            to="/catalog?category=software" 
+            class="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline shrink-0"
+          >
+            <span>Все инструкции</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </router-link>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <div class="p-4 rounded-lg bg-white border border-neutral-border flex items-center justify-between shadow-xs">
+            <div>
+              <h4 class="text-xs font-bold text-neutral-dark">ApekSurv Android v2.4.1</h4>
+              <p class="text-[11px] text-neutral-muted mt-0.5">Полевое ПО на русском языке • APK</p>
+            </div>
+            <button 
+              type="button"
+              @click="handleDownload('ApekSurv Android APK')" 
+              class="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition cursor-pointer shadow-xs"
+            >
+              Скачать
+            </button>
+          </div>
+
+          <div class="p-4 rounded-lg bg-white border border-neutral-border flex items-center justify-between shadow-xs">
+            <div>
+              <h4 class="text-xs font-bold text-neutral-dark">Каталог оборудования 2026</h4>
+              <p class="text-[11px] text-neutral-muted mt-0.5">Технические спецификации • PDF</p>
+            </div>
+            <button 
+              type="button"
+              @click="handleDownload('Каталог оборудования 2026 PDF')" 
+              class="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition cursor-pointer shadow-xs"
+            >
+              Скачать
+            </button>
+          </div>
+
+          <div class="p-4 rounded-lg bg-white border border-neutral-border flex items-center justify-between shadow-xs">
+            <div>
+              <h4 class="text-xs font-bold text-neutral-dark">Файлы калибровок ANTEX</h4>
+              <p class="text-[11px] text-neutral-muted mt-0.5">Калибровки фазовых центров • ZIP</p>
+            </div>
+            <button 
+              type="button"
+              @click="handleDownload('Файлы калибровок ANTEX ZIP')" 
+              class="px-3.5 py-1.5 rounded-lg bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition cursor-pointer shadow-xs"
+            >
+              Скачать
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
     <!-- 6.5. НОВОСТИ КОМПАНИИ (Карусель)                              -->
     <!-- ============================================================ -->
     <section id="news" class="py-14 bg-white scroll-mt-20 sm:scroll-mt-24">
@@ -884,7 +964,7 @@ onUnmounted(() => {
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
                   <label class="flex items-start gap-2.5 text-[11px] text-slate-400 cursor-pointer">
                     <input type="checkbox" required class="mt-0.5 rounded border-[#232F42] text-brand focus:ring-0">
-                    <span>Я согласен на обработку персональных данных</span>
+                    <span>Я согласен на обработку моих персональных данных в соответствии с <router-link to="/privacy" class="text-brand hover:underline font-medium transition">политикой конфиденциальности</router-link></span>
                   </label>
                   <button type="submit" class="inline-flex items-center justify-center h-10 px-6 rounded-lg bg-brand hover:bg-[#01556D] text-white font-semibold text-xs tracking-wide transition shadow-md whitespace-nowrap shrink-0 cursor-pointer">
                     Оставить заявку
