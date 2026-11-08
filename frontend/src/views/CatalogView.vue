@@ -448,8 +448,9 @@ function goToProduct(slug) {
               showMobileFilters ? 'block' : 'hidden lg:block'
             ]"
           >
-            <div class="sidebar-filter-scroll max-h-[75vh] lg:max-h-[calc(100vh-8.5rem)] overflow-y-auto p-5 border border-neutral-border rounded-xl bg-white shadow-xs">
-              <div class="sidebar-content-ltr space-y-6">
+            <div class="border border-neutral-border rounded-xl bg-white shadow-xs py-3.5">
+              <div class="sidebar-filter-scroll max-h-[75vh] lg:max-h-[calc(100vh-10rem)] overflow-y-auto px-5">
+                <div class="sidebar-content-ltr space-y-6">
                 
                 <!-- Filter Header -->
                 <div class="flex items-center justify-between pb-3 border-b border-neutral-border">
@@ -715,7 +716,8 @@ function goToProduct(slug) {
 
               </div>
             </div>
-          </aside>
+          </div>
+        </aside>
 
           <!-- RIGHT MAIN: SORTING BAR & PRODUCTS GRID -->
           <main class="lg:col-span-9 space-y-5">
