@@ -118,14 +118,13 @@ function updateNewsDots() {
 const {
   onPhoneKeyDown,
   onPhoneInput,
-  validatePhoneNumber,
-  validateEmailAddress
+  validatePhoneNumber
 } = useFormValidation();
 
 const contactForm = ref({
   name: '',
   phone: '',
-  email: '',
+  city: '',
   model: '',
   comment: '',
   agree: false
@@ -138,13 +137,6 @@ function validateContactPhone() {
   const err = validatePhoneNumber(contactForm.value.phone);
   if (err) contactErrors.value.phone = err;
   else delete contactErrors.value.phone;
-  return !err;
-}
-
-function validateContactEmail() {
-  const err = validateEmailAddress(contactForm.value.email);
-  if (err) contactErrors.value.email = err;
-  else delete contactErrors.value.email;
   return !err;
 }
 
@@ -177,9 +169,6 @@ function submitContactForm(e) {
   const pErr = validatePhoneNumber(contactForm.value.phone);
   if (pErr) errs.phone = pErr;
 
-  const eErr = validateEmailAddress(contactForm.value.email);
-  if (eErr) errs.email = eErr;
-
   if (!contactForm.value.agree) {
     errs.agree = 'Необходимо согласие на обработку персональных данных';
   }
@@ -191,7 +180,7 @@ function submitContactForm(e) {
   contactForm.value = {
     name: '',
     phone: '',
-    email: '',
+    city: '',
     model: '',
     comment: '',
     agree: false
@@ -1053,23 +1042,17 @@ onUnmounted(() => {
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <!-- Email -->
+                  <!-- Region / City (optional) -->
                   <div>
                     <label class="block text-[11px] font-medium text-slate-300 mb-1">
-                      Электронная почта <span class="text-brand">*</span>
+                      Ваш регион / город (необязательно)
                     </label>
                     <input 
-                      v-model="contactForm.email"
-                      @blur="validateContactEmail"
-                      @input="contactErrors.email && validateContactEmail()"
-                      type="email" 
-                      placeholder="alex@mail.ru" 
-                      :class="[
-                        'w-full h-10 px-3.5 rounded-lg bg-[#121824] border text-white text-xs placeholder-slate-500 focus:outline-none transition',
-                        contactErrors.email ? 'border-red-400 focus:border-red-500' : 'border-[#232F42] focus:border-brand'
-                      ]"
+                      v-model="contactForm.city"
+                      type="text" 
+                      placeholder="Например: Москва" 
+                      class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition"
                     />
-                    <p v-if="contactErrors.email" class="text-[11px] text-red-400 mt-1">{{ contactErrors.email }}</p>
                   </div>
 
                   <!-- Interested Model / Service (optional) -->

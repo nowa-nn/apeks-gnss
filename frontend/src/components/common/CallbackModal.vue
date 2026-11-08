@@ -6,10 +6,6 @@ const props = defineProps({
   isOpen: {
     type: Boolean,
     default: false
-  },
-  presetSubject: {
-    type: String,
-    default: ''
   }
 });
 
@@ -18,16 +14,13 @@ const emit = defineEmits(['close']);
 const {
   onPhoneKeyDown,
   onPhoneInput,
-  validatePhoneNumber,
-  validateEmailAddress
+  validatePhoneNumber
 } = useFormValidation();
 
 const form = ref({
   name: '',
   phone: '',
-  email: '',
-  model: '',
-  comment: '',
+  question: '',
   agree: false
 });
 
@@ -38,16 +31,11 @@ const isSuccess = ref(false);
 watch(() => props.isOpen, (val) => {
   if (val) {
     document.body.style.overflow = 'hidden';
-    form.value.model = props.presetSubject || '';
     isSuccess.value = false;
     errors.value = {};
   } else {
     document.body.style.overflow = '';
   }
-});
-
-watch(() => props.presetSubject, (val) => {
-  if (val) form.value.model = val;
 });
 
 function close() {
@@ -73,13 +61,6 @@ function validatePhone() {
   const err = validatePhoneNumber(form.value.phone);
   if (err) errors.value.phone = err;
   else delete errors.value.phone;
-  return !err;
-}
-
-function validateEmail() {
-  const err = validateEmailAddress(form.value.email);
-  if (err) errors.value.email = err;
-  else delete errors.value.email;
   return !err;
 }
 
@@ -111,9 +92,6 @@ function submitCallback() {
   const pErr = validatePhoneNumber(form.value.phone);
   if (pErr) errs.phone = pErr;
 
-  const eErr = validateEmailAddress(form.value.email);
-  if (eErr) errs.email = eErr;
-
   if (!form.value.agree) {
     errs.agree = 'Необходимо согласие на обработку персональных данных';
   }
@@ -128,9 +106,7 @@ function submitCallback() {
     form.value = {
       name: '',
       phone: '',
-      email: '',
-      model: '',
-      comment: '',
+      question: '',
       agree: false
     };
   }, 400);
@@ -148,7 +124,7 @@ function submitCallback() {
     @click.self="close"
   >
     <div 
-      class="bg-white rounded-2xl border border-neutral-border shadow-2xl max-w-lg w-full p-6 sm:p-7 relative overflow-hidden text-neutral-dark animate-in fade-in zoom-in-95 duration-150"
+      class="bg-white rounded-2xl border border-neutral-border shadow-2xl max-w-md w-full p-6 sm:p-7 relative overflow-hidden text-neutral-dark animate-in fade-in zoom-in-95 duration-150"
     >
       <!-- Close Button -->
       <button 
@@ -184,103 +160,69 @@ function submitCallback() {
         </button>
       </div>
 
-      <!-- FORM STATE -->
+      <!-- FORM STATE: 3 FIELDS (Имя, Телефон, Вопрос) + ЧЕКБОКС -->
       <div v-else class="space-y-5">
         <div>
           <h3 class="text-xl font-extrabold text-neutral-dark tracking-tight">Заказать звонок</h3>
           <p class="text-xs text-neutral-muted mt-1">
-            Оставьте ваши контактные данные, и специалист APEKS перезвонит вам
+            Оставьте ваши данные, и специалист APEKS перезвонит вам в течение 15 минут
           </p>
         </div>
 
         <form @submit.prevent="submitCallback" class="space-y-3.5">
-          <!-- Row 1: Name & Phone -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label class="block text-xs font-semibold text-neutral-dark mb-1">
-                Ваше имя <span class="text-brand">*</span>
-              </label>
-              <input 
-                v-model="form.name"
-                type="text" 
-                placeholder="Например: Алексей"
-                :class="[
-                  'w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition',
-                  errors.name ? 'border-red-400 focus:border-red-500' : 'border-neutral-border focus:border-brand'
-                ]"
-              />
-              <p v-if="errors.name" class="text-[11px] text-red-500 mt-1">{{ errors.name }}</p>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-neutral-dark mb-1">
-                Телефон <span class="text-brand">*</span>
-              </label>
-              <input 
-                :value="form.phone"
-                @keydown="handlePhoneKeyDown"
-                @input="handlePhoneInput"
-                @blur="validatePhone"
-                type="tel" 
-                maxlength="18"
-                placeholder="+7 (___) ___-__-__"
-                :class="[
-                  'w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition',
-                  errors.phone ? 'border-red-400 focus:border-red-500' : 'border-neutral-border focus:border-brand'
-                ]"
-              />
-              <p v-if="errors.phone" class="text-[11px] text-red-500 mt-1">{{ errors.phone }}</p>
-            </div>
-          </div>
-
-          <!-- Row 2: Email & Model -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label class="block text-xs font-semibold text-neutral-dark mb-1">
-                Электронная почта <span class="text-brand">*</span>
-              </label>
-              <input 
-                v-model="form.email"
-                @blur="validateEmail"
-                @input="errors.email && validateEmail()"
-                type="email" 
-                placeholder="alex@mail.ru"
-                :class="[
-                  'w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition',
-                  errors.email ? 'border-red-400 focus:border-red-500' : 'border-neutral-border focus:border-brand'
-                ]"
-              />
-              <p v-if="errors.email" class="text-[11px] text-red-500 mt-1">{{ errors.email }}</p>
-            </div>
-
-            <div>
-              <label class="block text-xs font-semibold text-neutral-dark mb-1 truncate">
-                Интересующая модель / услуга (необязательно)
-              </label>
-              <input 
-                v-model="form.model"
-                type="text" 
-                placeholder="Например: AP40 Laser+"
-                class="w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border border-neutral-border focus:border-brand rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition"
-              />
-            </div>
-          </div>
-
-          <!-- Row 3: Question / Comment -->
+          <!-- 1. Имя -->
           <div>
             <label class="block text-xs font-semibold text-neutral-dark mb-1">
-              Ваш вопрос (необязательно)
+              Ваше имя <span class="text-brand">*</span>
+            </label>
+            <input 
+              v-model="form.name"
+              type="text" 
+              placeholder="Например: Алексей"
+              :class="[
+                'w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition',
+                errors.name ? 'border-red-400 focus:border-red-500' : 'border-neutral-border focus:border-brand'
+              ]"
+            />
+            <p v-if="errors.name" class="text-[11px] text-red-500 mt-1">{{ errors.name }}</p>
+          </div>
+
+          <!-- 2. Номер -->
+          <div>
+            <label class="block text-xs font-semibold text-neutral-dark mb-1">
+              Телефон <span class="text-brand">*</span>
+            </label>
+            <input 
+              :value="form.phone"
+              @keydown="handlePhoneKeyDown"
+              @input="handlePhoneInput"
+              @blur="validatePhone"
+              type="tel" 
+              maxlength="18"
+              placeholder="+7 (___) ___-__-__"
+              :class="[
+                'w-full h-10 px-3 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition',
+                errors.phone ? 'border-red-400 focus:border-red-500' : 'border-neutral-border focus:border-brand'
+              ]"
+            />
+            <p v-if="errors.phone" class="text-[11px] text-red-500 mt-1">{{ errors.phone }}</p>
+          </div>
+
+          <!-- 3. Вопрос -->
+          <div>
+            <label class="block text-xs font-semibold text-neutral-dark mb-1">
+              Ваш вопрос <span class="text-neutral-muted font-normal">(необязательно)</span>
             </label>
             <textarea 
-              v-model="form.comment"
-              rows="2" 
-              placeholder="Опишите задачу или требования..."
+              v-model="form.question"
+              rows="3" 
+              placeholder="Опишите интересующую задачу, модель или условия работы..."
               class="w-full p-2.5 text-xs bg-[#F8FAFC] hover:bg-[#EEF1F6] focus:bg-white border border-neutral-border focus:border-brand rounded-lg text-neutral-dark placeholder-neutral-muted focus:outline-none transition resize-none"
             ></textarea>
           </div>
 
-          <!-- Agreement Checkbox -->
-          <div class="pt-1">
+          <!-- Чекбокс согласия -->
+          <div class="pt-0.5">
             <label class="flex items-center gap-2.5 cursor-pointer select-none group">
               <input 
                 v-model="form.agree"
@@ -295,7 +237,7 @@ function submitCallback() {
           </div>
 
           <!-- Submit Button -->
-          <div class="pt-2">
+          <div class="pt-1.5">
             <button 
               type="submit"
               :disabled="isSubmitting"

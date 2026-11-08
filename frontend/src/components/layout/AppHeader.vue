@@ -9,10 +9,8 @@ const route = useRoute();
 const { totalCount, toggleCart } = useCart();
 
 const isCallbackModalOpen = ref(false);
-const callbackPresetSubject = ref('');
 
-function openCallbackModal(subject = 'Заказ обратного звонка') {
-  callbackPresetSubject.value = subject;
+function openCallbackModal() {
   isCallbackModalOpen.value = true;
 }
 
@@ -134,7 +132,7 @@ function handleSearch(e) {
         <div class="flex items-center gap-3 sm:gap-4 lg:gap-5 shrink-0">
           
           <button 
-            @click="openCallbackModal('Заказ обратного звонка')" 
+            @click="openCallbackModal" 
             class="hidden md:inline-flex items-center justify-center h-10 px-6 rounded-lg bg-[#016C8A] hover:bg-[#01556D] text-white border border-[#016C8A] hover:border-[#01556D] text-xs sm:text-[13px] font-semibold transition whitespace-nowrap shadow-xs cursor-pointer"
           >
             Заказать звонок
@@ -240,7 +238,6 @@ function handleSearch(e) {
     <!-- Callback Pop-up Modal -->
     <CallbackModal 
       :is-open="isCallbackModalOpen" 
-      :preset-subject="callbackPresetSubject" 
       @close="isCallbackModalOpen = false" 
     />
   </header>

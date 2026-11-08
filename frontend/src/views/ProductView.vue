@@ -345,7 +345,7 @@ watch(
                 :src="activeImage" 
                 :alt="product.title" 
                 @click="openLightbox"
-                class="max-h-[320px] sm:max-h-[400px] lg:max-h-[440px] w-auto max-w-full object-contain transition-all duration-300 cursor-zoom-in"
+                class="max-h-[320px] sm:max-h-[400px] lg:max-h-[440px] w-auto max-w-full object-contain transition-all duration-300"
               />
 
               <!-- Next Image Arrow (без подложки/кружков) -->
