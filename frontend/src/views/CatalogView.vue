@@ -127,7 +127,7 @@ watch(selectedCategory, (newCat) => {
 
 function selectCategory(id) {
   selectedCategory.value = id;
-  const sb = document.querySelector('.sidebar-scroll-left');
+  const sb = document.querySelector('.sidebar-scroll-clean');
   if (sb) sb.scrollTop = 0;
   // Clear category-specific flags when switching categories to avoid unintended empty results
   if (id !== 'controllers') {
@@ -448,8 +448,8 @@ function goToProduct(slug) {
               showMobileFilters ? 'block' : 'hidden lg:block'
             ]"
           >
-            <div class="sidebar-scroll-left max-h-[75vh] lg:max-h-[calc(100vh-8.5rem)] overflow-y-scroll [scrollbar-gutter:stable] p-5 pl-3 border border-neutral-border rounded-xl bg-white shadow-xs">
-              <div class="sidebar-content-ltr space-y-6 pl-2">
+            <div class="sidebar-scroll-clean max-h-[75vh] lg:max-h-[calc(100vh-8.5rem)] overflow-y-auto p-5 border border-neutral-border rounded-xl bg-white shadow-xs">
+              <div class="space-y-6">
                 
                 <!-- Filter Header -->
                 <div class="flex items-center justify-between pb-3 border-b border-neutral-border">

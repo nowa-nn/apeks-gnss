@@ -762,8 +762,8 @@ function printOrder() {
                 <h3 class="text-base font-bold text-neutral-dark">Ваш заказ</h3>
               </div>
 
-              <!-- Mini Items List -->
-              <div class="max-h-64 overflow-y-auto space-y-3 pr-1">
+              <!-- Mini Items List with comfortable margin from scrollbar -->
+              <div class="max-h-72 sm:max-h-80 overflow-y-auto space-y-3 pr-4 sm:pr-5">
                 <div 
                   v-for="item in cartItems" 
                   :key="item.id || item.title"
