@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
+import { useFormValidation } from '../composables/useFormValidation.js';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -114,19 +115,99 @@ function updateNewsDots() {
   }
 }
 
-function handleOrderSubmit(e) {
-  e.preventDefault();
-  const msg = document.getElementById('formSuccessMsg');
-  if (msg) {
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 7000);
-  }
-  e.target.reset();
+const {
+  onPhoneKeyDown,
+  onPhoneInput,
+  validatePhoneNumber,
+  validateEmailAddress
+} = useFormValidation();
+
+const contactForm = ref({
+  name: '',
+  phone: '',
+  email: '',
+  model: '',
+  comment: '',
+  agree: false
+});
+
+const contactErrors = ref({});
+const contactSuccess = ref(false);
+
+function validateContactPhone() {
+  const err = validatePhoneNumber(contactForm.value.phone);
+  if (err) contactErrors.value.phone = err;
+  else delete contactErrors.value.phone;
+  return !err;
 }
 
-function scrollToContacts(subject) {
-  if (window.scrollToContacts) {
-    window.scrollToContacts(subject);
+function validateContactEmail() {
+  const err = validateEmailAddress(contactForm.value.email);
+  if (err) contactErrors.value.email = err;
+  else delete contactErrors.value.email;
+  return !err;
+}
+
+function handleContactPhoneKeyDown(e) {
+  const phoneRef = {
+    get value() { return contactForm.value.phone; },
+    set value(v) { contactForm.value.phone = v; }
+  };
+  onPhoneKeyDown(e, phoneRef, () => {
+    if (contactErrors.value.phone) validateContactPhone();
+  });
+}
+
+function handleContactPhoneInput(e) {
+  const phoneRef = {
+    get value() { return contactForm.value.phone; },
+    set value(v) { contactForm.value.phone = v; }
+  };
+  onPhoneInput(e, phoneRef, () => {
+    if (contactErrors.value.phone) validateContactPhone();
+  });
+}
+
+function submitContactForm(e) {
+  if (e) e.preventDefault();
+  const errs = {};
+  if (!contactForm.value.name.trim()) {
+    errs.name = 'Укажите ваше имя';
+  }
+  const pErr = validatePhoneNumber(contactForm.value.phone);
+  if (pErr) errs.phone = pErr;
+
+  const eErr = validateEmailAddress(contactForm.value.email);
+  if (eErr) errs.email = eErr;
+
+  if (!contactForm.value.agree) {
+    errs.agree = 'Необходимо согласие на обработку персональных данных';
+  }
+
+  contactErrors.value = errs;
+  if (Object.keys(errs).length > 0) return;
+
+  contactSuccess.value = true;
+  contactForm.value = {
+    name: '',
+    phone: '',
+    email: '',
+    model: '',
+    comment: '',
+    agree: false
+  };
+  setTimeout(() => {
+    contactSuccess.value = false;
+  }, 7000);
+}
+
+function scrollToContacts(presetMessage = '') {
+  const el = document.getElementById('contacts');
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+    if (presetMessage && typeof presetMessage === 'string') {
+      contactForm.value.model = presetMessage;
+    }
   }
 }
 
@@ -141,7 +222,8 @@ onMounted(() => {
   window.scrollNews = scrollNews;
   window.goToNewsSlide = goToNewsSlide;
   window.updateNewsDots = updateNewsDots;
-  window.handleOrderSubmit = handleOrderSubmit;
+  window.handleOrderSubmit = submitContactForm;
+  window.submitContactForm = submitContactForm;
 
   startHeroAutoplay();
 
@@ -929,44 +1011,117 @@ onUnmounted(() => {
             </div>
 
             <div class="lg:col-span-7">
-              <form @submit="handleOrderSubmit" class="space-y-4">
+              <form @submit.prevent="submitContactForm" class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Name -->
                   <div>
-                    <label class="block text-[11px] font-medium text-slate-300 mb-1">Ваше имя *</label>
-                    <input type="text" required placeholder="Например: Алексей" class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition">
+                    <label class="block text-[11px] font-medium text-slate-300 mb-1">
+                      Ваше имя <span class="text-brand">*</span>
+                    </label>
+                    <input 
+                      v-model="contactForm.name"
+                      type="text" 
+                      placeholder="Например: Алексей" 
+                      :class="[
+                        'w-full h-10 px-3.5 rounded-lg bg-[#121824] border text-white text-xs placeholder-slate-500 focus:outline-none transition',
+                        contactErrors.name ? 'border-red-400 focus:border-red-500' : 'border-[#232F42] focus:border-brand'
+                      ]"
+                    />
+                    <p v-if="contactErrors.name" class="text-[11px] text-red-400 mt-1">{{ contactErrors.name }}</p>
                   </div>
+
+                  <!-- Phone -->
                   <div>
-                    <label class="block text-[11px] font-medium text-slate-300 mb-1">Телефон *</label>
-                    <input type="tel" required placeholder="+7 (___) ___-__-__" class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition">
+                    <label class="block text-[11px] font-medium text-slate-300 mb-1">
+                      Телефон <span class="text-brand">*</span>
+                    </label>
+                    <input 
+                      :value="contactForm.phone"
+                      @keydown="handleContactPhoneKeyDown"
+                      @input="handleContactPhoneInput"
+                      @blur="validateContactPhone"
+                      type="tel" 
+                      maxlength="18"
+                      placeholder="+7 (___) ___-__-__" 
+                      :class="[
+                        'w-full h-10 px-3.5 rounded-lg bg-[#121824] border text-white text-xs placeholder-slate-500 focus:outline-none transition',
+                        contactErrors.phone ? 'border-red-400 focus:border-red-500' : 'border-[#232F42] focus:border-brand'
+                      ]"
+                    />
+                    <p v-if="contactErrors.phone" class="text-[11px] text-red-400 mt-1">{{ contactErrors.phone }}</p>
                   </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <!-- Email -->
                   <div>
-                    <label class="block text-[11px] font-medium text-slate-300 mb-1">Ваш регион/город? (необязательно)</label>
-                    <input type="text" placeholder="Например: Москва или Приморский край" class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition">
+                    <label class="block text-[11px] font-medium text-slate-300 mb-1">
+                      Электронная почта <span class="text-brand">*</span>
+                    </label>
+                    <input 
+                      v-model="contactForm.email"
+                      @blur="validateContactEmail"
+                      @input="contactErrors.email && validateContactEmail()"
+                      type="email" 
+                      placeholder="alex@mail.ru" 
+                      :class="[
+                        'w-full h-10 px-3.5 rounded-lg bg-[#121824] border text-white text-xs placeholder-slate-500 focus:outline-none transition',
+                        contactErrors.email ? 'border-red-400 focus:border-red-500' : 'border-[#232F42] focus:border-brand'
+                      ]"
+                    />
+                    <p v-if="contactErrors.email" class="text-[11px] text-red-400 mt-1">{{ contactErrors.email }}</p>
                   </div>
+
+                  <!-- Interested Model / Service (optional) -->
                   <div>
-                    <label class="block text-[11px] font-medium text-slate-300 mb-1">Интересующая модель / услуга</label>
-                    <input type="text" id="consultModelInput" placeholder="Например: AP40 Laser+ или Trade-In" class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition">
+                    <label class="block text-[11px] font-medium text-slate-300 mb-1 truncate">
+                      Интересующая модель / услуга (необязательно)
+                    </label>
+                    <input 
+                      v-model="contactForm.model"
+                      type="text" 
+                      id="consultModelInput" 
+                      placeholder="Например: AP40 Laser+ или Trade-In" 
+                      class="w-full h-10 px-3.5 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition"
+                    />
                   </div>
                 </div>
 
+                <!-- Question / Comment (optional) -->
                 <div>
-                  <label class="block text-[11px] font-medium text-slate-300 mb-1">Ваш вопрос (необязательно)</label>
-                  <textarea rows="2" placeholder="Опишите задачу, условия работы или требования к точности..." class="w-full p-3 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition resize-none"></textarea>
+                  <label class="block text-[11px] font-medium text-slate-300 mb-1">
+                    Ваш вопрос (необязательно)
+                  </label>
+                  <textarea 
+                    v-model="contactForm.comment"
+                    rows="2" 
+                    placeholder="Опишите задачу, условия работы или требования к точности..." 
+                    class="w-full p-3 rounded-lg bg-[#121824] border border-[#232F42] focus:border-brand focus:outline-none text-white text-xs placeholder-slate-500 transition resize-none"
+                  ></textarea>
                 </div>
 
-                <div id="formSuccessMsg" class="hidden p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs text-center font-medium">
+                <!-- Success Banner -->
+                <div v-if="contactSuccess" class="p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs text-center font-medium">
                   Заявка принята! Менеджер отдела продаж свяжется с вами в течение 15 минут.
                 </div>
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
-                  <label class="flex items-start gap-2.5 text-[11px] text-slate-400 cursor-pointer">
-                    <input type="checkbox" required class="mt-0.5 rounded border-[#232F42] text-brand focus:ring-0">
-                    <span>Я согласен на обработку моих персональных данных в соответствии с <router-link to="/privacy" class="text-brand hover:underline font-medium transition">политикой конфиденциальности</router-link></span>
-                  </label>
-                  <button type="submit" class="inline-flex items-center justify-center h-10 px-6 rounded-lg bg-brand hover:bg-[#01556D] text-white font-semibold text-xs tracking-wide transition shadow-md whitespace-nowrap shrink-0 cursor-pointer">
+                  <div>
+                    <label class="flex items-center gap-2.5 text-[11px] text-slate-400 cursor-pointer select-none group">
+                      <input 
+                        v-model="contactForm.agree"
+                        type="checkbox" 
+                        class="w-4 h-4 rounded border-[#232F42] text-brand focus:ring-brand accent-[#016C8A] hover:border-brand transition cursor-pointer shrink-0 shadow-xs"
+                      />
+                      <span class="group-hover:text-slate-300 transition">Я согласен на обработку моих персональных данных в соответствии с <router-link to="/privacy" class="text-brand hover:underline font-semibold transition" @click.stop>политикой конфиденциальности</router-link></span>
+                    </label>
+                    <p v-if="contactErrors.agree" class="text-[11px] text-red-400 mt-1 pl-6.5">{{ contactErrors.agree }}</p>
+                  </div>
+
+                  <button 
+                    type="submit" 
+                    class="inline-flex items-center justify-center h-10 px-6 rounded-lg bg-brand hover:bg-[#01556D] text-white font-semibold text-xs tracking-wide transition shadow-md whitespace-nowrap shrink-0 cursor-pointer"
+                  >
                     Оставить заявку
                   </button>
                 </div>

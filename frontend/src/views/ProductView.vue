@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { products, getProductBySlug } from '../data/products.js';
 
@@ -86,6 +86,138 @@ function prevImage() {
   const prevIdx = (currentIdx - 1 + gallery.length) % gallery.length;
   activeImage.value = gallery[prevIdx];
 }
+
+// ============================================================
+// Fullscreen Gallery Lightbox with Zoom / Лупа
+// ============================================================
+const isLightboxOpen = ref(false);
+const zoomLevel = ref(1);
+const panX = ref(0);
+const panY = ref(0);
+const isDragging = ref(false);
+let startDragX = 0;
+let startDragY = 0;
+
+const galleryImages = computed(() => {
+  return product.value.gallery && product.value.gallery.length > 0
+    ? product.value.gallery
+    : [product.value.mainImage];
+});
+
+const currentGalleryIndex = computed(() => {
+  const idx = galleryImages.value.indexOf(activeImage.value);
+  return idx >= 0 ? idx : 0;
+});
+
+function openLightbox() {
+  zoomLevel.value = 1;
+  panX.value = 0;
+  panY.value = 0;
+  isLightboxOpen.value = true;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  isLightboxOpen.value = false;
+  zoomLevel.value = 1;
+  panX.value = 0;
+  panY.value = 0;
+  document.body.style.overflow = '';
+}
+
+function zoomIn() {
+  if (zoomLevel.value < 3) {
+    zoomLevel.value = Math.min(3, +(zoomLevel.value + 0.5).toFixed(1));
+  }
+}
+
+function zoomOut() {
+  if (zoomLevel.value > 1) {
+    zoomLevel.value = Math.max(1, +(zoomLevel.value - 0.5).toFixed(1));
+    if (zoomLevel.value === 1) {
+      panX.value = 0;
+      panY.value = 0;
+    }
+  }
+}
+
+function resetZoom() {
+  zoomLevel.value = 1;
+  panX.value = 0;
+  panY.value = 0;
+}
+
+function toggleZoomOnClick() {
+  if (zoomLevel.value === 1) {
+    zoomLevel.value = 2;
+  } else {
+    resetZoom();
+  }
+}
+
+function handleWheel(e) {
+  if (e.deltaY < 0) {
+    zoomIn();
+  } else {
+    zoomOut();
+  }
+}
+
+function handleMouseDown(e) {
+  if (zoomLevel.value > 1) {
+    isDragging.value = true;
+    startDragX = e.clientX - panX.value;
+    startDragY = e.clientY - panY.value;
+  }
+}
+
+function handleMouseMove(e) {
+  if (isDragging.value && zoomLevel.value > 1) {
+    panX.value = e.clientX - startDragX;
+    panY.value = e.clientY - startDragY;
+  }
+}
+
+function handleMouseUp() {
+  isDragging.value = false;
+}
+
+function nextLightboxImage() {
+  const len = galleryImages.value.length;
+  const nextIdx = (currentGalleryIndex.value + 1) % len;
+  activeImage.value = galleryImages.value[nextIdx];
+  resetZoom();
+}
+
+function prevLightboxImage() {
+  const len = galleryImages.value.length;
+  const prevIdx = (currentGalleryIndex.value - 1 + len) % len;
+  activeImage.value = galleryImages.value[prevIdx];
+  resetZoom();
+}
+
+function selectLightboxImage(img) {
+  activeImage.value = img;
+  resetZoom();
+}
+
+function onLightboxKeydown(e) {
+  if (!isLightboxOpen.value) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowRight') nextLightboxImage();
+  if (e.key === 'ArrowLeft') prevLightboxImage();
+  if (e.key === '+' || e.key === '=') zoomIn();
+  if (e.key === '-') zoomOut();
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onLightboxKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onLightboxKeydown);
+  document.body.style.overflow = '';
+});
 
 // Format currency
 function formatRub(num) {
@@ -182,18 +314,18 @@ watch(
             <!-- Main Image Viewport with Vignette -->
             <div class="relative w-full product-img-box rounded-xl border border-neutral-border p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] lg:min-h-[500px] select-none group">
               
-              <!-- Fullscreen Link in Top-Right: Без подложки, только чистый текст и иконка -->
-              <a 
-                :href="activeImage" 
-                target="_blank"
-                class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 text-xs text-neutral-muted hover:text-brand transition select-none cursor-pointer"
+              <!-- Fullscreen Button in Top-Right: Opens in-page lightbox gallery -->
+              <button 
+                type="button"
+                @click.stop="openLightbox" 
+                class="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 text-xs text-neutral-muted hover:text-brand transition select-none cursor-pointer focus:outline-none"
                 title="Открыть изображение в полном размере"
               >
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                 </svg>
                 <span>В полный экран</span>
-              </a>
+              </button>
 
               <!-- Previous Image Arrow (без подложки/кружков) -->
               <button 
@@ -212,7 +344,8 @@ watch(
               <img 
                 :src="activeImage" 
                 :alt="product.title" 
-                class="max-h-[320px] sm:max-h-[400px] lg:max-h-[440px] w-auto max-w-full object-contain transition-all duration-300"
+                @click="openLightbox"
+                class="max-h-[320px] sm:max-h-[400px] lg:max-h-[440px] w-auto max-w-full object-contain transition-all duration-300 cursor-zoom-in"
               />
 
               <!-- Next Image Arrow (без подложки/кружков) -->
@@ -588,5 +721,162 @@ watch(
       </div>
     </section>
 
+
+    <!-- ============================================================ -->
+    <!-- Fullscreen Gallery & Lightbox Modal with Zoom / Лупа         -->
+    <!-- ============================================================ -->
+    <Teleport to="body">
+      <div 
+        v-if="isLightboxOpen" 
+        id="productLightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Галерея изображений"
+        class="fixed inset-0 z-50 bg-[#0B1520]/95 backdrop-blur-md flex flex-col justify-between select-none animate-in fade-in duration-200"
+      >
+        <!-- Top Bar: Title, Counter & Controls -->
+        <div class="h-16 px-4 sm:px-8 border-b border-white/10 flex items-center justify-between gap-4 text-white shrink-0 z-20 bg-[#0B1520]/80">
+          <div class="min-w-0">
+            <h3 class="font-bold text-sm sm:text-base truncate">{{ product.title }}</h3>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+              Фото {{ currentGalleryIndex + 1 }} из {{ galleryImages.length }}
+            </div>
+          </div>
+
+          <!-- Toolbar: Zoom Out (-), Zoom Level, Zoom In (+), Reset (1:1), Close -->
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <!-- Zoom Out Button (Лупа -) -->
+            <button 
+              type="button" 
+              @click.stop="zoomOut" 
+              :disabled="zoomLevel <= 1"
+              class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition focus:outline-none cursor-pointer"
+              title="Уменьшить масштаб (-)"
+              aria-label="Уменьшить"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+              </svg>
+            </button>
+
+            <!-- Zoom indicator -->
+            <span class="text-xs font-semibold px-2 py-1 rounded bg-white/10 text-slate-200 min-w-[50px] text-center">
+              {{ Math.round(zoomLevel * 100) }}%
+            </span>
+
+            <!-- Zoom In Button (Лупа +) -->
+            <button 
+              type="button" 
+              @click.stop="zoomIn" 
+              :disabled="zoomLevel >= 3"
+              class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition focus:outline-none cursor-pointer"
+              title="Увеличить масштаб (+)"
+              aria-label="Увеличить"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+              </svg>
+            </button>
+
+            <!-- Reset Zoom (1:1) -->
+            <button 
+              type="button" 
+              @click.stop="resetZoom" 
+              class="hidden sm:inline-flex items-center px-2.5 py-1 text-xs font-semibold rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition focus:outline-none cursor-pointer"
+              title="Сбросить масштаб (1:1)"
+            >
+              1:1
+            </button>
+
+            <div class="w-px h-5 bg-white/10 mx-1"></div>
+
+            <!-- Close Button -->
+            <button 
+              type="button" 
+              @click="closeLightbox" 
+              class="p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition focus:outline-none cursor-pointer"
+              title="Закрыть (Esc)"
+              aria-label="Закрыть"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Center Image Viewport -->
+        <div 
+          class="relative flex-1 flex items-center justify-center overflow-hidden p-4 select-none"
+          @wheel.prevent="handleWheel"
+          @mousedown="handleMouseDown"
+          @mousemove="handleMouseMove"
+          @mouseup="handleMouseUp"
+          @mouseleave="handleMouseUp"
+        >
+          <!-- Prev Arrow -->
+          <button 
+            v-if="galleryImages.length > 1"
+            type="button"
+            @click.stop="prevLightboxImage" 
+            class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/50 hover:bg-brand text-white flex items-center justify-center backdrop-blur-xs transition focus:outline-none cursor-pointer shadow-lg"
+            aria-label="Предыдущее фото"
+          >
+            <svg class="w-6 h-6 -ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </button>
+
+          <!-- Scaled and Draggable Image -->
+          <div 
+            class="relative transition-transform duration-75 ease-out"
+            :style="{
+              transform: `translate(${panX}px, ${panY}px) scale(${zoomLevel})`,
+              cursor: zoomLevel > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in'
+            }"
+            @click="toggleZoomOnClick"
+          >
+            <img 
+              :src="activeImage" 
+              :alt="product.title" 
+              class="max-h-[70vh] sm:max-h-[75vh] w-auto max-w-[90vw] object-contain drop-shadow-2xl pointer-events-none"
+              draggable="false"
+            />
+          </div>
+
+          <!-- Next Arrow -->
+          <button 
+            v-if="galleryImages.length > 1"
+            type="button"
+            @click.stop="nextLightboxImage" 
+            class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-black/50 hover:bg-brand text-white flex items-center justify-center backdrop-blur-xs transition focus:outline-none cursor-pointer shadow-lg"
+            aria-label="Следующее фото"
+          >
+            <svg class="w-6 h-6 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Bottom Thumbnail Bar -->
+        <div 
+          v-if="galleryImages.length > 1" 
+          class="h-20 px-4 border-t border-white/10 flex items-center justify-center gap-3 overflow-x-auto bg-[#0B1520]/80 z-20 shrink-0"
+        >
+          <button 
+            v-for="(img, idx) in galleryImages" 
+            :key="idx"
+            type="button"
+            @click.stop="selectLightboxImage(img)"
+            :class="[
+              'w-14 h-14 rounded-lg p-1.5 border transition flex items-center justify-center bg-white/5 hover:bg-white/10 shrink-0 focus:outline-none cursor-pointer',
+              activeImage === img ? 'border-brand ring-2 ring-brand' : 'border-white/20 opacity-60 hover:opacity-100'
+            ]"
+          >
+            <img :src="img" :alt="product.title" class="max-h-full max-w-full object-contain pointer-events-none" />
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>

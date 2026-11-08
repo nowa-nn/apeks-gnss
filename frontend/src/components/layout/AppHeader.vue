@@ -2,10 +2,19 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useCart } from '../../composables/useCart.js';
+import CallbackModal from '../common/CallbackModal.vue';
 
 const router = useRouter();
 const route = useRoute();
 const { totalCount, toggleCart } = useCart();
+
+const isCallbackModalOpen = ref(false);
+const callbackPresetSubject = ref('');
+
+function openCallbackModal(subject = 'Заказ обратного звонка') {
+  callbackPresetSubject.value = subject;
+  isCallbackModalOpen.value = true;
+}
 
 const isCatalogOpen = ref(false);
 const catalogContainerRef = ref(null);
@@ -38,6 +47,7 @@ onMounted(() => {
   document.addEventListener('keydown', handleKeydown);
   window.toggleCatalogDropdown = toggleCatalog;
   window.closeCatalogDropdown = closeCatalog;
+  window.openCallbackModal = openCallbackModal;
 });
 
 onUnmounted(() => {
@@ -124,7 +134,7 @@ function handleSearch(e) {
         <div class="flex items-center gap-3 sm:gap-4 lg:gap-5 shrink-0">
           
           <button 
-            @click="scrollToContacts('Заказ обратного звонка')" 
+            @click="openCallbackModal('Заказ обратного звонка')" 
             class="hidden md:inline-flex items-center justify-center h-10 px-6 rounded-lg bg-[#016C8A] hover:bg-[#01556D] text-white border border-[#016C8A] hover:border-[#01556D] text-xs sm:text-[13px] font-semibold transition whitespace-nowrap shadow-xs cursor-pointer"
           >
             Заказать звонок
@@ -226,5 +236,12 @@ function handleSearch(e) {
 
       </div>
     </nav>
+
+    <!-- Callback Pop-up Modal -->
+    <CallbackModal 
+      :is-open="isCallbackModalOpen" 
+      :preset-subject="callbackPresetSubject" 
+      @close="isCallbackModalOpen = false" 
+    />
   </header>
 </template>
