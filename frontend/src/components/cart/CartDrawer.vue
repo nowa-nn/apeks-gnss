@@ -95,12 +95,6 @@ function goToCheckout() {
             <h2 id="cartDrawerTitle" class="text-base sm:text-lg font-bold text-neutral-dark">
               Корзина
             </h2>
-            <span 
-              v-if="totalCount > 0" 
-              class="hidden sm:inline-flex text-xs font-semibold px-2 py-0.5 rounded bg-[#F4F6F9] text-neutral-dark border border-neutral-border"
-            >
-              {{ totalCount }} {{ totalCount === 1 ? 'товар' : totalCount < 5 ? 'товара' : 'товаров' }}
-            </span>
           </div>
 
           <div class="flex items-center gap-2">

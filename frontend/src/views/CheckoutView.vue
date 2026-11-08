@@ -711,11 +711,8 @@ function printOrder() {
             <!-- Order Summary Clean Container -->
             <div class="border border-neutral-border rounded-2xl p-5 sm:p-6 space-y-5 bg-white shadow-xs">
               
-              <div class="flex items-center justify-between pb-3 border-b border-neutral-border/70">
+              <div class="pb-3 border-b border-neutral-border/70">
                 <h3 class="text-base font-bold text-neutral-dark">Ваш заказ</h3>
-                <span class="text-xs font-semibold px-2 py-0.5 rounded bg-[#F4F6F9] text-neutral-muted">
-                  {{ totalCount }} {{ totalCount === 1 ? 'позиция' : totalCount < 5 ? 'позиции' : 'позиций' }}
-                </span>
               </div>
 
               <!-- Mini Items List -->
