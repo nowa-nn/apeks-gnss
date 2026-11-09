@@ -563,7 +563,7 @@ function printOrder() {
                 <label 
                   @click="form.deliveryType = 'cdek'"
                   :class="[
-                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between select-none',
+                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between',
                     form.deliveryType === 'cdek' 
                       ? 'border-brand bg-brand-light/25 ring-1 ring-brand' 
                       : 'border-neutral-border hover:border-neutral-muted bg-white'
@@ -590,7 +590,7 @@ function printOrder() {
                 <label 
                   @click="form.deliveryType = 'pickup'"
                   :class="[
-                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between select-none',
+                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between',
                     form.deliveryType === 'pickup' 
                       ? 'border-brand bg-brand-light/25 ring-1 ring-brand' 
                       : 'border-neutral-border hover:border-neutral-muted bg-white'
@@ -682,7 +682,7 @@ function printOrder() {
                 <label 
                   @click="form.paymentMethod = 'sbp'"
                   :class="[
-                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between select-none',
+                    'p-4 rounded-xl border text-left cursor-pointer transition flex flex-col justify-between',
                     form.paymentMethod === 'sbp' 
                       ? 'border-brand bg-brand-light/25 ring-1 ring-brand' 
                       : 'border-neutral-border hover:border-neutral-muted bg-white'
@@ -707,7 +707,7 @@ function printOrder() {
                 <label 
                   @click="form.deliveryType === 'pickup' && (form.paymentMethod = 'cash_pickup')"
                   :class="[
-                    'p-4 rounded-xl border text-left transition flex flex-col justify-between select-none',
+                    'p-4 rounded-xl border text-left transition flex flex-col justify-between',
                     form.deliveryType !== 'pickup'
                       ? 'border-neutral-border bg-[#F8FAFC] cursor-not-allowed'
                       : (form.paymentMethod === 'cash_pickup'
@@ -743,7 +743,7 @@ function printOrder() {
 
               <!-- Personal Data Agreement Checkbox (Aligned center with text, neat compact size) -->
               <div class="pt-1">
-                <label class="flex items-center gap-2.5 cursor-pointer select-none group">
+                <label class="flex items-center gap-2.5 cursor-pointer group">
                   <input 
                     id="field-agreeTerms"
                     v-model="form.agreeTerms" 

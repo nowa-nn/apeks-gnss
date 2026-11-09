@@ -312,7 +312,7 @@ watch(
           <div class="lg:col-span-7 lg:sticky lg:top-28 space-y-4">
             
             <!-- Main Image Viewport with Vignette -->
-            <div class="relative w-full product-img-box rounded-xl border border-neutral-border p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] lg:min-h-[500px] select-none group">
+            <div class="relative w-full product-img-box rounded-xl border border-neutral-border p-6 sm:p-10 flex items-center justify-center min-h-[380px] sm:min-h-[460px] lg:min-h-[500px] group">
               
               <!-- Fullscreen Button in Top-Right: Opens in-page lightbox gallery -->
               <button 
@@ -423,7 +423,7 @@ watch(
                 <!-- Опция 1: ПО -->
                 <label 
                   :class="[
-                    'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer select-none transition',
+                    'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer transition',
                     includeSoftware ? 'border-brand bg-brand/5 text-neutral-dark font-medium' : 'border-neutral-border hover:border-neutral-muted bg-white text-neutral-dark'
                   ]"
                 >
@@ -441,7 +441,7 @@ watch(
                 <!-- Опция 2: Контроллер -->
                 <label 
                   :class="[
-                    'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer select-none transition',
+                    'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer transition',
                     includeController ? 'border-brand bg-brand/5 text-neutral-dark font-medium' : 'border-neutral-border hover:border-neutral-muted bg-white text-neutral-dark'
                   ]"
                 >

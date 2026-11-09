@@ -236,14 +236,14 @@ onUnmounted(() => {
     <!-- ============================================================ -->
     <section class="bg-white pt-0 pb-3 md:pt-6 md:pb-4">
       <div class="w-full md:max-w-7xl md:mx-auto px-0 md:px-8">
-        <div id="heroSlider" @mouseenter="stopHeroAutoplay" @mouseleave="startHeroAutoplay" class="hero-boxed-slider relative w-full overflow-hidden hero-banner-wrap rounded-none md:rounded-2xl h-[570px] xs:h-[600px] sm:h-[630px] md:h-auto select-none shadow-sm md:shadow-md">
+        <div id="heroSlider" @mouseenter="stopHeroAutoplay" @mouseleave="startHeroAutoplay" class="hero-boxed-slider relative w-full overflow-hidden hero-banner-wrap rounded-none md:rounded-2xl h-[570px] xs:h-[600px] sm:h-[630px] md:h-auto shadow-sm md:shadow-md">
 
-          <!-- SLIDE 1: APEKS AP40 Laser+ -->
+          <!-- SLIDE 1: APEKS AP30 Laser -->
           <div class="hero-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-100 z-10 flex flex-col md:flex-row md:items-center bg-[#080d1c]">
             <div class="relative w-full h-[290px] xs:h-[310px] sm:h-[340px] md:h-full md:absolute md:inset-0 pointer-events-none overflow-hidden flex md:justify-end">
               <picture class="w-full h-full block">
                 <source type="image/webp" srcset="assets/banner-1-2-1.webp">
-                <img src="assets/banner-1-2-1.png" alt="APEKS AP40 Laser+" width="1920" height="800" fetchpriority="high" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
+                <img src="assets/banner-1-2-1.png" alt="APEKS AP30 Laser" width="1920" height="800" fetchpriority="high" class="w-full h-full object-cover object-[80%_center] md:object-[right_center] hero-mask-mobile">
               </picture>
               <div class="absolute inset-x-0 bottom-0 h-28 sm:h-32 bg-gradient-to-b from-transparent via-[#080d1c]/80 to-[#080d1c] pointer-events-none md:hidden"></div>
             </div>
@@ -251,13 +251,13 @@ onUnmounted(() => {
             <div class="relative z-10 w-full px-4 sm:px-8 md:px-12 lg:px-16 pt-1 pb-10 md:py-0">
               <div class="max-w-md sm:max-w-lg space-y-3.5 md:space-y-4 text-white">
                 <h1 class="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
-                  APEKS AP40 Laser+
+                  APEKS AP30 Laser
                 </h1>
                 <p class="text-slate-200 text-xs sm:text-sm lg:text-[15px] leading-relaxed max-w-sm sm:max-w-md">
-                  Спутниковый геодезический RTK-приемник со встроенным зеленым лазерным дальномером и IMU 120°. Высокоточные измерения недоступных объектов без вехи в самых суровых полевых условиях.
+                  Компактный GNSS RTK-приемник с зеленым лазерным дальномером до 10 метров, визуальной AR-разбивкой и IMU 120°. Высокоточные измерения недоступных объектов без вехи в любых полевых условиях.
                 </p>
                 <div class="pt-1 md:pt-2">
-                  <router-link to="/product/ap40-laser-plus" class="inline-flex items-center px-5 py-2.5 md:px-6 md:py-3 rounded-md md:rounded-lg bg-brand hover:bg-brand-dark text-white font-semibold text-xs md:text-sm transition shadow-sm">
+                  <router-link to="/product/apeks_ap30" class="inline-flex items-center px-5 py-2.5 md:px-6 md:py-3 rounded-md md:rounded-lg bg-brand hover:bg-brand-dark text-white font-semibold text-xs md:text-sm transition shadow-sm">
                     <span>Смотреть в каталоге</span>
                   </router-link>
                 </div>
@@ -1090,7 +1090,7 @@ onUnmounted(() => {
 
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
                   <div>
-                    <label class="flex items-center gap-2.5 text-[11px] text-slate-400 cursor-pointer select-none group">
+                    <label class="flex items-center gap-2.5 text-[11px] text-slate-400 cursor-pointer group">
                       <input 
                         v-model="contactForm.agree"
                         type="checkbox" 
