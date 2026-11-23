@@ -18,7 +18,8 @@ const categories = [
   { id: 'software', name: 'Полевое ПО', rawName: 'Полевое ПО' }
 ];
 
-const selectedCategory = ref('all');
+// Multi-select categories array
+const selectedCategories = ref([]);
 const searchQuery = ref('');
 const priceMin = ref(null);
 const priceMax = ref(null);
@@ -49,37 +50,61 @@ const sortBy = ref('default');
 
 const showMobileFilters = ref(false);
 
+const hasMultipleSelected = computed(() => selectedCategories.value.length > 1);
+
+function isCategoryActive(catId) {
+  if (catId === 'all') {
+    return selectedCategories.value.length === 0;
+  }
+  return selectedCategories.value.includes(catId);
+}
+
+function resolveAsset(url) {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:')) {
+    return url;
+  }
+  const clean = url.replace(/^\.?\//, '');
+  const isGhPages = typeof window !== 'undefined' && window.location.pathname.includes('/apeks-gnss');
+  const prefix = isGhPages ? '/apeks-gnss/' : '/';
+  return prefix + clean;
+}
+
 // Initialize from route query
 function initFromQuery() {
   if (route.query.category) {
-    const qCat = String(route.query.category).toLowerCase().replace(/ё/g, 'е').replace(/\+/g, ' ');
-    if (qCat === 'software' || qCat.includes('программ') || qCat.includes('по')) {
-      selectedCategory.value = 'software';
-    } else if (qCat === 'radio' || qCat.includes('радио') || qCat.includes('модем') || qCat.includes('периф')) {
-      selectedCategory.value = 'radio';
-    } else if (qCat === 'controllers' || qCat.includes('контролл') || qCat.includes('планшет')) {
-      selectedCategory.value = 'controllers';
-    } else if (qCat === 'total-stations' || qCat.includes('тахеометр')) {
-      selectedCategory.value = 'total-stations';
-    } else if (qCat === 'levels' || qCat.includes('нивелир') || qCat.includes('уровен') || qCat.includes('уровн')) {
-      selectedCategory.value = 'levels';
-    } else if (qCat === 'accessories' || qCat.includes('аксессуар')) {
-      selectedCategory.value = 'accessories';
-    } else if (qCat === 'gnss' || qCat.includes('гнсс') || qCat.includes('приемник')) {
-      selectedCategory.value = 'gnss';
-    } else {
-      const found = categories.find(c => 
-        c.id.toLowerCase() === qCat || 
-        (c.rawName && c.rawName.toLowerCase().replace(/ё/g, 'е') === qCat)
-      );
-      if (found) {
-        selectedCategory.value = found.id;
+    const rawVal = String(route.query.category);
+    const parts = rawVal.split(',').map(s => s.trim().toLowerCase().replace(/ё/g, 'е').replace(/\+/g, ' '));
+    const matched = [];
+    for (const part of parts) {
+      if (part === 'all') continue;
+      if (part === 'software' || part.includes('программ') || part.includes('по')) {
+        matched.push('software');
+      } else if (part === 'radio' || part.includes('радио') || part.includes('модем') || part.includes('периф')) {
+        matched.push('radio');
+      } else if (part === 'controllers' || part.includes('контролл') || part.includes('планшет')) {
+        matched.push('controllers');
+      } else if (part === 'total-stations' || part.includes('тахеометр')) {
+        matched.push('total-stations');
+      } else if (part === 'levels' || part.includes('нивелир') || part.includes('уровен') || part.includes('уровн')) {
+        matched.push('levels');
+      } else if (part === 'accessories' || part.includes('аксессуар')) {
+        matched.push('accessories');
+      } else if (part === 'gnss' || part.includes('гнсс') || part.includes('приемник')) {
+        matched.push('gnss');
       } else {
-        selectedCategory.value = 'all';
+        const found = categories.find(c => 
+          c.id.toLowerCase() === part || 
+          (c.rawName && c.rawName.toLowerCase().replace(/ё/g, 'е') === part)
+        );
+        if (found && found.id !== 'all') {
+          matched.push(found.id);
+        }
       }
     }
+    selectedCategories.value = [...new Set(matched)];
   } else {
-    selectedCategory.value = 'all';
+    selectedCategories.value = [];
   }
   if (route.query.q) {
     searchQuery.value = route.query.q;
@@ -98,69 +123,84 @@ watch(() => route.query, () => {
   initFromQuery();
 });
 
-watch(selectedCategory, (newCat) => {
-  if (newCat !== 'gnss') {
-    filterImu.value = false;
-    filterLaser.value = false;
-    filterCameraAr.value = false;
-    filterCameraVr.value = false;
-    filterRadio2W.value = false;
-    filterRadio5W.value = false;
-  }
-  if (newCat !== 'controllers') {
-    filterController.value = false;
-    filterTablet.value = false;
-    filterRtkModule.value = false;
-  }
-  if (newCat !== 'software') {
-    filterSwGnss.value = false;
-    filterSwTacheometer.value = false;
-    filterSwPostProcessing.value = false;
-    filterSwOther.value = false;
-  }
-  if (newCat !== 'radio') {
-    filterRadioModem.value = false;
-    filterRadioAntenna.value = false;
-    filterRadioOther.value = false;
-  }
-});
-
-function selectCategory(id) {
-  selectedCategory.value = id;
-  const sb = document.querySelector('.sidebar-filter-scroll');
-  if (sb) sb.scrollTop = 0;
-  // Clear category-specific flags when switching categories to avoid unintended empty results
-  if (id !== 'controllers') {
-    filterController.value = false;
-    filterTablet.value = false;
-    filterRtkModule.value = false;
-  }
-  if (id !== 'gnss' && id !== 'all') {
-    filterImu.value = false;
-    filterLaser.value = false;
-    filterCameraAr.value = false;
-    filterCameraVr.value = false;
-    filterRadio2W.value = false;
-    filterRadio5W.value = false;
-  }
-  if (id !== 'software') {
-    filterSwGnss.value = false;
-    filterSwTacheometer.value = false;
-    filterSwPostProcessing.value = false;
-    filterSwOther.value = false;
-  }
-  if (id !== 'radio') {
-    filterRadioModem.value = false;
-    filterRadioAntenna.value = false;
-    filterRadioOther.value = false;
-  }
+function syncCategoryQuery() {
+  const val = selectedCategories.value.length === 0 
+    ? undefined 
+    : (selectedCategories.value.length === 1 ? selectedCategories.value[0] : selectedCategories.value.join(','));
   router.replace({
     path: '/catalog',
     query: {
       ...route.query,
-      category: id === 'all' ? undefined : id
+      category: val
     }
   });
+}
+
+function resetSubFilters() {
+  if (!selectedCategories.value.includes('gnss')) {
+    filterImu.value = false;
+    filterLaser.value = false;
+    filterCameraAr.value = false;
+    filterCameraVr.value = false;
+    filterRadio2W.value = false;
+    filterRadio5W.value = false;
+  }
+  if (!selectedCategories.value.includes('controllers')) {
+    filterController.value = false;
+    filterTablet.value = false;
+    filterRtkModule.value = false;
+  }
+  if (!selectedCategories.value.includes('software')) {
+    filterSwGnss.value = false;
+    filterSwTacheometer.value = false;
+    filterSwPostProcessing.value = false;
+    filterSwOther.value = false;
+  }
+  if (!selectedCategories.value.includes('radio')) {
+    filterRadioModem.value = false;
+    filterRadioAntenna.value = false;
+    filterRadioOther.value = false;
+  }
+}
+
+// Top Category Button Click:
+// Retains single-category selection behavior, but clicking already selected button cancels selection
+function handleTopCategoryClick(catId) {
+  const sb = document.querySelector('.sidebar-filter-scroll');
+  if (sb) sb.scrollTop = 0;
+
+  if (catId === 'all') {
+    selectedCategories.value = [];
+    resetSubFilters();
+    syncCategoryQuery();
+    return;
+  }
+
+  // If already active, cancel/deselect it
+  if (selectedCategories.value.includes(catId)) {
+    selectedCategories.value = selectedCategories.value.filter(id => id !== catId);
+    resetSubFilters();
+    syncCategoryQuery();
+    return;
+  }
+
+  // Otherwise switch to this single category (retaining original top button behavior)
+  selectedCategories.value = [catId];
+  resetSubFilters();
+  syncCategoryQuery();
+}
+
+// Left Checkbox Click:
+// Allows multi-selection of categories simultaneously
+function toggleCategoryCheckbox(catId) {
+  const idx = selectedCategories.value.indexOf(catId);
+  if (idx === -1) {
+    selectedCategories.value.push(catId);
+  } else {
+    selectedCategories.value.splice(idx, 1);
+  }
+  resetSubFilters();
+  syncCategoryQuery();
 }
 
 function toggleManufacturer(brand) {
@@ -173,7 +213,7 @@ function toggleManufacturer(brand) {
 }
 
 function resetFilters() {
-  selectedCategory.value = 'all';
+  selectedCategories.value = [];
   searchQuery.value = '';
   priceMin.value = null;
   priceMax.value = null;
@@ -201,7 +241,7 @@ function resetFilters() {
 
 const hasActiveFilters = computed(() => {
   return (
-    selectedCategory.value !== 'all' ||
+    selectedCategories.value.length > 0 ||
     searchQuery.value.trim() !== '' ||
     priceMin.value !== null && priceMin.value !== '' ||
     priceMax.value !== null && priceMax.value !== '' ||
@@ -235,10 +275,13 @@ function getCategoryCount(catId) {
 
 const filteredProducts = computed(() => {
   const list = products.filter(p => {
-    // Category
-    if (selectedCategory.value !== 'all') {
-      const catObj = categories.find(c => c.id === selectedCategory.value);
-      if (catObj && p.category !== catObj.rawName) return false;
+    // Multi-category filtering
+    if (selectedCategories.value.length > 0) {
+      const activeRawNames = selectedCategories.value.map(id => {
+        const catObj = categories.find(c => c.id === id);
+        return catObj ? catObj.rawName : null;
+      }).filter(Boolean);
+      if (!activeRawNames.includes(p.category)) return false;
     }
 
     // Search query
@@ -264,7 +307,7 @@ const filteredProducts = computed(() => {
     }
 
     // Feature flags (GNSS)
-    if (selectedCategory.value === 'gnss') {
+    if (selectedCategories.value.length === 0 || selectedCategories.value.includes('gnss')) {
       if (filterImu.value && !p.hasImu) return false;
       if (filterLaser.value && !p.hasLaser) return false;
       if (filterCameraAr.value && !p.hasCameraAr) return false;
@@ -274,7 +317,7 @@ const filteredProducts = computed(() => {
     }
 
     // Feature flags (Controllers & Tablets)
-    if (selectedCategory.value === 'controllers') {
+    if (selectedCategories.value.length === 0 || selectedCategories.value.includes('controllers')) {
       if (filterController.value || filterTablet.value) {
         const matchDeviceType = (filterController.value && p.isController) || (filterTablet.value && p.isTablet);
         if (!matchDeviceType) return false;
@@ -283,7 +326,7 @@ const filteredProducts = computed(() => {
     }
 
     // Feature flags (Software)
-    if (selectedCategory.value === 'software') {
+    if (selectedCategories.value.length === 0 || selectedCategories.value.includes('software')) {
       if (filterSwGnss.value || filterSwTacheometer.value || filterSwPostProcessing.value || filterSwOther.value) {
         const matchSw = 
           (filterSwGnss.value && p.isSwGnss) ||
@@ -295,7 +338,7 @@ const filteredProducts = computed(() => {
     }
 
     // Feature flags (Radio)
-    if (selectedCategory.value === 'radio') {
+    if (selectedCategories.value.length === 0 || selectedCategories.value.includes('radio')) {
       if (filterRadioModem.value || filterRadioAntenna.value || filterRadioOther.value) {
         const matchRadio = 
           (filterRadioModem.value && p.isRadioModem) ||
@@ -392,16 +435,17 @@ function goToProduct(slug) {
           <button 
             v-for="cat in categories" 
             :key="cat.id"
-            @click="selectCategory(cat.id)"
+            @click="handleTopCategoryClick(cat.id)"
             :class="[
               'px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer flex items-center gap-1.5',
-              selectedCategory === cat.id
-                ? 'bg-brand text-white shadow-xs'
+              isCategoryActive(cat.id)
+                ? (hasMultipleSelected ? 'bg-[#01556D] text-white shadow-xs' : 'bg-brand text-white shadow-xs')
                 : 'bg-white border border-neutral-border text-neutral-dark hover:border-neutral-muted hover:bg-[#F8FAFC]'
             ]"
+            :title="isCategoryActive(cat.id) ? 'Нажмите, чтобы отменить выбор' : cat.name"
           >
             <span>{{ cat.name }}</span>
-            <span :class="selectedCategory === cat.id ? 'opacity-80 text-[10px]' : 'text-neutral-muted text-[10px]'">
+            <span :class="isCategoryActive(cat.id) ? 'opacity-80 text-[10px]' : 'text-neutral-muted text-[10px]'">
               ({{ getCategoryCount(cat.id) }})
             </span>
           </button>
@@ -477,8 +521,8 @@ function goToProduct(slug) {
                     >
                       <input 
                         type="checkbox" 
-                        :checked="selectedCategory === cat.id" 
-                        @change="selectCategory(selectedCategory === cat.id ? 'all' : cat.id)" 
+                        :checked="selectedCategories.includes(cat.id)" 
+                        @change="toggleCategoryCheckbox(cat.id)" 
                         class="w-3.5 h-3.5 rounded text-brand focus:ring-0 accent-[#016C8A] cursor-pointer"
                       />
                       <span>{{ cat.name }}</span>
@@ -529,7 +573,7 @@ function goToProduct(slug) {
                 </div>
 
                 <!-- Technology & Hardware Options (GNSS) -->
-                <div v-if="selectedCategory === 'gnss'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                <div v-if="selectedCategories.includes('gnss')" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
                   <span class="text-xs font-bold text-neutral-dark block">
                     Технологии (для GNSS)
                   </span>
@@ -586,7 +630,7 @@ function goToProduct(slug) {
                 </div>
 
                 <!-- Controller & Tablet Options -->
-                <div v-if="selectedCategory === 'controllers'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                <div v-if="selectedCategories.includes('controllers')" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
                   <span class="text-xs font-bold text-neutral-dark block">
                     Тип и оснащение
                   </span>
@@ -619,7 +663,7 @@ function goToProduct(slug) {
                 </div>
 
                 <!-- Software Options -->
-                <div v-if="selectedCategory === 'software'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                <div v-if="selectedCategories.includes('software')" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
                   <span class="text-xs font-bold text-neutral-dark block">
                     Назначение ПО
                   </span>
@@ -660,7 +704,7 @@ function goToProduct(slug) {
                 </div>
 
                 <!-- Radio Options -->
-                <div v-if="selectedCategory === 'radio'" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
+                <div v-if="selectedCategories.includes('radio')" class="space-y-2.5 pt-2 border-t border-neutral-border/60">
                   <span class="text-xs font-bold text-neutral-dark block">
                     Тип оборудования
                   </span>
@@ -754,14 +798,15 @@ function goToProduct(slug) {
               <span class="text-neutral-muted text-[11px]">Активные фильтры:</span>
               
               <span 
-                v-if="selectedCategory !== 'all'" 
+                v-for="catId in selectedCategories" 
+                :key="catId"
                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
               >
-                <span>{{ categories.find(c => c.id === selectedCategory)?.name }}</span>
-                <button @click="selectCategory('all')" class="hover:text-brand cursor-pointer">×</button>
+                <span>{{ categories.find(c => c.id === catId)?.name }}</span>
+                <button @click="toggleCategoryCheckbox(catId)" class="hover:text-brand cursor-pointer">×</button>
               </span>
 
-              <span 
+<span 
                 v-for="brand in selectedManufacturers" 
                 :key="brand"
                 class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-[#F4F6F9] border border-neutral-border text-neutral-dark text-[11px]"
@@ -923,16 +968,16 @@ function goToProduct(slug) {
                 v-for="prod in filteredProducts" 
                 :key="prod.id"
                 @click="goToProduct(prod.slug)"
-                class="bg-white rounded-xl border border-neutral-border hover:border-brand transition p-5 flex flex-col justify-between hover:shadow-xs group cursor-pointer"
+                class="product-card bg-white rounded-xl border border-neutral-border hover:border-brand transition p-5 flex flex-col justify-between hover:shadow-xs group cursor-pointer"
               >
                 <div>
                   
                   <!-- Image Box -->
                   <div class="h-44 sm:h-48 flex items-center justify-center p-3 product-img-box rounded-lg mb-3.5 relative overflow-hidden">
                     <img 
-                      :src="prod.mainImage" 
+                      :src="resolveAsset(prod.mainImage)" 
                       :alt="prod.title" 
-                      class="max-h-36 sm:max-h-40 w-auto object-contain group-hover:scale-105 transition duration-300"
+                      class="max-h-36 sm:max-h-40 w-auto object-contain  transition duration-300"
                       loading="lazy"
                     />
                   </div>

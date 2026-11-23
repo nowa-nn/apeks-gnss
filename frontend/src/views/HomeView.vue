@@ -349,7 +349,7 @@ onUnmounted(() => {
           <!-- 1. Смотреть все (только для мобильных устройств, в верхнем ряду слева, одинакового размера с остальными) -->
           <router-link to="/catalog" class="md:hidden group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/image_2026-10-22_18-56-56.png" alt="Смотреть все" class="max-h-[70px] w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/image_2026-10-22_18-56-56.png" alt="Смотреть все" class="max-h-[70px] w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Смотреть все</h3>
           </router-link>
@@ -357,7 +357,7 @@ onUnmounted(() => {
           <!-- 2. ГНСС-приемники -->
           <router-link to="/catalog?category=ГНСС-приёмники" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/ap40_laser.png" alt="ГНСС-приемники" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/ap40_laser.png" alt="ГНСС-приемники" class="max-h-24 w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">ГНСС-приемники</h3>
           </router-link>
@@ -365,7 +365,7 @@ onUnmounted(() => {
           <!-- 3. Нивелиры и уровни -->
           <router-link to="/catalog?category=levels" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/3-Photoroom (1).png" alt="Нивелиры и уровни" class="max-h-20 w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/3-Photoroom (1).png" alt="Нивелиры и уровни" class="max-h-20 w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Нивелиры и уровни</h3>
           </router-link>
@@ -373,7 +373,7 @@ onUnmounted(() => {
           <!-- 4. Контроллеры -->
           <router-link to="/catalog?category=Контроллеры и планшеты" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/cs3i_controller.png" alt="Контроллеры" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/cs3i_controller.png" alt="Контроллеры" class="max-h-24 w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Контроллеры</h3>
           </router-link>
@@ -381,7 +381,7 @@ onUnmounted(() => {
           <!-- 5. Тахеометры -->
           <router-link to="/catalog?category=Тахеометры" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/total_station.jpg" alt="Тахеометры" class="max-h-24 w-auto object-contain group-hover:scale-105 transition rounded">
+              <img src="assets/total_station.jpg" alt="Тахеометры" class="max-h-24 w-auto object-contain transition rounded">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Тахеометры</h3>
           </router-link>
@@ -389,15 +389,15 @@ onUnmounted(() => {
           <!-- 6. Радиосвязь -->
           <router-link to="/catalog?category=Радиосвязь" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/adl35_radio.png" alt="Радиосвязь" class="max-h-24 w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/adl35_radio.png" alt="Радиосвязь" class="max-h-24 w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Радиосвязь</h3>
           </router-link>
 
           <!-- 7. Аксессуары -->
-          <router-link to="/catalog?category=GNSS-датчики и антенны" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
+          <router-link to="/catalog?category=accessories" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/accessories_prism.jpg" alt="Геодезические аксессуары" class="max-h-24 w-auto object-contain group-hover:scale-105 transition rounded">
+              <img src="assets/accessories_prism.jpg" alt="Геодезические аксессуары" class="max-h-24 w-auto object-contain transition rounded">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Аксессуары</h3>
           </router-link>
@@ -405,7 +405,7 @@ onUnmounted(() => {
           <!-- 8. Полевое ПО (для десктопа в ряд справа, для мобильных в нижний ряд справа) -->
           <router-link to="/catalog?category=Полевое ПО" class="group p-3 sm:p-4 rounded-lg border border-neutral-border hover:border-brand transition bg-white text-center flex flex-col justify-between hover:shadow-xs">
             <div class="h-28 flex items-center justify-center p-2">
-              <img src="assets/client_title_software_apeksurv_cut.png" alt="Полевое ПО" class="max-h-[72px] md:max-h-[76px] w-auto object-contain group-hover:scale-105 transition">
+              <img src="assets/client_title_software_apeksurv_cut.png" alt="Полевое ПО" class="max-h-[72px] md:max-h-[76px] w-auto object-contain transition">
             </div>
             <h3 class="text-xs font-semibold text-neutral-dark group-hover:text-brand transition mt-2">Полевое ПО</h3>
           </router-link>
@@ -420,8 +420,17 @@ onUnmounted(() => {
     <section id="services" class="py-12 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-8">
         
-        <div class="mb-8 pb-3 border-b border-neutral-border">
+        <div class="flex items-center justify-between mb-8 pb-3 border-b border-neutral-border">
           <h2 class="text-2xl font-bold text-neutral-dark">Услуги и сервис</h2>
+          <router-link 
+            to="/services" 
+            class="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline shrink-0"
+          >
+            <span>Все услуги</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </router-link>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -498,7 +507,7 @@ onUnmounted(() => {
           >
             <div>
               <div class="h-48 flex items-center justify-center p-3 product-img-box rounded-md mb-4">
-                <img src="assets/client_title_apeks_ap80.png" alt="APEKS AP80 PRO" class="max-h-40 w-auto object-contain group-hover:scale-105 transition">
+                <img src="assets/client_title_apeks_ap80.png" alt="APEKS AP80 PRO" class="max-h-40 w-auto object-contain transition">
               </div>
               <div class="text-[11px] text-neutral-muted">Артикул: AP-80-PRO</div>
               <h3 class="text-base font-bold text-neutral-dark mt-0.5 group-hover:text-brand transition">APEKS AP80 PRO</h3>
@@ -524,7 +533,7 @@ onUnmounted(() => {
           >
             <div>
               <div class="h-48 flex items-center justify-center p-3 product-img-box rounded-md mb-4">
-                <img src="assets/client_title_apeks_ap40.png" alt="APEKS AP40 Laser+" class="max-h-40 w-auto object-contain group-hover:scale-105 transition">
+                <img src="assets/client_title_apeks_ap40.png" alt="APEKS AP40 Laser+" class="max-h-40 w-auto object-contain transition">
               </div>
               <div class="text-[11px] text-neutral-muted">Артикул: AP-40L-PLUS</div>
               <h3 class="text-base font-bold text-neutral-dark mt-0.5 group-hover:text-brand transition">APEKS AP40 Laser+</h3>
@@ -550,7 +559,7 @@ onUnmounted(() => {
           >
             <div>
               <div class="h-48 flex items-center justify-center p-3 product-img-box rounded-md mb-4">
-                <img src="assets/client_title_apeks_ap20ar.png" alt="APEKS AP20 AR" class="max-h-40 w-auto object-contain group-hover:scale-105 transition">
+                <img src="assets/client_title_apeks_ap20ar.png" alt="APEKS AP20 AR" class="max-h-40 w-auto object-contain transition">
               </div>
               <div class="text-[11px] text-neutral-muted">Артикул: AP-20-AR</div>
               <h3 class="text-base font-bold text-neutral-dark mt-0.5 group-hover:text-brand transition">APEKS AP20 AR</h3>
@@ -576,7 +585,7 @@ onUnmounted(() => {
           >
             <div>
               <div class="h-48 flex items-center justify-center p-3 product-img-box rounded-md mb-4">
-                <img src="assets/client_title_apeks_ap10.png" alt="APEKS AP10" class="max-h-40 w-auto object-contain group-hover:scale-105 transition">
+                <img src="assets/client_title_apeks_ap10.png" alt="APEKS AP10" class="max-h-40 w-auto object-contain transition">
               </div>
               <div class="text-[11px] text-neutral-muted">Артикул: AP-10</div>
               <h3 class="text-base font-bold text-neutral-dark mt-0.5 group-hover:text-brand transition">APEKS AP10</h3>
@@ -686,10 +695,10 @@ onUnmounted(() => {
           <div @click="scrollToContacts('Видео: Оборудование APEKS')" class="group cursor-pointer bg-white rounded-xl border border-neutral-border hover:border-brand transition shadow-xs overflow-hidden flex flex-col justify-between">
             <div>
               <div class="relative h-48 sm:h-52 overflow-hidden bg-neutral-dark">
-                <img src="assets/video_preview_lineup.jpg" alt="Оборудование APEKS" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100">
+                <img src="assets/video_preview_lineup.jpg" alt="Оборудование APEKS" class="w-full h-full object-cover transition duration-500 opacity-90 group-hover:opacity-100">
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition transform group-hover:scale-110">
+                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition ">
                     <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                   </div>
                 </div>
@@ -710,10 +719,10 @@ onUnmounted(() => {
           <div @click="scrollToContacts('Видео: APEKS AP20 AR')" class="group cursor-pointer bg-white rounded-xl border border-neutral-border hover:border-brand transition shadow-xs overflow-hidden flex flex-col justify-between">
             <div>
               <div class="relative h-48 sm:h-52 overflow-hidden bg-neutral-dark">
-                <img src="assets/video_preview_ap20ar.jpg" alt="APEKS AP20 AR" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100">
+                <img src="assets/video_preview_ap20ar.jpg" alt="APEKS AP20 AR" class="w-full h-full object-cover transition duration-500 opacity-90 group-hover:opacity-100">
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition transform group-hover:scale-110">
+                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition ">
                     <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                   </div>
                 </div>
@@ -734,10 +743,10 @@ onUnmounted(() => {
           <div @click="scrollToContacts('Видео: APEKS AP40 Laser+')" class="group cursor-pointer bg-white rounded-xl border border-neutral-border hover:border-brand transition shadow-xs overflow-hidden flex flex-col justify-between">
             <div>
               <div class="relative h-48 sm:h-52 overflow-hidden bg-neutral-dark">
-                <img src="assets/video_preview_ap40laser.jpg" alt="APEKS AP40 Laser+" class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90 group-hover:opacity-100">
+                <img src="assets/video_preview_ap40laser.jpg" alt="APEKS AP40 Laser+" class="w-full h-full object-cover transition duration-500 opacity-90 group-hover:opacity-100">
                 <div class="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition"></div>
                 <div class="absolute inset-0 flex items-center justify-center">
-                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition transform group-hover:scale-110">
+                  <div class="w-12 h-12 rounded-full bg-white/95 text-[#016C8A] group-hover:bg-brand group-hover:text-white flex items-center justify-center shadow-lg transition ">
                     <svg class="w-5 h-5 ml-0.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                   </div>
                 </div>
@@ -772,7 +781,7 @@ onUnmounted(() => {
           </div>
           
           <router-link 
-            to="/catalog?category=software" 
+            to="/instructions" 
             class="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline shrink-0"
           >
             <span>Все инструкции</span>

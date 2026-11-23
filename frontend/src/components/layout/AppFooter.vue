@@ -50,11 +50,11 @@
         <div class="space-y-2">
           <h4 class="font-bold text-white uppercase text-[11px] tracking-wider">Услуги</h4>
           <ul class="space-y-1.5 text-slate-400">
-            <li><router-link to="/" class="hover:text-white transition">Бесплатный тест-драйв</router-link></li>
-            <li><router-link to="/" class="hover:text-white transition">Поверка приборов</router-link></li>
-            <li><router-link to="/" class="hover:text-white transition">Trade-In</router-link></li>
-            <li><router-link to="/" class="hover:text-white transition">Лизинг и рассрочка</router-link></li>
-            <li><router-link to="/" class="hover:text-white transition">Инструкции и софт</router-link></li>
+            <li><router-link to="/services" class="hover:text-white transition">Бесплатный тест-драйв</router-link></li>
+            <li><router-link to="/services" class="hover:text-white transition">Сервисное обслуживание</router-link></li>
+            <li><router-link to="/services" class="hover:text-white transition">Trade-In</router-link></li>
+            <li><router-link to="/services" class="hover:text-white transition">Лизинг и рассрочка</router-link></li>
+            <li><router-link to="/instructions" class="hover:text-white transition">Инструкции и софт</router-link></li>
           </ul>
         </div>
 
@@ -62,9 +62,10 @@
         <div class="space-y-2" id="about">
           <h4 class="font-bold text-white uppercase text-[11px] tracking-wider">О компании</h4>
           <ul class="space-y-1.5 text-slate-400">
-            <li><router-link to="/" class="hover:text-white transition">Внесение в Госреестр СИ</router-link></li>
+            <li><router-link to="/partners" class="hover:text-white transition">Партнерам и дилерам</router-link></li>
             <li><router-link to="/" class="hover:text-white transition">Реквизиты организации</router-link></li>
             <li><router-link to="/privacy" class="hover:text-white transition">Политика конфиденциальности</router-link></li>
+            <li><router-link to="/offer" class="hover:text-white transition">Публичная оферта</router-link></li>
             <li><a href="#news" class="hover:text-white transition">Новости компании</a></li>
           </ul>
         </div>

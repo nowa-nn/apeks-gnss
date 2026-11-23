@@ -214,7 +214,7 @@ function handleSearch(e) {
             <router-link to="/catalog?category=controllers" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Полевые контроллеры и планшеты</router-link>
             <router-link to="/catalog?category=total-stations" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Электронные тахеометры</router-link>
             <router-link to="/catalog?category=levels" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Нивелиры и уровни</router-link>
-            <router-link to="/catalog?category=radio" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Радиомодемы и периферия</router-link>
+            <router-link to="/catalog?category=radio" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Радиосвязь</router-link>
             <router-link to="/catalog?category=accessories" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Аксессуары</router-link>
             <router-link to="/catalog?category=software" @click="closeCatalog" class="block px-4 py-2.5 text-sm font-medium hover:bg-brand-light hover:text-brand transition-colors">Программное обеспечение</router-link>
             <div class="border-t border-neutral-border my-1"></div>
@@ -225,9 +225,9 @@ function handleSearch(e) {
         <!-- Right: Menu links -->
         <div class="flex items-center gap-6 sm:gap-8 text-xs sm:text-[13px] font-semibold text-neutral-dark overflow-x-auto no-scrollbar py-1">
           <router-link to="/" class="hover:text-brand transition whitespace-nowrap">Акции</router-link>
-          <router-link to="/" class="hover:text-brand transition whitespace-nowrap">Услуги</router-link>
-          <router-link to="/" class="hover:text-brand transition whitespace-nowrap">Инструкции</router-link>
-          <router-link to="/" class="hover:text-brand transition whitespace-nowrap">Партнерам</router-link>
+          <router-link to="/services" class="hover:text-brand transition whitespace-nowrap">Услуги</router-link>
+          <router-link to="/instructions" class="hover:text-brand transition whitespace-nowrap">Инструкции</router-link>
+          <router-link to="/partners" class="hover:text-brand transition whitespace-nowrap">Партнерам</router-link>
           <router-link to="/" class="hover:text-brand transition whitespace-nowrap">О компании</router-link>
           <a href="#contacts" @click="scrollToContacts('')" class="hover:text-brand transition whitespace-nowrap">Контакты</a>
         </div>

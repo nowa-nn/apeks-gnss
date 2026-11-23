@@ -1,6 +1,6 @@
 // Single Source of Truth for APEKS GNSS catalog products
-// Synchronized strictly with official client site: https://apeksgnss.ru/#services-2
-// Total products: 15
+// Synchronized strictly with official client site: https://apeksgnss.ru/
+// Total products: 19
 
 export const products = [
   {
@@ -8,7 +8,8 @@ export const products = [
     "slug": "apeks_ap10",
     "aliases": [
       "ap10",
-      "apeks-ap10"
+      "apeks-ap10",
+      "gnss-priemnik-apeks-ap10"
     ],
     "title": "APEKS AP10",
     "subtitle": "Надежный базовый RTK-приемник на 1408 каналов с защитой IP67 и IMU до 120°",
@@ -203,7 +204,12 @@ export const products = [
     "aliases": [
       "ap20-ar",
       "apeks-ap20-ar",
-      "ap20"
+      "ap20",
+      "ap20ar",
+      "apeks-ap20ar",
+      "gnss-priemnik-apeks-ap20ar",
+      "gnss-priemnik-apeks-ap20",
+      "apeks-ap20"
     ],
     "title": "APEKS AP20 AR",
     "subtitle": "Инновационный GNSS RTK-приемник с дополненной реальностью (AR) и 1408 каналами",
@@ -415,7 +421,10 @@ export const products = [
     "aliases": [
       "ap30-laser",
       "ap30-visual",
-      "ap30"
+      "ap30",
+      "apeks-ap30",
+      "gnss-priemnik-apeks-ap30-laser",
+      "apeks-ap30-laser"
     ],
     "title": "APEKS AP30 Laser",
     "subtitle": "Компактный RTK-приемник с зеленым лазером до 10 метров, AR-разбивкой и IMU до 120°",
@@ -623,7 +632,10 @@ export const products = [
     "aliases": [
       "ap40-laser-plus",
       "ap40-laser",
-      "ap40"
+      "ap40",
+      "apeks-ap40",
+      "gnss-priemnik-apeks-ap40-laser",
+      "apeks-ap40-laser"
     ],
     "title": "APEKS AP40 Laser+",
     "subtitle": "Флагманский GNSS RTK-приемник с зеленым лазером до 120 метров, визуальной AR-разбивкой и IMU до 120°",
@@ -839,7 +851,10 @@ export const products = [
     "aliases": [
       "ap50-vision",
       "ap50-laser",
-      "ap50"
+      "ap50",
+      "apeks-ap50",
+      "gnss-priemnik-apeks-ap50-vision",
+      "apeks-ap50-vision"
     ],
     "title": "APEKS AP50 Vision",
     "subtitle": "Геодезический RTK-приемник с визуальной VR-съемкой, фотограмметрией и AR-разбивкой",
@@ -1055,7 +1070,10 @@ export const products = [
     "aliases": [
       "ap60-vision",
       "ap60-ar",
-      "ap60"
+      "ap60",
+      "apeks-ap60",
+      "gnss-priemnik-apeks-ap60-vision",
+      "apeks-ap60-vision"
     ],
     "title": "APEKS AP60 Vision",
     "subtitle": "Флагманский RTK-приемник с двойной оптической системой VR-съемки и AR-разбивки",
@@ -1279,7 +1297,11 @@ export const products = [
     "aliases": [
       "max-5",
       "max5-base",
-      "base5-standard"
+      "base5-standard",
+      "max5",
+      "apeks-max-5",
+      "gnss-priemnik-apeks-max-5",
+      "apeks_max_5"
     ],
     "title": "APEKS MAX 5",
     "subtitle": "Мощная базовая станция и ровер со встроенным УКВ модемом 5 Вт, сенсорным OLED и АКБ 13200 мА·ч",
@@ -1473,7 +1495,8 @@ export const products = [
     "slug": "apeks_aps1",
     "aliases": [
       "aps1",
-      "apeks-aps1"
+      "apeks-aps1",
+      "gnss-priemnik-apeks-aps1"
     ],
     "title": "APEKS APS1",
     "subtitle": "Ультракомпактный карманный RTK GNSS-приемник весом 210 г для ГИС и геодезии",
@@ -1653,7 +1676,10 @@ export const products = [
     "slug": "apeks_cs3i",
     "aliases": [
       "cs3i",
-      "cs3i-controller"
+      "cs3i-controller",
+      "apeks-cs3i",
+      "polevoy-kontroller-cs3i",
+      "polevoy-kontroller-apeks-cs3i"
     ],
     "title": "Полевой контроллер CS3i",
     "subtitle": "Защищенный контроллер на Android 11 с физической буквенно-цифровой клавиатурой и 4G",
@@ -1815,7 +1841,11 @@ export const products = [
     "aliases": [
       "cs5i",
       "cs5i-controller",
-      "cs5i-pro"
+      "cs5i-pro",
+      "apeks-cs5i",
+      "polevoy-kontroller-cs5i",
+      "polevoy-kontroller-apeks-cs5i",
+      "polevoy-kontroller-apeks-cs5i-pro"
     ],
     "title": "Полевой контроллер CS5i",
     "subtitle": "Флагманский полевой контроллер на Android 12 с QWERTY-клавиатурой, экраном 500 нит и IP68",
@@ -1976,7 +2006,9 @@ export const products = [
     "slug": "apeks_ts8i",
     "aliases": [
       "ts8i",
-      "ts8i-tablet"
+      "ts8i-tablet",
+      "apeks-ts8i",
+      "planshet-apeks-ts8i"
     ],
     "title": "Полевой планшет TS8i",
     "subtitle": "Защищенный 8\" полевой планшет на Qualcomm SM4350 с поддержкой 5G и защитой IP67",
@@ -2137,7 +2169,9 @@ export const products = [
     "slug": "apeks_ts8i_pro",
     "aliases": [
       "ts8i-pro",
-      "ts8i-pro-tablet"
+      "ts8i-pro-tablet",
+      "apeks-ts8i-pro",
+      "planshet-apeks-ts8i-pro"
     ],
     "title": "Полевой планшет TS8i PRO",
     "subtitle": "8\" планшет со встроенным 1408-канальным RTK-модулем миллиметровой/сантиметровой точности",
@@ -2299,7 +2333,8 @@ export const products = [
     "aliases": [
       "software-apeksurv",
       "apeksurv",
-      "apeksurv-8"
+      "apeksurv-8",
+      "polevoe-programmnoe-obespechenie-apeksurv-8-0"
     ],
     "title": "Фирменное полевое ПО ApekSurv 8.0",
     "subtitle": "Лицензионное программное обеспечение для Android: RTK, CAD, COGO и поддержка МСК",
@@ -2414,7 +2449,9 @@ export const products = [
     "slug": "apeks_adl35",
     "aliases": [
       "adl35",
-      "adl35-radio"
+      "adl35-radio",
+      "apeks-adl35",
+      "vneshniy-radiomodem-apeks-adl35"
     ],
     "title": "Радиомодем APEKS ADL35",
     "subtitle": "Мощный внешний приемопередатчик УКВ до 35 Вт с OLED-дисплеем и Bluetooth",
@@ -2551,7 +2588,9 @@ export const products = [
     "aliases": [
       "ap80-pro",
       "apeks-ap80",
-      "ap80"
+      "ap80",
+      "gnss-priemnik-apeks-ap80-pro",
+      "apeks-ap80-pro"
     ],
     "title": "APEKS AP80 PRO",
     "subtitle": "Флагманский RTK-приемник с фотограмметрией, зеленым лазером до 30 метров и IMU до 120°",
@@ -2781,8 +2820,791 @@ export const products = [
         "text": "Комплект поставки включает передовой контроллер CS5i с увеличенным сенсорным дисплеем 5,5\", физической QWERTY-клавиатурой, аккумулятором 9 000 мА·ч, скоростным процессором, 4 ГБ + 64 ГБ памяти, интерфейсами 4G/Wi-Fi/NFC и лицензионным софтом ApekSurv 8.0."
       }
     ]
+  },
+  {
+    "id": 16,
+    "slug": "apeks_am02",
+    "aliases": [
+      "am02",
+      "apeks-am02",
+      "taheometr-apeks-am02",
+      "am-02",
+      "tv-0012"
+    ],
+    "title": "Тахеометр APEKS AM02",
+    "subtitle": "Высокоточный электронный тахеометр 2″ с дальностью до 1000 м без отражателя и до 5000 м на призму",
+    "article": "AM-02",
+    "category": "Электронные тахеометры",
+    "manufacturer": "APEKS",
+    "price": 245000,
+    "oldPrice": null,
+    "inStock": true,
+    "stockNote": "В наличии · Официальный представитель в России",
+    "brochureUrl": "assets/AM02_брошюра_RU.pdf",
+    "brochureFileName": "AM02_брошюра_RU.pdf",
+    "brochureSize": "PDF, 2,0 МБ",
+    "mainImage": "assets/client_title_apeks_am02.png",
+    "gallery": [
+      "assets/client_title_apeks_am02.png"
+    ],
+    "badge": "",
+    "shortDesc": "Профессиональный электронный тахеометр с угловой точностью 2″ и дальностью измерений до 1000 м без отражателя и до 5000 м на призму. Оснащен двухосевым компенсатором, ярким цветным дисплеем 2,8″, лазерным центриром и Bluetooth для синхронизации с полевым ПО ApekSurv на Android.",
+    "description": "Тахеометр APEKS AM02 — надежный инструмент для ежедневной работы геодезиста и строителя. Высокая скорость измерений (0,8 с в режиме повтора, 0,3 с при слежении), встроенный датчик температуры и давления с автоматическим вводом поправки PPM, внутренняя память на 20 000 точек и два аккумулятора в комплекте обеспечивают до 16 часов непрерывной автономной работы.",
+    "kit": {
+      "softwarePrice": 20000,
+      "controllerPrice": 40000,
+      "controllerModel": "CS3i",
+      "hasBonusPole": false,
+      "baseItemText": "Электронный тахеометр APEKS AM02 (кейс, 2 аккумулятора, зарядное устройство, юстировочный набор)"
+    },
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": null
+    },
+    "highlights": [
+      {
+        "label": "Угловая точность",
+        "value": "2″ (абсолютный кодовый энкодер)"
+      },
+      {
+        "label": "Дальность без отражателя",
+        "value": "1000 м с точностью ±(3 мм + 2 ppm)"
+      },
+      {
+        "label": "Дальность на призму",
+        "value": "до 5000 м с точностью ±(2 мм + 2 ppm)"
+      },
+      {
+        "label": "Синхронизация с ПО",
+        "value": "Bluetooth-подключение к ПО ApekSurv на Android"
+      },
+      {
+        "label": "Автономность",
+        "value": "До 16 часов непрерывной работы от 2 аккумуляторов"
+      }
+    ],
+    "specs": [
+      {
+        "group": "Угловые измерения",
+        "items": [
+          {
+            "name": "Способ измерения углов",
+            "val": "Абсолютный кодовый"
+          },
+          {
+            "name": "Точность измерения углов",
+            "val": "2″"
+          },
+          {
+            "name": "Дискретность отсчёта",
+            "val": "1″ / 5″ / 10″ (0,3 / 1,5 / 3 мгон, на выбор)"
+          }
+        ]
+      },
+      {
+        "group": "Измерение расстояний",
+        "items": [
+          {
+            "name": "Дальность без отражателя",
+            "val": "1000 м"
+          },
+          {
+            "name": "Точность без отражателя",
+            "val": "±(3 мм + 2 ppm)"
+          },
+          {
+            "name": "Дальность на призму",
+            "val": "5000 м"
+          },
+          {
+            "name": "Точность на призму",
+            "val": "±(2 мм + 2 ppm)"
+          },
+          {
+            "name": "Время измерения",
+            "val": "Повтор: 0,8 с / слежение: 0,3 с / без отражателя: ~1,5 с"
+          }
+        ]
+      },
+      {
+        "group": "Зрительная труба и компенсатор",
+        "items": [
+          {
+            "name": "Увеличение зрительной трубы",
+            "val": "30×"
+          },
+          {
+            "name": "Поле зрения",
+            "val": "1°30′ (2,7 м на 100 м)"
+          },
+          {
+            "name": "Мин. расстояние фокусировки",
+            "val": "1,5 м"
+          },
+          {
+            "name": "Сетка нитей",
+            "val": "С регулируемой подсветкой"
+          },
+          {
+            "name": "Тип компенсатора",
+            "val": "Двухосевой жидкостно-электрический"
+          },
+          {
+            "name": "Диапазон компенсации",
+            "val": "±3′ (точность установки 1″)"
+          },
+          {
+            "name": "Лазерный центрир",
+            "val": "Красный лазер, 4 уровня яркости, точность 1 мм при 1,5 м"
+          }
+        ]
+      },
+      {
+        "group": "Управление, дисплей и память",
+        "items": [
+          {
+            "name": "Операционная система",
+            "val": "ОС реального времени"
+          },
+          {
+            "name": "Дисплей",
+            "val": "2,8″, 240 × 320 пикс., цветной ЖК"
+          },
+          {
+            "name": "Клавиатура",
+            "val": "Двусторонняя, буквенно-цифровая с подсветкой"
+          },
+          {
+            "name": "Внутренняя память",
+            "val": "Около 20 000 точек (формат ASCII)"
+          },
+          {
+            "name": "Интерфейсы",
+            "val": "RS-232, SD-карта, Micro USB, USB-флешка, Bluetooth"
+          }
+        ]
+      },
+      {
+        "group": "Питание и физические параметры",
+        "items": [
+          {
+            "name": "Аккумулятор",
+            "val": "Литий-ионный перезаряжаемый 7,4 В / 3000 мА·ч (2 шт. в комплекте)"
+          },
+          {
+            "name": "Время работы",
+            "val": "До 16 ч непрерывных измерений (около 12 000 измерений)"
+          },
+          {
+            "name": "Рабочая температура",
+            "val": "от −20 до +50 °C (хранение от −40 до +70 °C)"
+          },
+          {
+            "name": "Класс защиты",
+            "val": "IP55; 95% влажности без конденсата"
+          },
+          {
+            "name": "Габариты и масса",
+            "val": "200 × 200 × 355 мм, масса 5,6 кг"
+          }
+        ]
+      }
+    ],
+    "isController": false,
+    "isTablet": false,
+    "hasRtkModule": false,
+    "hasLaser": true,
+    "hasImu": false,
+    "hasCameraAr": false,
+    "hasCameraVr": false,
+    "hasRadio2W": false,
+    "hasRadio5W": false,
+    "isSwGnss": false,
+    "isSwTacheometer": true,
+    "isSwPostProcessing": false,
+    "isSwOther": false,
+    "isRadioModem": false,
+    "isRadioAntenna": false,
+    "isRadioOther": false,
+    "channels": 0,
+    "promoFeatures": []
+  },
+  {
+    "id": 17,
+    "slug": "apeks_am02i",
+    "aliases": [
+      "am02i",
+      "apeks-am02i",
+      "taheometr-apeks-am02i",
+      "taheometr-apeks-am02i-na-android",
+      "am-02i",
+      "tv-0011"
+    ],
+    "title": "Тахеометр APEKS AM02i на Android",
+    "subtitle": "Интеллектуальный электронный тахеометр 2″ на ОС Android 14 с 6″ сенсорным экраном и предустановленным ПО ApekSurv",
+    "article": "AM-02i",
+    "category": "Электронные тахеометры",
+    "manufacturer": "APEKS",
+    "price": 345000,
+    "oldPrice": null,
+    "inStock": true,
+    "stockNote": "В наличии · Официальный представитель в России",
+    "brochureUrl": "assets/AM02i_брошюра_RU.pdf",
+    "brochureFileName": "AM02i_брошюра_RU.pdf",
+    "brochureSize": "PDF, 3,7 МБ",
+    "mainImage": "assets/client_title_apeks_am02i.png",
+    "gallery": [
+      "assets/client_title_apeks_am02i.png"
+    ],
+    "badge": "",
+    "shortDesc": "Смарт-тахеометр нового поколения на базе операционной системы Android 14 с мощным процессором MT6769, 4 ГБ ОЗУ и 64 ГБ ПЗУ. Большой 6-дюймовый цветной сенсорный ЖК-экран (1280×720) и предустановленное полевое ПО ApekSurv позволяют выполнять графическую разбивку и вынос из CAD прямо на экране инструмента.",
+    "description": "APEKS AM02i объединяет в одном корпусе электронный тахеометр с точностью 2″ и мощный полевой Android-компьютер. Прибор измеряет до 1000 м без отражателя и до 4000 м на призму, оснащен слотом для Nano-SIM с поддержкой 4G LTE, модулями Wi-Fi и Bluetooth 5.0 BLE, Type-C и USB 2.0. Комплект из двух аккумуляторов по 7000 мА·ч обеспечивает бесперебойную работу в поле до 10 часов.",
+    "kit": {
+      "softwarePrice": 0,
+      "controllerPrice": 0,
+      "controllerModel": "Встроенный Android-компьютер 6\"",
+      "hasBonusPole": false,
+      "baseItemText": "Смарт-тахеометр APEKS AM02i (кейс, 2 аккумулятора по 7000 мА·ч, зарядное устройство, предустановленное ПО ApekSurv)"
+    },
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "highlights": [
+      {
+        "label": "Операционная система",
+        "value": "Android 14 (процессор MediaTek MT6769, 4 ГБ ОЗУ + 64 ГБ ПЗУ)"
+      },
+      {
+        "label": "Сенсорный дисплей",
+        "value": "6.0″ HD (1280×720) двусторонний цветной сенсорный экран"
+      },
+      {
+        "label": "Работа с CAD",
+        "value": "Прямой вынос и разбивка чертежей DXF/DWG в ПО ApekSurv"
+      },
+      {
+        "label": "Дальность и точность",
+        "value": "2″ точность, 1000 м без отражателя, 4000 м на призму"
+      },
+      {
+        "label": "Связь и интернет",
+        "value": "4G LTE (Nano-SIM), двухдиапазонный Wi-Fi, Bluetooth 5.0 BLE, Type-C"
+      },
+      {
+        "label": "Сверхмощное питание",
+        "value": "2 аккумулятора по 7000 мА·ч (7,2 В) — до 10 часов работы"
+      }
+    ],
+    "specs": [
+      {
+        "group": "Система и процессор",
+        "items": [
+          {
+            "name": "Операционная система",
+            "val": "Android 14"
+          },
+          {
+            "name": "Процессор",
+            "val": "Восьмиядерный MediaTek MT6769"
+          },
+          {
+            "name": "Оперативная память",
+            "val": "4 ГБ ОЗУ"
+          },
+          {
+            "name": "Встроенная память",
+            "val": "64 ГБ ПЗУ"
+          },
+          {
+            "name": "Предустановленное ПО",
+            "val": "Фирменное полевое ПО ApekSurv (вынос из CAD, разбивка трасс, объем земляных работ)"
+          }
+        ]
+      },
+      {
+        "group": "Дисплей и интерфейсы",
+        "items": [
+          {
+            "name": "Дисплей",
+            "val": "Двусторонний емкостный сенсорный ЖК 6,0″, 1280 × 720 пикс."
+          },
+          {
+            "name": "Беспроводная связь",
+            "val": "Wi-Fi 802.11a/b/g/n/ac (2,4 / 5 ГГц), Bluetooth 5.0 BLE"
+          },
+          {
+            "name": "Мобильная связь",
+            "val": "2G/3G/4G LTE, слот для карты Nano-SIM"
+          },
+          {
+            "name": "Проводные интерфейсы",
+            "val": "1 × USB Type-C (OTG, зарядка), 1 × USB 2.0"
+          }
+        ]
+      },
+      {
+        "group": "Угловые измерения",
+        "items": [
+          {
+            "name": "Точность измерения углов",
+            "val": "2″"
+          },
+          {
+            "name": "Способ измерения углов",
+            "val": "Абсолютный энкодер"
+          },
+          {
+            "name": "Дискретность отсчёта",
+            "val": "1″"
+          }
+        ]
+      },
+      {
+        "group": "Измерение расстояний",
+        "items": [
+          {
+            "name": "Дальность без отражателя",
+            "val": "1000 м"
+          },
+          {
+            "name": "Дальность на призму",
+            "val": "4000 м"
+          },
+          {
+            "name": "Дальность на отражающую плёнку",
+            "val": "2000 м"
+          },
+          {
+            "name": "Точность на призму",
+            "val": "±(2 мм + 2 ppm)"
+          },
+          {
+            "name": "Точность без отражателя",
+            "val": "±(3 мм + 2 ppm)"
+          },
+          {
+            "name": "Точность на плёнку",
+            "val": "±(3 мм + 2 ppm)"
+          },
+          {
+            "name": "Скорость измерения",
+            "val": "Точный режим < 0,7 с; быстрый режим < 0,5 с; режим слежения < 0,3 с"
+          },
+          {
+            "name": "Мин. отсчёт",
+            "val": "Точный / слежение: 0,1 мм"
+          }
+        ]
+      },
+      {
+        "group": "Зрительная труба и компенсатор",
+        "items": [
+          {
+            "name": "Увеличение зрительной трубы",
+            "val": "30× (прямое изображение)"
+          },
+          {
+            "name": "Поле зрения",
+            "val": "1°30′"
+          },
+          {
+            "name": "Мин. расстояние фокусировки",
+            "val": "1,7 м"
+          },
+          {
+            "name": "Разрешающая способность",
+            "val": "2,8″"
+          },
+          {
+            "name": "Тип компенсатора",
+            "val": "Двухосевой"
+          },
+          {
+            "name": "Диапазон компенсации",
+            "val": "±4′ (точность установки ±6″)"
+          },
+          {
+            "name": "Лазерный центрир",
+            "val": "Красный лазер 635 нм"
+          },
+          {
+            "name": "Быстрая кнопка измерений",
+            "val": "На боковой панели под аккумуляторным отсеком"
+          }
+        ]
+      },
+      {
+        "group": "Питание и физические параметры",
+        "items": [
+          {
+            "name": "Аккумулятор",
+            "val": "Литий-ионный перезаряжаемый 7,2 В (DC) / 7000 мА·ч (2 шт. в комплекте)"
+          },
+          {
+            "name": "Время работы",
+            "val": "До 10 часов непрерывной съемки"
+          },
+          {
+            "name": "Класс защиты",
+            "val": "IP55; 95% влажности без конденсата"
+          },
+          {
+            "name": "Рабочая температура",
+            "val": "от −20 до +50 °C (хранение от −40 до +50 °C)"
+          },
+          {
+            "name": "Габариты и масса",
+            "val": "200 × 200 × 355 мм, масса 5,6 кг"
+          }
+        ]
+      }
+    ],
+    "isController": false,
+    "isTablet": false,
+    "hasRtkModule": false,
+    "hasLaser": true,
+    "hasImu": false,
+    "hasCameraAr": false,
+    "hasCameraVr": false,
+    "hasRadio2W": false,
+    "hasRadio5W": false,
+    "isSwGnss": false,
+    "isSwTacheometer": true,
+    "isSwPostProcessing": false,
+    "isSwOther": false,
+    "isRadioModem": false,
+    "isRadioAntenna": false,
+    "isRadioOther": false,
+    "channels": 0,
+    "promoFeatures": []
+  },
+  {
+    "id": 18,
+    "slug": "veha_karbonovaya_apeks_2_5_m",
+    "aliases": [
+      "veha-karbonovaya-apeks-2-5-m",
+      "apeks_pole_25",
+      "apeks-pole-25",
+      "carbon-pole",
+      "veha-apeks",
+      "tv-0039"
+    ],
+    "title": "Веха карбоновая APEKS 2,5 м",
+    "subtitle": "Телескопическая веха из углеволокна (карбон) 2,5 м с поворотным фиксатором и круглым уровнем",
+    "article": "AP-P25",
+    "category": "Аксессуары",
+    "manufacturer": "APEKS",
+    "price": 14500,
+    "oldPrice": null,
+    "inStock": true,
+    "stockNote": "В наличии · Официальный представитель в России",
+    "brochureUrl": null,
+    "brochureFileName": null,
+    "brochureSize": null,
+    "mainImage": "assets/client_title_apeks_pole_25.png",
+    "gallery": [
+      "assets/client_title_apeks_pole_25.png"
+    ],
+    "badge": "",
+    "shortDesc": "Профессиональная телескопическая геодезическая веха APEKS длиной 2,5 м из высокопрочного углеродного волокна (карбона) для установки GNSS-приёмников, отражателей и антенн. Обладает минимальным весом, высокой жесткостью, оснащена надежным поворотным цанговым фиксатором секций и встроенным юстируемым уровнем.",
+    "description": "Карбоновая веха APEKS 2,5 м разработана специально для ежедневных полевых спутниковых съемок RTK. Углепластиковый композит отличается высокой прочностью на изгиб, не подвержен коррозии и температурным деформациям, а также приятен для работы в холодное время года. Стандартная резьба 5/8″ обеспечивает совместимость со всеми типами спутниковых антенн и призменных систем.",
+    "kit": {
+      "softwarePrice": 0,
+      "controllerPrice": 0,
+      "controllerModel": null,
+      "hasBonusPole": false,
+      "baseItemText": "Карбоновая веха APEKS 2,5 м, защитный транспортировочный чехол с ремнем"
+    },
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "highlights": [
+      {
+        "label": "Материал корпуса",
+        "value": "100% высокомодульное углеродное волокно (карбон)"
+      },
+      {
+        "label": "Рабочая длина",
+        "value": "Телескопическая регулировка до 2,50 м (в сложенном виде 1,35 м)"
+      },
+      {
+        "label": "Фиксация секций",
+        "value": "Надежный цанговый зажим Twist-Lock"
+      },
+      {
+        "label": "Резьбовое соединение",
+        "value": "Стандартная геодезическая резьба 5/8″"
+      },
+      {
+        "label": "Оснащение",
+        "value": "Встроенный регулируемый круглый уровень и наконечник из твердого сплава"
+      }
+    ],
+    "specs": [
+      {
+        "group": "Основные параметры",
+        "items": [
+          {
+            "name": "Производитель",
+            "val": "APEKS"
+          },
+          {
+            "name": "Материал",
+            "val": "Углеродное волокно (100% карбон)"
+          },
+          {
+            "name": "Максимальная длина",
+            "val": "2,50 м"
+          },
+          {
+            "name": "Длина в сложенном виде",
+            "val": "1,35 м"
+          },
+          {
+            "name": "Количество секций",
+            "val": "2 секции"
+          },
+          {
+            "name": "Тип фиксатора",
+            "val": "Поворотный цанговый зажим Twist-Lock"
+          }
+        ]
+      },
+      {
+        "group": "Конструкция и комплектация",
+        "items": [
+          {
+            "name": "Крепление оборудования",
+            "val": "Стандартная резьба 5/8″"
+          },
+          {
+            "name": "Круглый уровень",
+            "val": "Встроенный юстируемый пузырьковый уровень 20′"
+          },
+          {
+            "name": "Наконечник",
+            "val": "Сменный стальной наконечник повышенной твердости"
+          },
+          {
+            "name": "Масса вехи",
+            "val": "1,15 кг"
+          },
+          {
+            "name": "Комплектация",
+            "val": "Веха, защитный плотный чехол с плечевым ремнем"
+          }
+        ]
+      }
+    ],
+    "isController": false,
+    "isTablet": false,
+    "hasRtkModule": false,
+    "hasLaser": false,
+    "hasImu": false,
+    "hasCameraAr": false,
+    "hasCameraVr": false,
+    "hasRadio2W": false,
+    "hasRadio5W": false,
+    "isSwGnss": false,
+    "isSwTacheometer": false,
+    "isSwPostProcessing": false,
+    "isSwOther": false,
+    "isRadioModem": false,
+    "isRadioAntenna": false,
+    "isRadioOther": false,
+    "channels": 0,
+    "promoFeatures": []
+  },
+  {
+    "id": 19,
+    "slug": "opticheskiy_nivelir_apeks_apl32",
+    "aliases": [
+      "opticheskiy-nivelir-apeks-apl32",
+      "apeks_apl32",
+      "apeks-apl32",
+      "apl32",
+      "nivelir-apl32",
+      "tv-0013"
+    ],
+    "title": "Оптический нивелир APEKS APL32",
+    "subtitle": "Высокоточный оптический нивелир 32× с воздушным демпфером и влагозащитой IP66",
+    "article": "AP-L32",
+    "category": "Нивелиры и уровни",
+    "manufacturer": "APEKS",
+    "price": 19500,
+    "oldPrice": null,
+    "inStock": true,
+    "stockNote": "В наличии · Официальный представитель в России",
+    "brochureUrl": null,
+    "brochureFileName": null,
+    "brochureSize": null,
+    "mainImage": "assets/client_title_apeks_apl32.png",
+    "gallery": [
+      "assets/client_title_apeks_apl32.png"
+    ],
+    "badge": "",
+    "shortDesc": "Профессиональный оптический нивелир APEKS APL32 с 32-кратным увеличением зрительной трубы и автоматическим компенсатором с воздушным магнитным демпфером. Обеспечивает точность измерения превышений 1,0 мм на 1 км двойного хода. Герметичный металлический корпус с классом защиты IP66 надежно защищен от сильного дождя, грязи и строительной пыли.",
+    "description": "Оптический нивелир APEKS APL32 предназначен для высокоточного геометрического нивелирования при строительстве зданий, дорожных работах, планировке участков и инженерно-геодезических изысканиях. Просветленная оптика обеспечивает яркое и контрастное прямое изображение даже в условиях сумерек или плохой освещенности. Горизонтальный лимб с градуировкой 360° позволяет выполнять угловые измерения.",
+    "kit": {
+      "softwarePrice": 0,
+      "controllerPrice": 0,
+      "controllerModel": null,
+      "hasBonusPole": false,
+      "baseItemText": "Оптический нивелир APEKS APL32, ударопрочный пластиковый кейс, нитяной отвес, юстировочный набор, инструкция"
+    },
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "highlights": [
+      {
+        "label": "Увеличение зрительной трубы",
+        "value": "32× (высококонтрастная просветленная оптика)"
+      },
+      {
+        "label": "Точность нивелирования",
+        "value": "1,0 мм на 1 км двойного хода"
+      },
+      {
+        "label": "Автоматический компенсатор",
+        "value": "Быстрый компенсатор с воздушным демпфером, диапазон ±15′"
+      },
+      {
+        "label": "Защита корпуса",
+        "value": "Герметичный пыле-влагозащищенный корпус стандарта IP66"
+      },
+      {
+        "label": "Горизонтальный круг",
+        "value": "Градуировка 360° с ценой деления 1° для угловых засечек"
+      }
+    ],
+    "specs": [
+      {
+        "group": "Зрительная труба",
+        "items": [
+          {
+            "name": "Изображение",
+            "val": "Прямое"
+          },
+          {
+            "name": "Увеличение",
+            "val": "32×"
+          },
+          {
+            "name": "Световой диаметр объектива",
+            "val": "38 мм"
+          },
+          {
+            "name": "Поле зрения",
+            "val": "1°20′ (2,3 м на 100 м)"
+          },
+          {
+            "name": "Мин. расстояние визирования",
+            "val": "0,5 м"
+          },
+          {
+            "name": "Коэффициент дальномера",
+            "val": "100"
+          }
+        ]
+      },
+      {
+        "group": "Точность и компенсатор",
+        "items": [
+          {
+            "name": "СКО на 1 км двойного хода",
+            "val": "1,0 мм"
+          },
+          {
+            "name": "Тип компенсатора",
+            "val": "Маятниковый с воздушным магнитным демпфером"
+          },
+          {
+            "name": "Рабочий диапазон компенсатора",
+            "val": "±15′"
+          },
+          {
+            "name": "Точность установки компенсатора",
+            "val": "±0,3″"
+          }
+        ]
+      },
+      {
+        "group": "Горизонтальный круг и уровни",
+        "items": [
+          {
+            "name": "Градуировка горизонтального лимба",
+            "val": "360°"
+          },
+          {
+            "name": "Цена деления лимба",
+            "val": "1°"
+          },
+          {
+            "name": "Чувствительность круглого уровня",
+            "val": "8′ / 2 мм"
+          }
+        ]
+      },
+      {
+        "group": "Физические параметры и защита",
+        "items": [
+          {
+            "name": "Класс защиты от пыли и влаги",
+            "val": "IP66"
+          },
+          {
+            "name": "Диапазон рабочих температур",
+            "val": "от −30 до +50 °C"
+          },
+          {
+            "name": "Крепление к штативу",
+            "val": "Стандартная становая резьба 5/8″"
+          },
+          {
+            "name": "Габаритные размеры",
+            "val": "200 × 130 × 140 мм"
+          },
+          {
+            "name": "Масса нивелира",
+            "val": "1,7 кг (с кейсом 3,1 кг)"
+          }
+        ]
+      }
+    ],
+    "isController": false,
+    "isTablet": false,
+    "hasRtkModule": false,
+    "hasLaser": false,
+    "hasImu": false,
+    "hasCameraAr": false,
+    "hasCameraVr": false,
+    "hasRadio2W": false,
+    "hasRadio5W": false,
+    "isSwGnss": false,
+    "isSwTacheometer": false,
+    "isSwPostProcessing": false,
+    "isSwOther": false,
+    "isRadioModem": false,
+    "isRadioAntenna": false,
+    "isRadioOther": false,
+    "channels": 0,
+    "promoFeatures": []
   }
 ];
+
 export function getProductBySlug(slug) {
   if (!slug) return null;
   const clean = String(slug).toLowerCase().trim();

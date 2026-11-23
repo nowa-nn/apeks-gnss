@@ -160,9 +160,9 @@ onMounted(() => {
             </div>
 
             <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Акции</router-link>
-            <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Услуги и сервис</router-link>
-            <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Инструкции и ПО</router-link>
-            <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Партнерам</router-link>
+            <router-link to="/services" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Услуги и сервис</router-link>
+            <router-link to="/instructions" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Инструкции и ПО</router-link>
+            <router-link to="/partners" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Партнерам</router-link>
             <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">О компании</router-link>
             <a href="#contacts" @click="toggleMobileMenu(); scrollToContacts('')" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Контакты</a>
           </div>

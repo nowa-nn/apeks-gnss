@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!-- Auto trailing slash for clean subdirectory resolution -->
+  <script>
+    if (location.pathname.length > 1 && !location.pathname.endsWith('/') && !location.pathname.endsWith('.html') && !location.pathname.includes('.')) {
+      location.replace(location.pathname + '/' + location.search + location.hash);
+    }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APEKS GNSS — Официальный интернет-магазин</title>
+  <meta name="description" content="Официальный интернет-магазин спутникового и геодезического оборудования APEKS GNSS.">
+
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Preload Hero LCP Image -->
+  <link rel="preload" as="image" href="../assets/banner-1-2-1.webp" type="image/webp" fetchpriority="high">
+  <!-- SPA Routing Redirect Restore for Static Hosts & GitHub Pages -->
+  <script>
+    (function(l) {
+      if (l.search[1] === '/' ) {
+        var decoded = l.search.slice(1).split('&').map(function(s) { 
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+        );
+      }
+    }(window.location));
+  </script>
+  <script type="module" crossorigin src="../assets/index-CDXZF9UZ.js"></script>
+  <link rel="stylesheet" crossorigin href="../assets/index-UagvJXwd.css">
+</head>
+<body class="bg-white text-neutral-dark font-sans antialiased">
+  <div id="app"></div>
+</body>
+</html>

@@ -69,6 +69,17 @@ function incrementQty() {
 }
 
 // Gallery navigation
+function resolveAsset(url) {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('//') || url.startsWith('data:')) {
+    return url;
+  }
+  const clean = url.replace(/^\.?\//, '');
+  const isGhPages = typeof window !== 'undefined' && window.location.pathname.includes('/apeks-gnss');
+  const prefix = isGhPages ? '/apeks-gnss/' : '/';
+  return prefix + clean;
+}
+
 function selectImage(img) {
   activeImage.value = img;
 }
@@ -342,7 +353,7 @@ watch(
 
               <!-- Main Instrument Image -->
               <img 
-                :src="activeImage" 
+                :src="resolveAsset(activeImage)" 
                 :alt="product.title" 
                 @click="openLightbox"
                 class="max-h-[320px] sm:max-h-[400px] lg:max-h-[440px] w-auto max-w-full object-contain transition-all duration-300"
@@ -379,7 +390,7 @@ watch(
                 ]"
                 :aria-label="'Фото ' + (idx + 1)"
               >
-                <img :src="img" :alt="product.title + ' миниатюра ' + (idx + 1)" class="max-h-full max-w-full object-contain" />
+                <img :src="resolveAsset(img)" :alt="product.title + ' миниатюра ' + (idx + 1)" class="max-h-full max-w-full object-contain" />
               </button>
             </div>
 
@@ -414,7 +425,7 @@ watch(
             </div>
 
             <!-- Выбор опций комплекта (миниатюрный, без дублирования) -->
-            <div v-if="product.kitOptions" class="space-y-2 pt-1 pb-1">
+            <div v-if="product.kitOptions && (product.kitOptions.software || product.kitOptions.controller)" class="space-y-2 pt-1 pb-1">
               <div class="text-xs font-semibold text-neutral-dark">
                 Комплектация:
               </div>
@@ -422,6 +433,7 @@ watch(
               <div class="space-y-1.5">
                 <!-- Опция 1: ПО -->
                 <label 
+                  v-if="product.kitOptions.software"
                   :class="[
                     'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer transition',
                     includeSoftware ? 'border-brand bg-brand/5 text-neutral-dark font-medium' : 'border-neutral-border hover:border-neutral-muted bg-white text-neutral-dark'
@@ -440,6 +452,7 @@ watch(
 
                 <!-- Опция 2: Контроллер -->
                 <label 
+                  v-if="product.kitOptions.controller"
                   :class="[
                     'flex items-center justify-between px-3 py-2 rounded-lg border text-xs cursor-pointer transition',
                     includeController ? 'border-brand bg-brand/5 text-neutral-dark font-medium' : 'border-neutral-border hover:border-neutral-muted bg-white text-neutral-dark'
@@ -459,7 +472,7 @@ watch(
 
               <!-- Бонусная карбоновая веха при покупке полного комплекта в одну строку на десктопе (12px) -->
               <div class="text-[12px] pt-0.5 leading-snug">
-                <span v-if="isFullKit" class="text-brand font-medium inline-flex items-center gap-1.5 lg:whitespace-nowrap">
+                <span v-if="product.kit?.hasBonusPole && isFullKit" class="text-brand font-medium inline-flex items-center gap-1.5 lg:whitespace-nowrap">
                   <svg class="w-3.5 h-3.5 text-brand shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V6a2 2 0 10-2 2h2zm-8 4h16v9a2 2 0 01-2 2H6a2 2 0 01-2-2v-9zm-1-4h18a1 1 0 011 1v3H2V9a1 1 0 011-1z"/>
                   </svg>
@@ -651,7 +664,7 @@ watch(
             Скачайте официальный буклет APEKS с полными метрологическими характеристиками, схемами подключения и результатами полевых тестов.
           </p>
           <a 
-            :href="product.brochureUrl" 
+            :href="resolveAsset(product.brochureUrl)" 
             :download="product.brochureFileName || 'brochure.pdf'"
             target="_blank" 
             rel="noopener"
@@ -689,9 +702,9 @@ watch(
             <div>
               <div class="h-44 flex items-center justify-center p-3 product-img-box rounded-md mb-4">
                 <img 
-                  :src="rel.mainImage" 
+                  :src="resolveAsset(rel.mainImage)" 
                   :alt="rel.title" 
-                  class="max-h-36 w-auto object-contain group-hover:scale-105 transition duration-300"
+                  class="max-h-36 w-auto object-contain  transition duration-300"
                 />
               </div>
               <div class="text-[11px] text-neutral-muted">Артикул: {{ rel.article }}</div>
@@ -837,7 +850,7 @@ watch(
             @click="toggleZoomOnClick"
           >
             <img 
-              :src="activeImage" 
+              :src="resolveAsset(activeImage)" 
               :alt="product.title" 
               class="max-h-[70vh] sm:max-h-[75vh] w-auto max-w-[90vw] object-contain drop-shadow-2xl pointer-events-none"
               draggable="false"
@@ -873,7 +886,7 @@ watch(
               activeImage === img ? 'border-brand ring-2 ring-brand' : 'border-white/20 opacity-60 hover:opacity-100'
             ]"
           >
-            <img :src="img" :alt="product.title" class="max-h-full max-w-full object-contain pointer-events-none" />
+            <img :src="resolveAsset(img)" :alt="product.title" class="max-h-full max-w-full object-contain pointer-events-none" />
           </button>
         </div>
       </div>
