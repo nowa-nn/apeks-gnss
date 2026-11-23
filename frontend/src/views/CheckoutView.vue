@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCart, formatRub } from '../composables/useCart.js';
+import { resolveAsset } from '../utils/assets.js';
 
 const router = useRouter();
 const {
@@ -410,7 +411,7 @@ function printOrder() {
                 class="py-3.5 flex items-center justify-between gap-4"
               >
                 <div class="flex items-center gap-3">
-                  <img :src="item.img" :alt="item.title" class="w-12 h-12 object-contain bg-[#F4F6F9] rounded border border-neutral-border p-1">
+                  <img :src="resolveAsset(item.img || 'assets/client_title_apeks_ap10.png')" :alt="item.title" class="w-12 h-12 object-contain bg-[#F4F6F9] rounded border border-neutral-border p-1">
                   <div>
                     <div class="text-xs sm:text-sm font-bold text-neutral-dark">{{ item.title }}</div>
                     <div class="text-[11px] text-neutral-muted">{{ item.qty }} шт. × {{ formatRub(item.price) }}</div>
@@ -779,7 +780,7 @@ function printOrder() {
                 >
                   <div class="flex items-center gap-2.5 min-w-0">
                     <img 
-                      :src="item.img || 'assets/client_title_apeks_ap10.png'" 
+                      :src="resolveAsset(item.img || 'assets/client_title_apeks_ap10.png')" 
                       :alt="item.title"
                       class="w-10 h-10 object-contain bg-[#F4F6F9] rounded border border-neutral-border p-1 shrink-0"
                     />

@@ -4,7 +4,14 @@ export function resolveAsset(url) {
     return url;
   }
   const clean = url.replace(/^\.?\//, '');
-  const isGhPages = typeof window !== 'undefined' && window.location.pathname.includes('/apeks-gnss');
-  const prefix = isGhPages ? '/apeks-gnss/' : '/';
-  return prefix + clean;
+  if (typeof window === 'undefined') return '/' + clean;
+
+  const isGhPages = window.location.hostname.includes('github.io');
+  if (isGhPages) {
+    if (window.location.pathname.startsWith('/apeks-gnss/docs')) {
+      return '/apeks-gnss/docs/' + clean;
+    }
+    return '/apeks-gnss/' + clean;
+  }
+  return '/' + clean;
 }

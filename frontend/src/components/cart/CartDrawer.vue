@@ -2,6 +2,7 @@
 import { watch, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCart, formatRub } from '../../composables/useCart.js';
+import { resolveAsset } from '../../utils/assets.js';
 
 const router = useRouter();
 const {
@@ -154,7 +155,7 @@ function goToCheckout() {
             <!-- Thumbnail -->
             <div class="w-16 h-16 sm:w-20 sm:h-20 shrink-0 bg-[#F4F6F9] rounded-lg border border-neutral-border p-1.5 flex items-center justify-center">
               <img 
-                :src="item.img || 'assets/client_title_apeks_ap10.png'" 
+                :src="resolveAsset(item.img || 'assets/client_title_apeks_ap10.png')" 
                 :alt="item.title"
                 class="w-full h-full object-contain"
                 loading="lazy"

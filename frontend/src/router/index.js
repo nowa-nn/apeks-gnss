@@ -11,13 +11,26 @@ import PartnersView from '../views/PartnersView.vue';
 import UniversalPageView from '../views/UniversalPageView.vue';
 
 const isGhPages = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
-const base = isGhPages ? '/apeks-gnss/' : '/';
+const isDocsSubdir = typeof window !== 'undefined' && window.location.pathname.startsWith('/apeks-gnss/docs');
+const base = isGhPages ? (isDocsSubdir ? '/apeks-gnss/docs/' : '/apeks-gnss/') : '/';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: HomeView,
+  },
+  {
+    path: '/index.html',
+    redirect: '/',
+  },
+  {
+    path: '/docs',
+    redirect: '/',
+  },
+  {
+    path: '/docs/index.html',
+    redirect: '/',
   },
   {
     path: '/catalog',
