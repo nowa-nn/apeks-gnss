@@ -143,7 +143,7 @@ export default async function seed({ container }: ExecArgs) {
       title: p.title,
       subtitle: p.subtitle,
       description: p.description,
-      handle: p.slug,
+      handle: p.slug.replace(/_/g, "-"),
       status: ProductStatus.PUBLISHED,
       category_ids: [createdCategories.find((c) => c.name === p.category)!.id],
       shipping_profile_id: profile.id,

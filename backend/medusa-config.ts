@@ -19,4 +19,14 @@ module.exports = defineConfig({
     backendUrl: process.env.MEDUSA_BACKEND_URL || "http://localhost:9000",
     storefrontUrl: process.env.STOREFRONT_URL || "http://localhost:5173",
   },
+  modules: [
+    {
+      resolve: "@medusajs/medusa/event-bus-redis",
+      options: { redisUrl: process.env.REDIS_URL },
+    },
+    {
+      resolve: "@medusajs/medusa/workflow-engine-redis",
+      options: { redis: { redisUrl: process.env.REDIS_URL } },
+    },
+  ],
 })
