@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo='https://github.com/nowa-nn/apeks-gnss.git'
+releases='/opt/apeks/releases'
+mkdir -p "$releases"
+sha="$(git ls-remote "$repo" refs/heads/backend | cut -f1)"
+test -n "$sha"
+current="$(readlink -f /opt/apeks/current 2>/dev/null || true)"
+if [[ "$current" == "$releases/$sha" ]]; then
+  exit 0
+fi
+
+candidate="$releases/$sha"
+if [[ ! -d "$candidate/.git" ]]; then
+  git clone --quiet --depth 1 --branch backend "$repo" "$candidate"
+fi
+cd "$candidate/backend"
+set -a
+source /etc/apeks/medusa.env
+set +a
+npm ci --no-audit --no-fund
+npm run build
+ln -sfn ../../node_modules .medusa/server/node_modules
+./node_modules/.bin/medusa db:migrate
+if [[ ! -e /var/lib/apeks/seeded ]]; then
+  npm run seed
+  touch /var/lib/apeks/seeded
+fi
+chown -R apeks:apeks "$candidate"
+ln -sfn "$candidate" /opt/apeks/current
+systemctl restart apeks-medusa.service
+systemctl is-active --quiet apeks-medusa.service
+
+for release in "$releases"/*; do
+  [[ -d "$release" ]] || continue
+  [[ "$release" == "$candidate" || "$release" == "$current" ]] && continue
+  rm -rf -- "$release"
+done

@@ -3,6 +3,10 @@ MASTER_PROMPT.md
 
 # Dependencies & Build artifacts
 node_modules/
+.medusa/
+.env
+.env.*
+!.env.example
 .DS_Store
 Thumbs.db
 *.local

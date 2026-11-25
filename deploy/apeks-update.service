@@ -1,0 +1,9 @@
+[Unit]
+Description=Update APEKS Medusa from backend branch
+After=network-online.target postgresql.service redis-server.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/apeks-update
+TimeoutStartSec=30min

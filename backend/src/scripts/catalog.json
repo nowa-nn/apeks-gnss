@@ -1,0 +1,332 @@
+[
+  {
+    "slug": "apeks_ap10",
+    "title": "APEKS AP10",
+    "subtitle": "Надежный базовый RTK-приемник на 1408 каналов с защитой IP67 и IMU до 120°",
+    "description": "Надежный 1408-канальный спутниковый приемник для кадастровых и строительных съемок. Оснащен компенсатором угла наклона IMU 4.0 до 120° без необходимости калибровки, встроенным УКВ радиомодемом 2 Вт и герметичным корпусом IP67.",
+    "article": "AP-10",
+    "category": "ГНСС-приёмники",
+    "price": 99000,
+    "mainImage": "assets/client_title_apeks_ap10.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": null
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap20ar",
+    "title": "APEKS AP20 AR",
+    "subtitle": "Инновационный GNSS RTK-приемник с дополненной реальностью (AR) и 1408 каналами",
+    "description": "Компактный 1408-канальный RTK-приемник со встроенной камерой дополненной реальности AR для наглядного выноса проектов в натуру, бескалибровочным компенсатором IMU 4.0 до 120° и приемопередающим радио 2 Вт.",
+    "article": "AP-20-AR",
+    "category": "ГНСС-приёмники",
+    "price": 129000,
+    "mainImage": "assets/client_title_apeks_ap20ar.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap30",
+    "title": "APEKS AP30 Laser",
+    "subtitle": "Компактный RTK-приемник с зеленым лазером до 10 метров, AR-разбивкой и IMU до 120°",
+    "description": "Универсальный GNSS RTK-приемник с зеленым лазерным дальномером до 10 метров, визуальной AR-разбивкой и датчиком наклона IMU до 120°. Подходит для решения сложных съемочных задач в условиях закрытого горизонта и городской застройки.",
+    "article": "AP-30-LASER",
+    "category": "ГНСС-приёмники",
+    "price": 169000,
+    "mainImage": "assets/client_title_apeks_ap30.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap40",
+    "title": "APEKS AP40 Laser+",
+    "subtitle": "Флагманский GNSS RTK-приемник с зеленым лазером до 120 метров, визуальной AR-разбивкой и IMU до 120°",
+    "description": "Флагманский спутниковый приемник с зеленым миллиметровым лазером до 120 метров, трехмерной визуальной AR-разбивкой и датчиком наклона IMU 4.0 до 120°. Выполняет съемку труднодоступных углов, фасадов и объектов без использования вехи.",
+    "article": "AP-40L-PLUS",
+    "category": "ГНСС-приёмники",
+    "price": 199000,
+    "mainImage": "assets/client_title_apeks_ap40.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap50",
+    "title": "APEKS AP50 Vision",
+    "subtitle": "Геодезический RTK-приемник с визуальной VR-съемкой, фотограмметрией и AR-разбивкой",
+    "description": "Профессиональный спутниковый приемник с фотограмметрической системой для вычисления 3D-координат объектов по фото и видео, визуальным выносом в натуру AR и бескалибровочным IMU до 120°.",
+    "article": "AP-50-VISION",
+    "category": "ГНСС-приёмники",
+    "price": 175000,
+    "mainImage": "assets/client_title_apeks_ap50.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS5i",
+        "price": 50000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap60",
+    "title": "APEKS AP60 Vision",
+    "subtitle": "Флагманский RTK-приемник с двойной оптической системой VR-съемки и AR-разбивки",
+    "description": "Флагманский RTK-приемник с оптической системой видеозахвата и фотограмметрии для 3D-моделирования, трехмерной AR-разбивкой, датчиком наклона IMU 4.0 до 120° и приемопередатчиком 2 Вт.",
+    "article": "AP-60-VISION",
+    "category": "ГНСС-приёмники",
+    "price": 189000,
+    "mainImage": "assets/client_title_apeks_ap60.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS5i",
+        "price": 50000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "max_5",
+    "title": "APEKS MAX 5",
+    "subtitle": "Мощная базовая станция и ровер со встроенным УКВ модемом 5 Вт, сенсорным OLED и АКБ 13200 мА·ч",
+    "description": "Мощная автономная GNSS-станция и ровер с аккумулятором 13 200 мА·ч, встроенным приемопередатчиком 5 Вт + LoRa с дальностью до 25 км, сенсорным цветным OLED-экраном 1.39\" и IMU до 120°.",
+    "article": "MAX-5",
+    "category": "ГНСС-приёмники",
+    "price": 189000,
+    "mainImage": "assets/client_title_max_5.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_aps1",
+    "title": "APEKS APS1",
+    "subtitle": "Ультракомпактный карманный RTK GNSS-приемник весом 210 г для ГИС и геодезии",
+    "description": "Сверхлегкий карманный RTK-приемник весом 210 грамм на 1408 каналов с компенсацией наклона IMU до 60°. Оптимален для мобильного сбора ГИС-данных, инвентаризации сетей и кадастровой съемки.",
+    "article": "APS-1",
+    "category": "ГНСС-приёмники",
+    "price": 76000,
+    "mainImage": "assets/client_title_apeks_aps1.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_cs3i",
+    "title": "Полевой контроллер CS3i",
+    "subtitle": "Защищенный контроллер на Android 11 с физической буквенно-цифровой клавиатурой и 4G",
+    "description": "Эргономичный полевой контроллер с максимальной защитой IP68, ярким экраном 5.45\", физической клавиатурой для быстрого ввода в перчатках, батареей 9 000 мА·ч и поддержкой сетей 4G LTE.",
+    "article": "CS-3I",
+    "category": "Контроллеры и планшеты",
+    "price": 49000,
+    "mainImage": "assets/client_title_apeks_cs3i.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_cs5i",
+    "title": "Полевой контроллер CS5i",
+    "subtitle": "Флагманский полевой контроллер на Android 12 с QWERTY-клавиатурой, экраном 500 нит и IP68",
+    "description": "Флагманский геодезический контроллер на Android 12 с ярким антибликовым дисплеем 5.5\", полноразмерной аппаратной QWERTY-клавиатурой, аккумулятором 9 000 мА·ч, памятью 4+64 ГБ и защитой IP68.",
+    "article": "CS-5I",
+    "category": "Контроллеры и планшеты",
+    "price": 59000,
+    "mainImage": "assets/client_title_apeks_cs5i.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ts8i",
+    "title": "Полевой планшет TS8i",
+    "subtitle": "Защищенный 8\" полевой планшет на Qualcomm SM4350 с поддержкой 5G и защитой IP67",
+    "description": "Ударопрочный 8-дюймовый геодезический планшет на процессоре Qualcomm с поддержкой сетей 5G, ярким экраном высокой четкости, емкой батареей 9 000 мА·ч и пылевлагозащитой IP67.",
+    "article": "TS-8I",
+    "category": "Контроллеры и планшеты",
+    "price": 89000,
+    "mainImage": "assets/client_title_apeks_ts8i.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ts8i_pro",
+    "title": "Полевой планшет TS8i PRO",
+    "subtitle": "8\" планшет со встроенным 1408-канальным RTK-модулем миллиметровой/сантиметровой точности",
+    "description": "Полевой 8-дюймовый планшет со встроенным 1408-канальным GNSS RTK модулем сантиметровой точности, поддержкой 5G, процессором Qualcomm и аккумулятором 9 000 мА·ч.",
+    "article": "TS-8I-PRO",
+    "category": "Контроллеры и планшеты",
+    "price": 129000,
+    "mainImage": "assets/client_title_apeks_ts8i_pro.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "software_apeksurv",
+    "title": "Фирменное полевое ПО ApekSurv 8.0",
+    "subtitle": "Лицензионное программное обеспечение для Android: RTK, CAD, COGO и поддержка МСК",
+    "description": "Полнофункциональное программное обеспечение для полевых геодезических работ на русском языке. Поддерживает все режимы съемки RTK/PPK/статика, расчеты COGO, работу с CAD-чертежами и местными системами координат.",
+    "article": "APEKSURV-8",
+    "category": "Полевое ПО",
+    "price": 25000,
+    "mainImage": "assets/client_title_software_apeksurv.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_adl35",
+    "title": "Радиомодем APEKS ADL35",
+    "subtitle": "Мощный внешний приемопередатчик УКВ до 35 Вт с OLED-дисплеем и Bluetooth",
+    "description": "Внешний радиомодем мощностью до 35 Вт для передачи поправок базовой станции на десятки километров. Оснащен OLED-экраном, поддержкой Bluetooth, защитой IP67 и широким диапазоном частот 410–470 МГц.",
+    "article": "ADL-35",
+    "category": "Радиосвязь",
+    "price": 99000,
+    "mainImage": "assets/client_title_apeks_adl35.png",
+    "kitOptions": null,
+    "inStock": true
+  },
+  {
+    "slug": "apeks_ap80",
+    "title": "APEKS AP80 PRO",
+    "subtitle": "Флагманский RTK-приемник с фотограмметрией, зеленым лазером до 30 метров и IMU до 120°",
+    "description": "Флагманский спутниковый приемник с фотограмметрической системой двойных камер, зеленым миллиметровым лазером до 30 метров и бескалибровочным IMU 4.0 до 120°. Позволяет выполнять точные измерения недоступных объектов и формировать 3D-модели в постобработке.",
+    "article": "AP-80-PRO",
+    "category": "ГНСС-приёмники",
+    "price": 249000,
+    "mainImage": "assets/client_title_apeks_ap80.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS5i",
+        "price": 50000
+      },
+      "bonusPole": "Карбоновая веха 2.2 м в подарок"
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_am02",
+    "title": "Тахеометр APEKS AM02",
+    "subtitle": "Высокоточный электронный тахеометр 2″ с дальностью до 1000 м без отражателя и до 5000 м на призму",
+    "description": "Тахеометр APEKS AM02 — надежный инструмент для ежедневной работы геодезиста и строителя. Высокая скорость измерений (0,8 с в режиме повтора, 0,3 с при слежении), встроенный датчик температуры и давления с автоматическим вводом поправки PPM, внутренняя память на 20 000 точек и два аккумулятора в комплекте обеспечивают до 16 часов непрерывной автономной работы.",
+    "article": "AM-02",
+    "category": "Электронные тахеометры",
+    "price": 245000,
+    "mainImage": "assets/client_title_apeks_am02.png",
+    "kitOptions": {
+      "software": {
+        "name": "Лицензия ПО ApekSurv 8.0",
+        "price": 20000
+      },
+      "controller": {
+        "name": "Контроллер CS3i",
+        "price": 40000
+      },
+      "bonusPole": null
+    },
+    "inStock": true
+  },
+  {
+    "slug": "apeks_am02i",
+    "title": "Тахеометр APEKS AM02i на Android",
+    "subtitle": "Интеллектуальный электронный тахеометр 2″ на ОС Android 14 с 6″ сенсорным экраном и предустановленным ПО ApekSurv",
+    "description": "APEKS AM02i объединяет в одном корпусе электронный тахеометр с точностью 2″ и мощный полевой Android-компьютер. Прибор измеряет до 1000 м без отражателя и до 4000 м на призму, оснащен слотом для Nano-SIM с поддержкой 4G LTE, модулями Wi-Fi и Bluetooth 5.0 BLE, Type-C и USB 2.0. Комплект из двух аккумуляторов по 7000 мА·ч обеспечивает бесперебойную работу в поле до 10 часов.",
+    "article": "AM-02i",
+    "category": "Электронные тахеометры",
+    "price": 345000,
+    "mainImage": "assets/client_title_apeks_am02i.png",
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "inStock": true
+  },
+  {
+    "slug": "veha_karbonovaya_apeks_2_5_m",
+    "title": "Веха карбоновая APEKS 2,5 м",
+    "subtitle": "Телескопическая веха из углеволокна (карбон) 2,5 м с поворотным фиксатором и круглым уровнем",
+    "description": "Карбоновая веха APEKS 2,5 м разработана специально для ежедневных полевых спутниковых съемок RTK. Углепластиковый композит отличается высокой прочностью на изгиб, не подвержен коррозии и температурным деформациям, а также приятен для работы в холодное время года. Стандартная резьба 5/8″ обеспечивает совместимость со всеми типами спутниковых антенн и призменных систем.",
+    "article": "AP-P25",
+    "category": "Аксессуары",
+    "price": 14500,
+    "mainImage": "assets/client_title_apeks_pole_25.png",
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "inStock": true
+  },
+  {
+    "slug": "opticheskiy_nivelir_apeks_apl32",
+    "title": "Оптический нивелир APEKS APL32",
+    "subtitle": "Высокоточный оптический нивелир 32× с воздушным демпфером и влагозащитой IP66",
+    "description": "Оптический нивелир APEKS APL32 предназначен для высокоточного геометрического нивелирования при строительстве зданий, дорожных работах, планировке участков и инженерно-геодезических изысканиях. Просветленная оптика обеспечивает яркое и контрастное прямое изображение даже в условиях сумерек или плохой освещенности. Горизонтальный лимб с градуировкой 360° позволяет выполнять угловые измерения.",
+    "article": "AP-L32",
+    "category": "Нивелиры и уровни",
+    "price": 19500,
+    "mainImage": "assets/client_title_apeks_apl32.png",
+    "kitOptions": {
+      "software": null,
+      "controller": null,
+      "bonusPole": null
+    },
+    "inStock": true
+  }
+]
