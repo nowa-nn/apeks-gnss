@@ -2,7 +2,7 @@ name: Deploy Vue Frontend to GitHub Pages
 
 on:
   push:
-    branches: ['main']
+    branches: ['frontend']
   workflow_dispatch:
 
 permissions:
@@ -37,6 +37,9 @@ jobs:
           npm ci
 
       - name: Build Vue Project
+        env:
+          VITE_MEDUSA_URL: https://130.49.149.59
+          VITE_MEDUSA_PUBLISHABLE_KEY: pk_78fbc987ad48e06e755fa6e01d6a36754334f6e0c47507fd3a7ccd2d1e82ae78
         run: |
           cd frontend
           npm run build

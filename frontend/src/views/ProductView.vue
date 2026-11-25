@@ -254,13 +254,18 @@ function handleAddToCart() {
       configuredTitle += ` [${optionsList.join(', ')}]`;
     }
 
-    window.addToCart(
-      configuredTitle,
-      totalPrice.value,
-      product.value.mainImage,
-      product.value.subtitle,
-      quantity.value
-    );
+    const configuration = includeSoftware.value && includeController.value
+      ? 'full' : includeSoftware.value ? 'software' : includeController.value ? 'controller' : 'base';
+    window.addToCart({
+      id: `${product.value.slug}:${configuration}`,
+      title: configuredTitle,
+      price: totalPrice.value,
+      img: product.value.mainImage,
+      subtitle: product.value.subtitle,
+      slug: product.value.slug,
+      configuration,
+      qty: quantity.value
+    });
   }
 }
 

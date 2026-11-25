@@ -1,8 +1,10 @@
-// Single Source of Truth for APEKS GNSS catalog products
+import { reactive } from 'vue';
+
+// Visual descriptions are local; Medusa supplies current prices and variants.
 // Synchronized strictly with official client site: https://apeksgnss.ru/
 // Total products: 19
 
-export const products = [
+export const products = reactive([
   {
     "id": 2,
     "slug": "apeks_ap10",
@@ -3603,7 +3605,7 @@ export const products = [
     "channels": 0,
     "promoFeatures": []
   }
-];
+]);
 
 export function getProductBySlug(slug) {
   if (!slug) return null;

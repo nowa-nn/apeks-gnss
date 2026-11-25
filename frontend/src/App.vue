@@ -5,6 +5,7 @@ import AppHeader from './components/layout/AppHeader.vue';
 import AppFooter from './components/layout/AppFooter.vue';
 import CartDrawer from './components/cart/CartDrawer.vue';
 import { useCart } from './composables/useCart.js';
+import { syncCatalog } from './lib/medusa.js';
 
 const router = useRouter();
 
@@ -85,6 +86,7 @@ function filterStoreProducts(query) {
 }
 
 onMounted(() => {
+  syncCatalog().catch((error) => console.warn('Medusa catalog:', error.message));
   window.formatRub = formatRub;
   window.toggleDropdown = toggleDropdown;
   window.toggleCartDrawer = toggleCart;

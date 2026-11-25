@@ -111,7 +111,7 @@ export function useCart() {
     }
 
     const qtyToAdd = Math.max(1, Number(item.qty) || 1);
-    const existing = cartItems.value.find(i => i.title === item.title);
+    const existing = cartItems.value.find(i => i.id === item.id || i.title === item.title);
 
     if (existing) {
       existing.qty = (Number(existing.qty) || 1) + qtyToAdd;
@@ -123,6 +123,7 @@ export function useCart() {
         img: item.img || 'assets/client_title_apeks_ap10.png',
         subtitle: item.subtitle || '',
         slug: item.slug || '',
+        configuration: item.configuration || 'base',
         qty: qtyToAdd
       });
     }

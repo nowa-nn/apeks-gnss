@@ -367,7 +367,10 @@ function formatRub(num) {
 function handleAddToCart(prod, event) {
   if (event) event.stopPropagation();
   if (window.addToCart) {
-    window.addToCart(prod.id, prod.title, prod.price, prod.mainImage);
+    window.addToCart({
+      id: `${prod.slug}:base`, title: prod.title, price: prod.price,
+      img: prod.mainImage, slug: prod.slug, configuration: 'base', qty: 1
+    });
   }
 }
 
