@@ -19,7 +19,7 @@ cd "$candidate/backend"
 set -a
 source /etc/apeks/medusa.env
 set +a
-npm ci --no-audit --no-fund
+npm ci --include=dev --no-audit --no-fund
 npm run build
 ln -sfn ../../node_modules .medusa/server/node_modules
 ./node_modules/.bin/medusa db:migrate
