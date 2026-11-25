@@ -28,5 +28,26 @@ module.exports = defineConfig({
       resolve: "@medusajs/medusa/workflow-engine-redis",
       options: { redis: { redisUrl: process.env.REDIS_URL } },
     },
+    {
+      resolve: "@medusajs/medusa/locking",
+      options: { providers: [{
+        resolve: "@medusajs/medusa/locking-redis",
+        id: "locking-redis",
+        is_default: true,
+        options: { redisUrl: process.env.REDIS_URL },
+      }] },
+    },
+    {
+      resolve: "@medusajs/medusa/file",
+      options: { providers: [{
+        resolve: "@medusajs/medusa/file-local",
+        id: "local",
+        options: {
+          upload_dir: "/var/lib/apeks/uploads",
+          private_upload_dir: "/var/lib/apeks/private-uploads",
+          backend_url: "https://130.49.149.59/static",
+        },
+      }] },
+    },
   ],
 })

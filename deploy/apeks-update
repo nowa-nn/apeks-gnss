@@ -4,6 +4,8 @@ set -euo pipefail
 repo='https://github.com/nowa-nn/apeks-gnss.git'
 releases='/opt/apeks/releases'
 mkdir -p "$releases"
+install -d -o apeks -g apeks -m 755 /var/lib/apeks/uploads
+install -d -o apeks -g apeks -m 700 /var/lib/apeks/private-uploads
 sha="$(git ls-remote "$repo" refs/heads/backend | cut -f1)"
 test -n "$sha"
 current="$(readlink -f /opt/apeks/current 2>/dev/null || true)"
@@ -28,6 +30,16 @@ if [[ ! -e /var/lib/apeks/seeded ]]; then
   touch /var/lib/apeks/seeded
 fi
 chown -R apeks:apeks "$candidate"
+install -m 644 "$candidate/deploy/nginx.conf" /etc/nginx/sites-available/apeks
+nginx -t
+systemctl reload nginx
+install -m 644 "$candidate/deploy/apeks-medusa.service" /etc/systemd/system/apeks-medusa.service
+install -m 644 "$candidate/deploy/apeks-update.service" /etc/systemd/system/apeks-update.service
+install -m 644 "$candidate/deploy/apeks-update.timer" /etc/systemd/system/apeks-update.timer
+install -m 644 "$candidate/deploy/apeks-cert-renew.service" /etc/systemd/system/apeks-cert-renew.service
+install -m 644 "$candidate/deploy/apeks-cert-renew.timer" /etc/systemd/system/apeks-cert-renew.timer
+install -m 755 "$candidate/deploy/apeks-update" /usr/local/sbin/apeks-update
+systemctl daemon-reload
 ln -sfn "$candidate" /opt/apeks/current
 systemctl restart apeks-medusa.service
 systemctl is-active --quiet apeks-medusa.service

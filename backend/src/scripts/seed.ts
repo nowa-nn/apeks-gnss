@@ -32,7 +32,6 @@ const updateStoreCurrencies = createWorkflow("apeks-update-store-currencies", (i
 export default async function seed({ container }: ExecArgs) {
   const logger = container.resolve(ContainerRegistrationKeys.LOGGER)
   const link = container.resolve(ContainerRegistrationKeys.LINK)
-  const query = container.resolve(ContainerRegistrationKeys.QUERY)
   const stores = container.resolve(Modules.STORE)
   const channels = container.resolve(Modules.SALES_CHANNEL)
   const fulfillment = container.resolve(Modules.FULFILLMENT)
@@ -113,18 +112,11 @@ export default async function seed({ container }: ExecArgs) {
     input: { id: location.id, add: [channel.id] },
   })
 
-  const { data: existingKeys } = await query.graph({
-    entity: "api_key", fields: ["id"], filters: { type: "publishable" },
+  const { result: [apiKey] } = await createApiKeysWorkflow(container).run({
+    input: { api_keys: [{ title: "Витрина APEKS", type: "publishable", created_by: "" }] },
   })
-  let apiKeyId = existingKeys[0]?.id
-  if (!apiKeyId) {
-    const { result } = await createApiKeysWorkflow(container).run({
-      input: { api_keys: [{ title: "Витрина APEKS", type: "publishable", created_by: "" }] },
-    })
-    apiKeyId = result[0].id
-  }
   await linkSalesChannelsToApiKeyWorkflow(container).run({
-    input: { id: apiKeyId, add: [channel.id] },
+    input: { id: apiKey.id, add: [channel.id] },
   })
 
   const categories = [...new Set(catalog.map((p) => p.category))]
@@ -145,6 +137,7 @@ export default async function seed({ container }: ExecArgs) {
       description: p.description,
       handle: p.slug.replace(/_/g, "-"),
       status: ProductStatus.PUBLISHED,
+      sales_channels: [{ id: channel.id }],
       category_ids: [createdCategories.find((c) => c.name === p.category)!.id],
       shipping_profile_id: profile.id,
       thumbnail: `https://nowa-nn.github.io/apeks-gnss/${p.mainImage}`,
@@ -162,5 +155,5 @@ export default async function seed({ container }: ExecArgs) {
     }
   })
   await createProductsWorkflow(container).run({ input: { products } })
-  logger.info(`Создано товаров: ${products.length}; ключ витрины: ${apiKeyId}`)
+  logger.info(`Создано товаров: ${products.length}; ключ витрины: ${apiKey.id}`)
 }
