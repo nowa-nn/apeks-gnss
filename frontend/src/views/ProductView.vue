@@ -44,6 +44,9 @@ const includeSoftware = ref(false);
 const includeController = ref(false);
 
 const totalPrice = computed(() => {
+  if (includeSoftware.value && includeController.value && typeof product.value.kitOptions?.fullPrice === 'number') {
+    return product.value.kitOptions.fullPrice;
+  }
   let total = product.value.price || 0;
   if (includeSoftware.value && product.value.kitOptions?.software) {
     total += product.value.kitOptions.software.price;

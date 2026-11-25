@@ -60,6 +60,13 @@ export async function syncCatalog() {
     if (typeof amount === 'number' && item.kitOptions?.controller && typeof variantPrice(controller) === 'number') {
       item.kitOptions.controller.price = variantPrice(controller) - amount;
     }
+    const full = remote.variants?.find((variant) => variant.sku?.endsWith('-full'));
+    if (item.kitOptions && typeof variantPrice(full) === 'number') {
+      item.kitOptions.fullPrice = variantPrice(full);
+    }
+    if (remote.thumbnail && remote.thumbnail.includes('/static/')) {
+      item.mainImage = remote.thumbnail;
+    }
     if (remote.title) item.title = remote.title;
   }
 }

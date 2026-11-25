@@ -3,8 +3,15 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { useFormValidation } from '../composables/useFormValidation.js';
 import { useRouter } from 'vue-router';
 import { resolveAsset } from '../utils/assets.js';
+import { getProductBySlug } from '../data/products.js';
+import { formatRub } from '../composables/useCart.js';
 
 const router = useRouter();
+
+function featuredPrice(slug, fallback) {
+  const prod = getProductBySlug(slug);
+  return formatRub(typeof prod?.price === 'number' ? prod.price : fallback);
+}
 
 // ============================================================
 // Hero Slider Functionality
@@ -519,7 +526,7 @@ onUnmounted(() => {
 
             <div class="pt-4 mt-4 border-t border-neutral-border">
               <div class="mb-3">
-                <span class="text-lg font-bold text-neutral-dark">249 000 ₽</span>
+                <span class="text-lg font-bold text-neutral-dark">{{ featuredPrice('ap80-pro', 249000) }}</span>
               </div>
               <router-link to="/product/ap80-pro" class="block w-full py-2.5 rounded bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition text-center cursor-pointer">
                 Подробнее
@@ -545,7 +552,7 @@ onUnmounted(() => {
 
             <div class="pt-4 mt-4 border-t border-neutral-border">
               <div class="mb-3">
-                <span class="text-lg font-bold text-neutral-dark">199 000 ₽</span>
+                <span class="text-lg font-bold text-neutral-dark">{{ featuredPrice('ap40-laser-plus', 199000) }}</span>
               </div>
               <router-link to="/product/ap40-laser-plus" class="block w-full py-2.5 rounded bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition text-center cursor-pointer">
                 Подробнее
@@ -571,7 +578,7 @@ onUnmounted(() => {
 
             <div class="pt-4 mt-4 border-t border-neutral-border">
               <div class="mb-3">
-                <span class="text-lg font-bold text-neutral-dark">129 000 ₽</span>
+                <span class="text-lg font-bold text-neutral-dark">{{ featuredPrice('ap20-ar', 129000) }}</span>
               </div>
               <router-link to="/product/ap20-ar" class="block w-full py-2.5 rounded bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition text-center cursor-pointer">
                 Подробнее
@@ -597,7 +604,7 @@ onUnmounted(() => {
 
             <div class="pt-4 mt-4 border-t border-neutral-border">
               <div class="mb-3">
-                <span class="text-lg font-bold text-neutral-dark">99 000 ₽</span>
+                <span class="text-lg font-bold text-neutral-dark">{{ featuredPrice('ap10', 99000) }}</span>
               </div>
               <router-link to="/product/ap10" class="block w-full py-2.5 rounded bg-brand hover:bg-[#01556D] text-white text-xs font-semibold transition text-center cursor-pointer">
                 Подробнее
