@@ -49,7 +49,7 @@ export default async function seed({ container }: ExecArgs) {
     input: { store_id: store.id, supported_currencies: [{ currency_code: "rub", is_default: true }] },
   })
   await updateStoresWorkflow(container).run({
-    input: { selector: { id: store.id }, update: { default_sales_channel_id: channel.id } },
+    input: { selector: { id: store.id }, update: { name: "APEKS GNSS", default_sales_channel_id: channel.id } },
   })
 
   const { result: regions } = await createRegionsWorkflow(container).run({
