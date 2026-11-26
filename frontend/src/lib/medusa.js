@@ -1,6 +1,7 @@
 import { products } from '../data/products.js';
+import { getMedusaBaseUrl, normalizeMediaUrl } from '../utils/assets.js';
 
-const apiUrl = import.meta.env.VITE_MEDUSA_URL || 'https://130.49.149.59';
+const apiUrl = getMedusaBaseUrl();
 const publishableKey = import.meta.env.VITE_MEDUSA_PUBLISHABLE_KEY;
 
 async function request(path, options = {}) {
@@ -15,6 +16,27 @@ async function request(path, options = {}) {
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(body.message || `Ошибка сервера (${response.status})`);
+  return body;
+}
+
+async function adminRequest(path, token, options = {}) {
+  if (!token) throw new Error('Требуется вход администратора');
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
+    ...options.headers,
+  };
+  const response = await fetch(`${apiUrl}${path}`, {
+    ...options,
+    headers,
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const err = new Error(body.message || `Ошибка сервера (${response.status})`);
+    err.status = response.status;
+    throw err;
+  }
   return body;
 }
 
@@ -65,10 +87,62 @@ export async function syncCatalog() {
       item.kitOptions.fullPrice = variantPrice(full);
     }
     if (remote.thumbnail && remote.thumbnail.includes('/static/')) {
-      item.mainImage = remote.thumbnail;
+      item.mainImage = normalizeMediaUrl(remote.thumbnail);
     }
     if (remote.title) item.title = remote.title;
   }
+}
+
+export async function fetchStoreHomepage() {
+  const { homepage } = await request('/store/homepage');
+  return homepage || null;
+}
+
+export async function adminLogin(email, password) {
+  const response = await fetch(`${apiUrl}/auth/user/emailpass`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email: email.trim(), password }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || !body.token) {
+    throw new Error(body.message || 'Неверный логин или пароль администратора');
+  }
+  // Verify token has admin access
+  await adminRequest('/admin/users/me', body.token);
+  return body.token;
+}
+
+export async function fetchAdminHomepage(token) {
+  return adminRequest('/admin/homepage', token);
+}
+
+export async function saveAdminHomepage(token, data) {
+  return adminRequest('/admin/homepage', token, {
+    method: 'POST',
+    body: JSON.stringify({ data }),
+  });
+}
+
+export async function rollbackAdminHomepage(token, version) {
+  return adminRequest('/admin/homepage/rollback', token, {
+    method: 'POST',
+    body: JSON.stringify({ version }),
+  });
+}
+
+export async function uploadAdminFile(token, file) {
+  const form = new FormData();
+  form.append('files', file, file.name);
+  const res = await adminRequest('/admin/uploads', token, {
+    method: 'POST',
+    body: form,
+  });
+  const uploaded = res.files?.[0];
+  if (!uploaded?.url) {
+    throw new Error('Сервер не вернул ссылку на загруженный файл');
+  }
+  return normalizeMediaUrl(uploaded.url);
 }
 
 function cartVariant(item, medusaProducts) {

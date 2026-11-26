@@ -4,10 +4,13 @@ import { useRouter } from 'vue-router';
 import AppHeader from './components/layout/AppHeader.vue';
 import AppFooter from './components/layout/AppFooter.vue';
 import CartDrawer from './components/cart/CartDrawer.vue';
+import HomepageEditor from './components/editor/HomepageEditor.vue';
 import { useCart } from './composables/useCart.js';
+import { useHomepage } from './composables/useHomepage.js';
 import { syncCatalog } from './lib/medusa.js';
 
 const router = useRouter();
+const { detectEditParam, loadPublicHomepage, loadAdminState, isEditMode } = useHomepage();
 
 const {
   cartItems,
@@ -86,6 +89,11 @@ function filterStoreProducts(query) {
 }
 
 onMounted(() => {
+  detectEditParam();
+  loadPublicHomepage();
+  if (isEditMode.value) {
+    loadAdminState();
+  }
   syncCatalog().catch((error) => console.warn('Medusa catalog:', error.message));
   window.formatRub = formatRub;
   window.toggleDropdown = toggleDropdown;
@@ -119,6 +127,9 @@ onMounted(() => {
 
     <!-- Slide-Over Cart Drawer -->
     <CartDrawer />
+
+    <!-- Visual Homepage Editor Overlay (only active in ?edit=1 mode) -->
+    <HomepageEditor />
 
     <!-- Slide-Over Mobile Menu Drawer -->
     <div id="mobileMenuDrawer" class="fixed inset-0 z-50 bg-black/50 flex justify-end hidden">
