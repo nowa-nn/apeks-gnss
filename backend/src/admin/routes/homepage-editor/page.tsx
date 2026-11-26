@@ -3,16 +3,22 @@ import { ArrowUpRightOnBox, Clock, PencilSquare } from "@medusajs/icons"
 import { Badge, Button, Container, Heading, Text } from "@medusajs/ui"
 import { useCallback, useEffect, useState } from "react"
 
-type HomepageSnapshot = {
+type CmsSnapshot = {
   version: number
   saved_at: string
 }
 
-type AdminHomepageResponse = {
-  homepage: HomepageSnapshot | null
-  history: HomepageSnapshot[]
+type AdminCmsResponse = {
+  key: string
+  current: CmsSnapshot | null
+  history: CmsSnapshot[]
   storefront_url: string
 }
+
+const CMS_PAGES = [
+  { key: "homepage", title: "Главная страница", path: "/?edit=1" },
+  { key: "news", title: "Новости компании", path: "/news?edit=1" },
+]
 
 function formatDate(iso?: string) {
   if (!iso) return "—"
@@ -27,19 +33,20 @@ function formatDate(iso?: string) {
   })
 }
 
-const HomepageEditorPage = () => {
-  const [state, setState] = useState<AdminHomepageResponse | null>(null)
+const SiteEditorPage = () => {
+  const [selectedKey, setSelectedKey] = useState("homepage")
+  const [state, setState] = useState<AdminCmsResponse | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [rollingBack, setRollingBack] = useState<number | null>(null)
 
-  const loadState = useCallback(async () => {
+  const loadState = useCallback(async (key: string) => {
     setLoading(true)
     setError("")
     try {
-      const res = await fetch("/admin/homepage", { credentials: "include" })
+      const res = await fetch(`/admin/cms/${key}`, { credentials: "include" })
       const json = await res.json()
-      if (!res.ok) throw new Error(json.message || "Не удалось загрузить настройки главной")
+      if (!res.ok) throw new Error(json.message || "Не удалось загрузить настройки раздела")
       setState(json)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка загрузки")
@@ -49,14 +56,14 @@ const HomepageEditorPage = () => {
   }, [])
 
   useEffect(() => {
-    loadState()
-  }, [loadState])
+    loadState(selectedKey)
+  }, [selectedKey, loadState])
 
   const handleRollback = async (version: number) => {
     setRollingBack(version)
     setError("")
     try {
-      const res = await fetch("/admin/homepage/rollback", {
+      const res = await fetch(`/admin/cms/${selectedKey}/rollback`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -73,16 +80,17 @@ const HomepageEditorPage = () => {
   }
 
   const storefrontBase = (state?.storefront_url || "").replace(/\/$/, "")
-  const editorUrl = storefrontBase ? `${storefrontBase}/?edit=1` : ""
+  const activePage = CMS_PAGES.find((p) => p.key === selectedKey) || CMS_PAGES[0]
+  const editorUrl = storefrontBase ? `${storefrontBase}${activePage.path}` : ""
 
   return (
     <div className="flex flex-col gap-y-4">
       <Container className="divide-y p-0">
         <div className="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Heading level="h1">Визуальный редактор главной страницы</Heading>
+            <Heading level="h1">Визуальный редактор сайта</Heading>
             <Text size="small" className="text-ui-fg-subtle mt-1">
-              Редактируйте слайдер, баннеры, «Лучшие предложения», новости, видео и загрузки прямо на живой витрине кликом по блокам.
+              Управляйте блоками главной страницы и разделом новостей прямо на живой витрине.
             </Text>
           </div>
           {editorUrl ? (
@@ -91,19 +99,32 @@ const HomepageEditorPage = () => {
               onClick={() => window.open(editorUrl, "_blank", "noopener,noreferrer")}
             >
               <ArrowUpRightOnBox />
-              Открыть визуальный редактор
+              Открыть: {activePage.title}
             </Button>
           ) : null}
         </div>
 
+        <div className="px-6 py-4 flex flex-wrap items-center gap-2">
+          {CMS_PAGES.map((page) => (
+            <Button
+              key={page.key}
+              size="small"
+              variant={selectedKey === page.key ? "primary" : "secondary"}
+              onClick={() => setSelectedKey(page.key)}
+            >
+              {page.title}
+            </Button>
+          ))}
+        </div>
+
         <div className="px-6 py-4 flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
-            <Text size="small" weight="plus">Текущая публикация:</Text>
+            <Text size="small" weight="plus">Текущая публикация ({activePage.title}):</Text>
             {loading ? (
               <Badge color="grey">Загрузка...</Badge>
-            ) : state?.homepage ? (
+            ) : state?.current ? (
               <Badge color="green">
-                Версия v{state.homepage.version} от {formatDate(state.homepage.saved_at)}
+                Версия v{state.current.version} от {formatDate(state.current.saved_at)}
               </Badge>
             ) : (
               <Badge color="blue">По умолчанию (из шаблона витрины)</Badge>
@@ -126,7 +147,7 @@ const HomepageEditorPage = () => {
       <Container className="divide-y p-0">
         <div className="px-6 py-4 flex items-center gap-2">
           <Clock className="text-ui-fg-subtle" />
-          <Heading level="h2">История версий и откат</Heading>
+          <Heading level="h2">История версий ({activePage.title})</Heading>
         </div>
 
         <div className="divide-y">
@@ -164,8 +185,8 @@ const HomepageEditorPage = () => {
 }
 
 export const config = defineRouteConfig({
-  label: "Редактор главной",
+  label: "Редактор сайта",
   icon: PencilSquare,
 })
 
-export default HomepageEditorPage
+export default SiteEditorPage
