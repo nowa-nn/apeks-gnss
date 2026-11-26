@@ -227,6 +227,7 @@ function handleSearch(e) {
           <router-link to="/" class="hover:text-brand transition whitespace-nowrap">Акции</router-link>
           <router-link to="/services" class="hover:text-brand transition whitespace-nowrap">Услуги</router-link>
           <router-link to="/instructions" class="hover:text-brand transition whitespace-nowrap">Инструкции</router-link>
+          <router-link to="/news" class="hover:text-brand transition whitespace-nowrap">Новости</router-link>
           <router-link to="/partners" class="hover:text-brand transition whitespace-nowrap">Партнерам</router-link>
           <router-link to="/" class="hover:text-brand transition whitespace-nowrap">О компании</router-link>
           <a href="#contacts" @click="scrollToContacts('')" class="hover:text-brand transition whitespace-nowrap">Контакты</a>

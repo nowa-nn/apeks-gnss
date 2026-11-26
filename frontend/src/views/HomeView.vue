@@ -6,6 +6,7 @@ import { resolveAsset } from '../utils/assets.js';
 import { getProductBySlug } from '../data/products.js';
 import { formatRub } from '../composables/useCart.js';
 import { useHomepage } from '../composables/useHomepage.js';
+import { useNews } from '../composables/useNews.js';
 
 const router = useRouter();
 const {
@@ -16,6 +17,18 @@ const {
   activeTarget,
   selectTarget,
 } = useHomepage();
+const { publishedNews } = useNews();
+
+const displayedNews = computed(() => {
+  const all = publishedNews.value || [];
+  const selectedIds = homepage.value.newsSection?.selectedIds;
+  if (Array.isArray(selectedIds)) {
+    return selectedIds
+      .map((id) => all.find((item) => item.id === id))
+      .filter(Boolean);
+  }
+  return all.slice(0, 4);
+});
 
 const showOverlays = computed(
   () => isEditMode.value && isAuthenticated.value && !isPreviewMode.value
@@ -152,7 +165,7 @@ function handleNewsClick(item) {
   if (item?.linkUrl) {
     navigateOrUrl(item.linkUrl);
   } else {
-    scrollToContacts(item?.contactSubject || item?.title || '');
+    router.push({ path: '/news', query: { article: item.slug || item.id } });
   }
 }
 
@@ -809,34 +822,42 @@ onUnmounted(() => {
             <p class="text-xs text-neutral-muted mt-1">{{ homepage.newsSection.subtitle }}</p>
           </div>
 
-          <div class="flex items-center gap-1 shrink-0 self-start sm:self-end">
-            <button type="button" @click.stop="scrollNews('prev')" id="newsPrevBtn" aria-label="Предыдущие новости"
-              class="p-1.5 text-neutral-400 hover:text-brand transition cursor-pointer focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            </button>
-            <button type="button" @click.stop="scrollNews('next')" id="newsNextBtn" aria-label="Следующие новости"
-              class="p-1.5 text-neutral-400 hover:text-brand transition cursor-pointer focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-            </button>
+          <div class="flex items-center gap-3 shrink-0 self-start sm:self-end">
+            <router-link
+              to="/news"
+              class="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline"
+            >
+              <span>{{ homepage.newsSection.allLinkText || 'Все новости' }}</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </router-link>
+            <div class="flex items-center gap-1">
+              <button type="button" @click.stop="scrollNews('prev')" id="newsPrevBtn" aria-label="Предыдущие новости"
+                class="p-1.5 text-neutral-400 hover:text-brand transition cursor-pointer focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+              </button>
+              <button type="button" @click.stop="scrollNews('next')" id="newsNextBtn" aria-label="Следующие новости"
+                class="p-1.5 text-neutral-400 hover:text-brand transition cursor-pointer focus:outline-none disabled:opacity-20 disabled:cursor-not-allowed">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
           </div>
         </div>
 
         <div id="newsCarousel" class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory py-2" style="scrollbar-width: none; -ms-overflow-style: none;">
           <article
-            v-for="(item, idx) in homepage.newsSection.items"
-            :key="item.id || idx"
-            @click.capture="handleBlockClick($event, 'news', idx)"
-            :class="[
-              'w-[88vw] xs:w-[320px] sm:w-[350px] lg:w-[calc((100%-48px)/3)] shrink-0 snap-start bg-white rounded-xl border border-neutral-border overflow-hidden flex flex-col justify-between shadow-xs',
-              editOutline('news', idx)
-            ]"
+            v-for="item in displayedNews"
+            :key="item.id || item.slug"
+            @click="showOverlays ? handleBlockClick($event, 'news', 0) : handleNewsClick(item)"
+            class="w-[88vw] xs:w-[320px] sm:w-[350px] lg:w-[calc((100%-48px)/3)] shrink-0 snap-start bg-white rounded-xl border border-neutral-border hover:border-brand transition overflow-hidden flex flex-col justify-between shadow-xs cursor-pointer group"
           >
             <div>
               <div class="relative h-48 sm:h-52 overflow-hidden bg-neutral-dark">
                 <img :src="resolveAsset(item.image)" :alt="item.title" class="w-full h-full object-cover">
               </div>
               <div class="p-5">
-                <h3 class="font-bold text-sm sm:text-base text-neutral-dark leading-snug mb-2">
+                <h3 class="font-bold text-sm sm:text-base text-neutral-dark leading-snug mb-2 group-hover:text-brand transition">
                   {{ item.title }}
                 </h3>
                 <p class="text-xs text-neutral-muted leading-relaxed line-clamp-3">
@@ -845,21 +866,17 @@ onUnmounted(() => {
               </div>
             </div>
             <div class="px-5 pb-5 pt-0">
-              <button
-                type="button"
-                @click="handleNewsClick(item)"
-                class="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline cursor-pointer"
-              >
+              <span class="inline-flex items-center gap-1 text-xs font-semibold text-brand group-hover:underline">
                 <span>{{ item.buttonText || 'Подробнее' }}</span>
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </button>
+              </span>
             </div>
           </article>
         </div>
 
         <div class="flex items-center justify-center gap-2 mt-6" id="newsCarouselDots">
           <button
-            v-for="(item, idx) in homepage.newsSection.items"
+            v-for="(item, idx) in displayedNews"
             :key="'ndot-' + (item.id || idx)"
             type="button"
             @click.stop="goToNewsSlide(idx)"

@@ -66,7 +66,7 @@
             <li><router-link to="/" class="hover:text-white transition">Реквизиты организации</router-link></li>
             <li><router-link to="/privacy" class="hover:text-white transition">Политика конфиденциальности</router-link></li>
             <li><router-link to="/offer" class="hover:text-white transition">Публичная оферта</router-link></li>
-            <li><a href="#news" class="hover:text-white transition">Новости компании</a></li>
+            <li><router-link to="/news" class="hover:text-white transition">Новости компании</router-link></li>
           </ul>
         </div>
 

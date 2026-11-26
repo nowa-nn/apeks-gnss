@@ -93,9 +93,13 @@ export async function syncCatalog() {
   }
 }
 
+export async function fetchStoreCms(key) {
+  const { content } = await request(`/store/cms/${encodeURIComponent(key)}`);
+  return content || null;
+}
+
 export async function fetchStoreHomepage() {
-  const { homepage } = await request('/store/homepage');
-  return homepage || null;
+  return fetchStoreCms('homepage');
 }
 
 export async function adminLogin(email, password) {
@@ -108,27 +112,38 @@ export async function adminLogin(email, password) {
   if (!response.ok || !body.token) {
     throw new Error(body.message || 'Неверный логин или пароль администратора');
   }
-  // Verify token has admin access
   await adminRequest('/admin/users/me', body.token);
   return body.token;
 }
 
-export async function fetchAdminHomepage(token) {
-  return adminRequest('/admin/homepage', token);
+export async function fetchAdminCms(token, key) {
+  return adminRequest(`/admin/cms/${encodeURIComponent(key)}`, token);
 }
 
-export async function saveAdminHomepage(token, data) {
-  return adminRequest('/admin/homepage', token, {
+export async function saveAdminCms(token, key, data) {
+  return adminRequest(`/admin/cms/${encodeURIComponent(key)}`, token, {
     method: 'POST',
     body: JSON.stringify({ data }),
   });
 }
 
-export async function rollbackAdminHomepage(token, version) {
-  return adminRequest('/admin/homepage/rollback', token, {
+export async function rollbackAdminCms(token, key, version) {
+  return adminRequest(`/admin/cms/${encodeURIComponent(key)}/rollback`, token, {
     method: 'POST',
     body: JSON.stringify({ version }),
   });
+}
+
+export async function fetchAdminHomepage(token) {
+  return fetchAdminCms(token, 'homepage');
+}
+
+export async function saveAdminHomepage(token, data) {
+  return saveAdminCms(token, 'homepage', data);
+}
+
+export async function rollbackAdminHomepage(token, version) {
+  return rollbackAdminCms(token, 'homepage', version);
 }
 
 export async function uploadAdminFile(token, file) {

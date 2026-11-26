@@ -35,6 +35,8 @@ const staticPaths = [
   'partners',
   'partneram',
   'dealers',
+  'news',
+  'novosti',
   'page-template',
   'template',
   'custom-page'

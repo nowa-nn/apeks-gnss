@@ -8,6 +8,7 @@ import OfferView from '../views/OfferView.vue';
 import ServicesView from '../views/ServicesView.vue';
 import InstructionsView from '../views/InstructionsView.vue';
 import PartnersView from '../views/PartnersView.vue';
+import NewsView from '../views/NewsView.vue';
 import UniversalPageView from '../views/UniversalPageView.vue';
 
 const isGhPages = typeof window !== 'undefined' && window.location.hostname.includes('github.io');
@@ -75,6 +76,18 @@ const routes = [
     name: 'Partners',
     component: PartnersView,
     alias: ['/partneram', '/dealers']
+  },
+  {
+    path: '/news',
+    name: 'News',
+    component: NewsView,
+    alias: ['/novosti']
+  },
+  {
+    path: '/news/:slug',
+    name: 'NewsDetail',
+    component: NewsView,
+    props: true,
   },
   {
     path: '/page-template',

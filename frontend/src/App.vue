@@ -1,16 +1,19 @@
 <script setup>
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import AppHeader from './components/layout/AppHeader.vue';
 import AppFooter from './components/layout/AppFooter.vue';
 import CartDrawer from './components/cart/CartDrawer.vue';
 import HomepageEditor from './components/editor/HomepageEditor.vue';
 import { useCart } from './composables/useCart.js';
 import { useHomepage } from './composables/useHomepage.js';
+import { useNews } from './composables/useNews.js';
 import { syncCatalog } from './lib/medusa.js';
 
+const route = useRoute();
 const router = useRouter();
-const { detectEditParam, loadPublicHomepage, loadAdminState, isEditMode } = useHomepage();
+const { detectEditParam, loadPublicHomepage, loadAllAdminStates, setPageKey, isEditMode } = useHomepage();
+const { loadPublicNews } = useNews();
 
 const {
   cartItems,
@@ -88,11 +91,20 @@ function filterStoreProducts(query) {
   });
 }
 
+function syncEditorPageKey() {
+  const isNews = route.name === 'News' || route.name === 'NewsDetail';
+  setPageKey(isNews ? 'news' : 'homepage');
+}
+
+watch(() => route.name, syncEditorPageKey);
+
 onMounted(() => {
   detectEditParam();
+  syncEditorPageKey();
   loadPublicHomepage();
+  loadPublicNews();
   if (isEditMode.value) {
-    loadAdminState();
+    loadAllAdminStates();
   }
   syncCatalog().catch((error) => console.warn('Medusa catalog:', error.message));
   window.formatRub = formatRub;
@@ -175,6 +187,7 @@ onMounted(() => {
             <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Акции</router-link>
             <router-link to="/services" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Услуги и сервис</router-link>
             <router-link to="/instructions" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Инструкции и ПО</router-link>
+            <router-link to="/news" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Новости</router-link>
             <router-link to="/partners" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Партнерам</router-link>
             <router-link to="/" @click="toggleMobileMenu" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">О компании</router-link>
             <a href="#contacts" @click="toggleMobileMenu(); scrollToContacts('')" class="block px-4 py-2.5 text-sm font-semibold text-neutral-dark hover:text-brand transition">Контакты</a>

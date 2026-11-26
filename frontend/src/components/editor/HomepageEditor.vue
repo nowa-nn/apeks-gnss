@@ -1,31 +1,54 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { useHomepage } from '../../composables/useHomepage.js';
+import { useNews } from '../../composables/useNews.js';
 import { products } from '../../data/products.js';
 import { resolveAsset } from '../../utils/assets.js';
 
+const router = useRouter();
+
 const {
   homepage,
-  publishedMeta,
-  history,
+  publishedMeta: homepageMeta,
+  history: homepageHistory,
+  isDirty: isHomepageDirty,
+  isSaving: isHomepageSaving,
   isEditMode,
   isPreviewMode,
   isAuthenticated,
-  isDirty,
-  isSaving,
+  activePageKey,
   activeTarget,
   editorError,
   editorNotice,
   loginEditor,
   logoutEditor,
   exitEditMode,
-  publishChanges,
-  rollbackToVersion,
-  discardChanges,
-  resetToTemplateDefaults,
+  publishChanges: publishHomepage,
+  rollbackToVersion: rollbackHomepage,
+  discardChanges: discardHomepage,
+  resetToTemplateDefaults: resetHomepageDefaults,
   uploadMedia,
   selectTarget,
 } = useHomepage();
+
+const {
+  newsData,
+  newsPublishedMeta,
+  newsHistory,
+  isNewsDirty,
+  isNewsSaving,
+  publishNews,
+  rollbackNews,
+  discardNews,
+  resetNewsToDefaults,
+  addNewsItem,
+} = useNews();
+
+const editablePages = [
+  { key: 'homepage', label: 'Главная', path: '/' },
+  { key: 'news', label: 'Новости', path: '/news' },
+];
 
 const email = ref('admin@apeks.local');
 const password = ref('');
@@ -35,17 +58,54 @@ const showHistory = ref(false);
 const uploadingField = ref('');
 const uploadError = ref('');
 
-const sectionLabels = {
-  hero: 'Hero-слайдер',
-  catalog: 'Каталог оборудования',
-  services: 'Услуги и сервис',
-  featured: 'Лучшие предложения',
-  about: 'О компании',
-  videos: 'APEKS в работе (Видео)',
-  downloads: 'Центр загрузок',
-  news: 'Новости компании',
-  contacts: 'Контакты и форма',
+const pageSectionLabels = {
+  homepage: {
+    hero: 'Hero-слайдер',
+    catalog: 'Каталог оборудования',
+    services: 'Услуги и сервис',
+    featured: 'Лучшие предложения',
+    about: 'О компании',
+    videos: 'APEKS в работе (Видео)',
+    downloads: 'Центр загрузок',
+    news: 'Выбор новостей на главной',
+    contacts: 'Контакты и форма',
+  },
+  news: {
+    newsHeader: 'Заголовок раздела новостей',
+    newsItem: 'Статьи и новости',
+  },
 };
+
+const currentSectionLabels = computed(() => pageSectionLabels[activePageKey.value] || pageSectionLabels.homepage);
+
+const activeDoc = computed(() => {
+  if (activePageKey.value === 'news') {
+    return {
+      key: 'news',
+      label: 'Новости',
+      meta: newsPublishedMeta.value,
+      history: newsHistory.value,
+      isDirty: isNewsDirty.value,
+      isSaving: isNewsSaving.value,
+      publish: publishNews,
+      rollback: rollbackNews,
+      discard: discardNews,
+      reset: resetNewsToDefaults,
+    };
+  }
+  return {
+    key: 'homepage',
+    label: 'Главная',
+    meta: homepageMeta.value,
+    history: homepageHistory.value,
+    isDirty: isHomepageDirty.value,
+    isSaving: isHomepageSaving.value,
+    publish: publishHomepage,
+    rollback: rollbackHomepage,
+    discard: discardHomepage,
+    reset: resetHomepageDefaults,
+  };
+});
 
 const activeSection = computed(() => activeTarget.value?.section || '');
 const activeIndex = computed(() =>
@@ -55,6 +115,57 @@ const activeIndex = computed(() =>
 watch(activeTarget, () => {
   uploadError.value = '';
 });
+
+function switchEditorPage(pagePath) {
+  showHistory.value = false;
+  router.push({ path: pagePath, query: { edit: '1' } });
+}
+
+function toggleNewsSelection(newsId) {
+  if (!Array.isArray(homepage.value.newsSection.selectedIds)) {
+    homepage.value.newsSection.selectedIds = [];
+  }
+  const list = homepage.value.newsSection.selectedIds;
+  const idx = list.indexOf(newsId);
+  if (idx >= 0) {
+    list.splice(idx, 1);
+  } else {
+    list.push(newsId);
+  }
+}
+
+function isNewsSelected(newsId) {
+  return Array.isArray(homepage.value.newsSection.selectedIds) &&
+    homepage.value.newsSection.selectedIds.includes(newsId);
+}
+
+const selectedNewsObjects = computed(() => {
+  const ids = homepage.value.newsSection.selectedIds || [];
+  const all = newsData.value.items || [];
+  return ids.map((id) => all.find((n) => n.id === id)).filter(Boolean);
+});
+
+const currentNewsItem = computed(() => {
+  if (activeSection.value !== 'newsItem') return null;
+  const items = newsData.value.items || [];
+  return items[activeIndex.value] || items[0] || null;
+});
+
+function removeNewsItemAt(idx) {
+  const items = newsData.value.items || [];
+  if (!items.length) return;
+  const [removed] = items.splice(idx, 1);
+  if (removed?.id && Array.isArray(homepage.value.newsSection.selectedIds)) {
+    homepage.value.newsSection.selectedIds = homepage.value.newsSection.selectedIds.filter(
+      (id) => id !== removed.id
+    );
+  }
+  if (items.length > 0) {
+    selectTarget('newsItem', Math.max(0, idx - 1), 'news');
+  } else {
+    activeTarget.value = null;
+  }
+}
 
 async function handleLogin() {
   loginError.value = '';
@@ -160,7 +271,11 @@ const currentSlide = computed(() => {
 
 function setSelectedIndex(idx) {
   if (!activeTarget.value) return;
-  activeTarget.value = { section: activeTarget.value.section, index: idx };
+  activeTarget.value = {
+    pageKey: activeTarget.value.pageKey || activePageKey.value,
+    section: activeTarget.value.section,
+    index: idx,
+  };
 }
 </script>
 
@@ -175,7 +290,7 @@ function setSelectedIndex(idx) {
         <div class="w-full max-w-md bg-white rounded-2xl border border-neutral-border shadow-2xl p-6 space-y-5">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <h2 class="text-lg font-extrabold text-neutral-dark">Визуальный редактор главной</h2>
+              <h2 class="text-lg font-extrabold text-neutral-dark">Визуальный редактор сайта</h2>
               <p class="text-xs text-neutral-muted mt-1">
                 Войдите под учётной записью администратора Medusa, чтобы редактировать блоки прямо на странице.
               </p>
@@ -239,24 +354,43 @@ function setSelectedIndex(idx) {
       <!-- TOP EDITOR TOOLBAR (WHEN AUTHENTICATED) -->
       <div v-else>
         <div class="fixed top-0 inset-x-0 z-[80] bg-[#0B1520] text-white border-b border-white/15 shadow-lg">
-          <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5 min-w-0">
+          <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between gap-2 sm:gap-3">
+            <div class="flex items-center gap-2 min-w-0">
               <span class="px-2 py-0.5 rounded bg-brand text-white text-[11px] font-bold uppercase tracking-wide shrink-0">
                 Редактор
               </span>
-              <span v-if="isDirty" class="text-xs font-semibold text-amber-300 truncate">
+              <div class="flex items-center gap-1 bg-white/10 p-0.5 rounded-lg shrink-0">
+                <button
+                  v-for="pg in editablePages"
+                  :key="pg.key"
+                  type="button"
+                  @click="switchEditorPage(pg.path)"
+                  :class="[
+                    'px-2.5 py-1 rounded-md text-[11px] font-semibold transition cursor-pointer flex items-center gap-1',
+                    activePageKey === pg.key ? 'bg-white text-neutral-dark shadow-xs' : 'text-slate-200 hover:text-white'
+                  ]"
+                >
+                  <span>{{ pg.label }}</span>
+                  <span
+                    v-if="(pg.key === 'homepage' && isHomepageDirty) || (pg.key === 'news' && isNewsDirty)"
+                    class="w-1.5 h-1.5 rounded-full bg-amber-400"
+                    title="Есть несохранённые изменения"
+                  ></span>
+                </button>
+              </div>
+              <span v-if="activeDoc.isDirty" class="hidden md:inline text-xs font-semibold text-amber-300 truncate">
                 Есть несохранённые изменения
               </span>
-              <span v-else-if="publishedMeta" class="text-xs text-emerald-300 truncate">
-                Опубликовано v{{ publishedMeta.version }} ({{ formatDate(publishedMeta.saved_at) }})
+              <span v-else-if="activeDoc.meta" class="hidden md:inline text-xs text-emerald-300 truncate">
+                Опубликовано v{{ activeDoc.meta.version }} ({{ formatDate(activeDoc.meta.saved_at) }})
               </span>
-              <span v-else class="text-xs text-slate-300 truncate">
-                Шаблон по умолчанию · Нажмите на любой блок на странице
+              <span v-else class="hidden md:inline text-xs text-slate-300 truncate">
+                По умолчанию · Нажмите на блок
               </span>
             </div>
 
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              <div class="relative">
+              <div class="relative hidden sm:block">
                 <select
                   :value="activeSection"
                   @change="selectTarget($event.target.value, 0)"
@@ -264,7 +398,7 @@ function setSelectedIndex(idx) {
                 >
                   <option value="" disabled class="text-neutral-dark">Выбрать блок...</option>
                   <option
-                    v-for="(label, key) in sectionLabels"
+                    v-for="(label, key) in currentSectionLabels"
                     :key="key"
                     :value="key"
                     class="text-neutral-dark"
@@ -293,22 +427,22 @@ function setSelectedIndex(idx) {
                   @click="showHistory = !showHistory"
                   class="h-8 px-3 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold cursor-pointer"
                 >
-                  История ({{ history.length }})
+                  История ({{ activeDoc.history.length }})
                 </button>
                 <div
                   v-if="showHistory"
                   class="absolute right-0 mt-2 w-72 bg-white text-neutral-dark rounded-xl border border-neutral-border shadow-2xl p-3 space-y-2 z-[95]"
                 >
                   <div class="flex items-center justify-between pb-1.5 border-b border-neutral-border">
-                    <span class="text-xs font-bold">Сохранённые версии</span>
+                    <span class="text-xs font-bold">Версии: {{ activeDoc.label }}</span>
                     <button type="button" @click="showHistory = false" class="text-xs text-neutral-muted cursor-pointer">✕</button>
                   </div>
-                  <div v-if="!history.length" class="text-[11px] text-neutral-muted py-2">
+                  <div v-if="!activeDoc.history.length" class="text-[11px] text-neutral-muted py-2">
                     Предыдущих версий пока нет.
                   </div>
                   <div v-else class="max-h-60 overflow-y-auto divide-y divide-neutral-border/70">
                     <div
-                      v-for="item in history"
+                      v-for="item in activeDoc.history"
                       :key="item.version"
                       class="py-2 flex items-center justify-between gap-2"
                     >
@@ -318,8 +452,8 @@ function setSelectedIndex(idx) {
                       </div>
                       <button
                         type="button"
-                        :disabled="isSaving"
-                        @click="rollbackToVersion(item.version); showHistory = false"
+                        :disabled="activeDoc.isSaving"
+                        @click="activeDoc.rollback(item.version); showHistory = false"
                         class="px-2.5 py-1 rounded bg-neutral-100 hover:bg-brand hover:text-white text-[11px] font-semibold transition cursor-pointer"
                       >
                         Откатить
@@ -329,7 +463,7 @@ function setSelectedIndex(idx) {
                   <div class="pt-1 border-t border-neutral-border">
                     <button
                       type="button"
-                      @click="resetToTemplateDefaults(); showHistory = false"
+                      @click="activeDoc.reset(); showHistory = false"
                       class="w-full py-1.5 rounded bg-red-50 hover:bg-red-100 text-red-700 text-[11px] font-semibold cursor-pointer"
                     >
                       Сбросить к исходному шаблону
@@ -339,9 +473,9 @@ function setSelectedIndex(idx) {
               </div>
 
               <button
-                v-if="isDirty"
+                v-if="activeDoc.isDirty"
                 type="button"
-                @click="discardChanges"
+                @click="activeDoc.discard()"
                 class="hidden sm:inline-flex h-8 px-3 rounded-lg bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-semibold cursor-pointer"
               >
                 Отменить
@@ -349,11 +483,11 @@ function setSelectedIndex(idx) {
 
               <button
                 type="button"
-                :disabled="isSaving || !isDirty"
-                @click="publishChanges"
+                :disabled="activeDoc.isSaving || !activeDoc.isDirty"
+                @click="activeDoc.publish()"
                 class="h-8 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-45 text-white text-xs font-bold transition cursor-pointer"
               >
-                {{ isSaving ? 'Сохранение...' : 'Опубликовать' }}
+                {{ activeDoc.isSaving ? 'Сохранение...' : 'Опубликовать' }}
               </button>
 
               <button
@@ -389,7 +523,7 @@ function setSelectedIndex(idx) {
             <div>
               <div class="text-[11px] text-brand font-bold uppercase tracking-wider">Редактирование блока</div>
               <h3 class="text-sm font-extrabold text-neutral-dark">
-                {{ sectionLabels[activeSection] || activeSection }}
+                {{ currentSectionLabels[activeSection] || activeSection }}
               </h3>
             </div>
             <button
@@ -855,55 +989,219 @@ function setSelectedIndex(idx) {
               </div>
             </template>
 
-            <!-- 8. NEWS SECTION -->
+            <!-- 8. HOMEPAGE NEWS SELECTOR (ONLY PICK EXISTING NEWS) -->
             <template v-else-if="activeSection === 'news'">
               <div class="space-y-3">
                 <div>
-                  <label class="block font-semibold mb-1">Заголовок</label>
+                  <label class="block font-semibold mb-1">Заголовок блока</label>
                   <input v-model="homepage.newsSection.title" type="text" class="w-full h-9 px-3 rounded-lg border border-neutral-border" />
                 </div>
                 <div>
                   <label class="block font-semibold mb-1">Подзаголовок</label>
                   <input v-model="homepage.newsSection.subtitle" type="text" class="w-full h-9 px-3 rounded-lg border border-neutral-border" />
                 </div>
-              </div>
-              <div class="pt-3 border-t border-neutral-border space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold">Новости</span>
-                  <button
-                    type="button"
-                    @click="addListItem('news', homepage.newsSection.items, { title: 'Новая новость APEKS', summary: 'Текст новости...', image: 'assets/news_gnss_battle_2026.jpg', buttonText: 'Подробнее', linkUrl: '', contactSubject: 'Новость APEKS' })"
-                    class="px-2.5 py-1 rounded bg-brand text-white font-semibold cursor-pointer"
-                  >
-                    + Добавить
-                  </button>
+                <div>
+                  <label class="block font-semibold mb-1">Текст ссылки на все новости</label>
+                  <input v-model="homepage.newsSection.allLinkText" type="text" class="w-full h-9 px-3 rounded-lg border border-neutral-border" />
                 </div>
-                <div
-                  v-for="(item, idx) in homepage.newsSection.items"
-                  :key="item.id || idx"
-                  :class="['p-3 rounded-xl border space-y-2', idx === activeIndex ? 'border-brand bg-brand/5' : 'border-neutral-border']"
-                >
-                  <div class="flex items-center justify-between">
-                    <span class="font-bold">{{ idx + 1 }}. {{ item.title }}</span>
-                    <div class="flex items-center gap-1">
-                      <button type="button" :disabled="idx === 0" @click="moveItem(homepage.newsSection.items, idx, -1)" class="px-1.5 py-0.5 border rounded disabled:opacity-30 cursor-pointer">↑</button>
-                      <button type="button" :disabled="idx === homepage.newsSection.items.length - 1" @click="moveItem(homepage.newsSection.items, idx, 1)" class="px-1.5 py-0.5 border rounded disabled:opacity-30 cursor-pointer">↓</button>
-                      <button type="button" :disabled="homepage.newsSection.items.length <= 1" @click="removeListItem('news', homepage.newsSection.items, idx)" class="px-1.5 py-0.5 text-red-600 cursor-pointer">✕</button>
+              </div>
+
+              <div class="pt-3 border-t border-neutral-border space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-neutral-dark">Порядок на главной ({{ selectedNewsObjects.length }})</span>
+                </div>
+                <div v-if="!selectedNewsObjects.length" class="p-3 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-800">
+                  Ни одна новость не выбрана. Отметьте нужные новости ниже.
+                </div>
+                <div v-else class="space-y-1.5">
+                  <div
+                    v-for="(item, idx) in selectedNewsObjects"
+                    :key="item.id"
+                    class="p-2 rounded-lg border border-brand/40 bg-brand/5 flex items-center justify-between gap-2"
+                  >
+                    <span class="font-semibold text-[11px] truncate">{{ idx + 1 }}. {{ item.title }}</span>
+                    <div class="flex items-center gap-1 shrink-0">
+                      <button type="button" :disabled="idx === 0" @click="moveItem(homepage.newsSection.selectedIds, idx, -1)" class="px-1.5 py-0.5 border rounded bg-white disabled:opacity-30 cursor-pointer">↑</button>
+                      <button type="button" :disabled="idx === selectedNewsObjects.length - 1" @click="moveItem(homepage.newsSection.selectedIds, idx, 1)" class="px-1.5 py-0.5 border rounded bg-white disabled:opacity-30 cursor-pointer">↓</button>
+                      <button type="button" @click="toggleNewsSelection(item.id)" class="px-1.5 py-0.5 text-red-600 cursor-pointer" title="Убрать с главной">✕</button>
                     </div>
                   </div>
-                  <input v-model="item.title" type="text" class="w-full h-8 px-2.5 rounded border border-neutral-border bg-white" placeholder="Заголовок" />
-                  <textarea v-model="item.summary" rows="3" class="w-full p-2 rounded border border-neutral-border bg-white" placeholder="Анонс" />
-                  <div class="grid grid-cols-2 gap-2">
-                    <input v-model="item.buttonText" type="text" class="h-8 px-2.5 rounded border border-neutral-border bg-white" placeholder="Кнопка" />
-                    <input v-model="item.linkUrl" type="text" class="h-8 px-2.5 rounded border border-neutral-border bg-white" placeholder="Ссылка (пусто = форма)" />
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-neutral-border space-y-2.5">
+                <span class="font-bold text-neutral-dark block">Существующие новости (отметьте нужные)</span>
+                <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                  <label
+                    v-for="item in newsData.items"
+                    :key="item.id"
+                    class="p-2.5 rounded-xl border border-neutral-border hover:border-brand flex items-start gap-2.5 cursor-pointer bg-white"
+                  >
+                    <input
+                      type="checkbox"
+                      :checked="isNewsSelected(item.id)"
+                      @change="toggleNewsSelection(item.id)"
+                      class="mt-0.5 w-4 h-4 accent-[#016C8A] cursor-pointer shrink-0"
+                    />
+                    <img :src="resolveAsset(item.image)" class="w-10 h-8 object-cover rounded border shrink-0" />
+                    <div class="min-w-0">
+                      <div class="font-semibold text-[11px] text-neutral-dark leading-snug line-clamp-2">{{ item.title }}</div>
+                      <div class="text-[10px] text-neutral-muted mt-0.5">
+                        {{ item.date || 'Без даты' }} <span v-if="item.published === false" class="text-amber-600 font-semibold">• Скрыта</span>
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <button
+                  type="button"
+                  @click="switchEditorPage('/news')"
+                  class="w-full py-2.5 px-3 rounded-lg bg-[#0B1520] hover:bg-brand text-white text-xs font-bold transition cursor-pointer"
+                >
+                  Добавить или изменить новости в разделе «Новости» →
+                </button>
+              </div>
+            </template>
+
+            <!-- NEWS PAGE: HEADER -->
+            <template v-else-if="activeSection === 'newsHeader'">
+              <div class="space-y-3">
+                <div>
+                  <label class="block font-semibold mb-1">Заголовок страницы новостей</label>
+                  <input v-model="newsData.title" type="text" class="w-full h-9 px-3 rounded-lg border border-neutral-border" />
+                </div>
+                <div>
+                  <label class="block font-semibold mb-1">Подзаголовок</label>
+                  <textarea v-model="newsData.subtitle" rows="3" class="w-full p-2.5 rounded-lg border border-neutral-border" />
+                </div>
+              </div>
+            </template>
+
+            <!-- NEWS PAGE: CRUD ITEMS -->
+            <template v-else-if="activeSection === 'newsItem'">
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-neutral-dark">Все новости ({{ newsData.items.length }})</span>
+                  <button
+                    type="button"
+                    @click="addNewsItem"
+                    class="px-2.5 py-1 rounded bg-brand text-white font-semibold cursor-pointer"
+                  >
+                    + Добавить новость
+                  </button>
+                </div>
+
+                <div class="flex flex-wrap gap-1.5">
+                  <button
+                    v-for="(item, idx) in newsData.items"
+                    :key="item.id || idx"
+                    type="button"
+                    @click="setSelectedIndex(idx)"
+                    :class="[
+                      'px-2.5 py-1 rounded-lg border text-[11px] font-semibold cursor-pointer transition max-w-[160px] truncate',
+                      idx === activeIndex
+                        ? 'bg-brand text-white border-brand'
+                        : 'bg-white text-neutral-dark border-neutral-border hover:border-brand'
+                    ]"
+                  >
+                    {{ idx + 1 }}. {{ item.title }}
+                  </button>
+                </div>
+              </div>
+
+              <div v-if="currentNewsItem" class="space-y-3 pt-3 border-t border-neutral-border">
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    :disabled="activeIndex <= 0"
+                    @click="setSelectedIndex(moveItem(newsData.items, activeIndex, -1))"
+                    class="px-2.5 py-1 rounded border border-neutral-border disabled:opacity-40 cursor-pointer"
+                  >
+                    ↑ Выше
+                  </button>
+                  <button
+                    type="button"
+                    :disabled="activeIndex >= newsData.items.length - 1"
+                    @click="setSelectedIndex(moveItem(newsData.items, activeIndex, 1))"
+                    class="px-2.5 py-1 rounded border border-neutral-border disabled:opacity-40 cursor-pointer"
+                  >
+                    ↓ Ниже
+                  </button>
+                  <button
+                    type="button"
+                    @click="removeNewsItemAt(activeIndex)"
+                    class="ml-auto px-2.5 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100 cursor-pointer"
+                  >
+                    Удалить
+                  </button>
+                </div>
+
+                <label class="flex items-center gap-2 p-2.5 rounded-lg bg-[#F8FAFC] border border-neutral-border cursor-pointer">
+                  <input
+                    type="checkbox"
+                    :checked="currentNewsItem.published !== false"
+                    @change="currentNewsItem.published = $event.target.checked"
+                    class="w-4 h-4 accent-[#016C8A] cursor-pointer"
+                  />
+                  <span class="font-semibold text-neutral-dark">Опубликована на сайте</span>
+                </label>
+
+                <div>
+                  <label class="block font-semibold mb-1">Заголовок новости</label>
+                  <input v-model="currentNewsItem.title" type="text" class="w-full h-9 px-3 rounded-lg border border-neutral-border" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold mb-1">Дата</label>
+                    <input v-model="currentNewsItem.date" type="date" class="w-full h-9 px-2.5 rounded-lg border border-neutral-border" />
                   </div>
-                  <div class="flex items-center gap-2">
-                    <img :src="resolveAsset(item.image)" class="w-12 h-8 object-cover rounded border bg-white shrink-0" />
-                    <input v-model="item.image" type="text" class="flex-1 h-8 px-2 rounded border border-neutral-border bg-white text-[11px]" />
-                    <label class="px-2 py-1 rounded bg-brand text-white text-[11px] font-semibold cursor-pointer shrink-0">
-                      {{ uploadingField === `news-${idx}` ? '...' : 'Фото' }}
-                      <input type="file" accept="image/*" class="hidden" @change="handleFileUpload($event, (u) => { item.image = u; }, `news-${idx}`)" />
+                  <div>
+                    <label class="block font-semibold mb-1">Рубрика</label>
+                    <input v-model="currentNewsItem.category" type="text" class="w-full h-9 px-2.5 rounded-lg border border-neutral-border" placeholder="Испытания" />
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block font-semibold mb-1">Slug (для ссылки)</label>
+                  <input v-model="currentNewsItem.slug" type="text" class="w-full h-8 px-2.5 rounded-lg border border-neutral-border font-mono text-[11px]" />
+                </div>
+
+                <div>
+                  <label class="block font-semibold mb-1">Краткий анонс (для карточки)</label>
+                  <textarea v-model="currentNewsItem.summary" rows="3" class="w-full p-2.5 rounded-lg border border-neutral-border" />
+                </div>
+
+                <div>
+                  <label class="block font-semibold mb-1">Полный текст статьи</label>
+                  <textarea v-model="currentNewsItem.content" rows="6" class="w-full p-2.5 rounded-lg border border-neutral-border" />
+                </div>
+
+                <div class="p-3 rounded-xl bg-[#F8FAFC] border border-neutral-border space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-bold text-neutral-dark">Обложка новости</span>
+                    <label class="px-2.5 py-1 rounded bg-brand text-white text-[11px] font-semibold cursor-pointer">
+                      {{ uploadingField === 'news-cover' ? 'Загрузка...' : 'Загрузить фото' }}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        class="hidden"
+                        @change="handleFileUpload($event, (u) => { currentNewsItem.image = u; }, 'news-cover')"
+                      />
                     </label>
+                  </div>
+                  <img v-if="currentNewsItem.image" :src="resolveAsset(currentNewsItem.image)" class="w-full h-24 object-cover rounded border bg-white" />
+                  <input v-model="currentNewsItem.image" type="text" class="w-full h-8 px-2 rounded border border-neutral-border bg-white text-[11px]" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold mb-1">Текст кнопки</label>
+                    <input v-model="currentNewsItem.buttonText" type="text" class="w-full h-8 px-2.5 rounded border border-neutral-border" />
+                  </div>
+                  <div>
+                    <label class="block font-semibold mb-1">Внешняя ссылка (опц.)</label>
+                    <input v-model="currentNewsItem.linkUrl" type="text" class="w-full h-8 px-2.5 rounded border border-neutral-border" placeholder="Пусто = статья" />
                   </div>
                 </div>
               </div>
