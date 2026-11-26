@@ -43,9 +43,9 @@ module.exports = defineConfig({
         resolve: "@medusajs/medusa/file-local",
         id: "local",
         options: {
-          upload_dir: "/var/lib/apeks/uploads",
-          private_upload_dir: "/var/lib/apeks/private-uploads",
-          backend_url: "https://130.49.149.59/static",
+          upload_dir: process.env.MEDUSA_UPLOAD_DIR || "/var/lib/apeks/uploads",
+          private_upload_dir: process.env.MEDUSA_PRIVATE_UPLOAD_DIR || "/var/lib/apeks/private-uploads",
+          backend_url: process.env.MEDUSA_STATIC_URL || `${(process.env.MEDUSA_BACKEND_URL || "http://localhost:9000").replace(/\/$/, "")}/static`,
         },
       }] },
     },
