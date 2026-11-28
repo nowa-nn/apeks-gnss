@@ -207,7 +207,11 @@ export async function placeOrder(form, cartItems) {
   await request(`/store/carts/${cart.id}`, {
     method: 'POST', body: JSON.stringify({
       email: form.email.trim(), shipping_address: address,
-      metadata: { delivery_type: form.deliveryType, customer_name: form.fullName.trim(), payment_intent: 'sbp_later' },
+      metadata: {
+        delivery_type: form.deliveryType,
+        customer_name: form.fullName.trim(),
+        payment_intent: form.paymentMethod === 'cash_pickup' ? 'cash_pickup' : 'sbp_later',
+      },
     }),
   });
   const { shipping_options: shippingOptions } = await request(`/store/shipping-options?cart_id=${cart.id}`);
